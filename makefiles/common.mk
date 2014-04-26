@@ -22,6 +22,7 @@ DATA += $(sort $(wildcard ${DATA_HERE}) ${DATALINKS})#without repetitions
 REMOTEDATA += $(foreach wildcard,${DATA_LINK},$(foreach dir,${datadirs},\
 	      $(wildcard ${dir}/${wildcard})))
 DATALINKS = $(notdir $(patsubst %${DROPSUFFIX},%,${REMOTEDATA}))
+SHOWDATA += DATA datadirs DROPSUFFIX REMOTEDATA# to be shown by showdata
 
 # symbolic links to source data files
 define template_data_links
@@ -45,7 +46,7 @@ Specific targets:
 endef
 
 define INFO_common
-Common targets: info.
+Common targets: info, show, showconf, showdata, showmacros.
 endef
 
 info: ;@true
@@ -59,7 +60,20 @@ info: ;@true
 	$(info ${INFO_common})
 	$(info ${INFOADD})
 
-.PHONY: all info
+show: showconf showdata showmacros
+
+showconf: ;@true
+	$(foreach var,${SHOWCONF},$(info ${var} = ${${var}}))
+	$(info )
+
+showdata: ;@true
+	$(foreach var,${SHOWDATA},$(info ${var} = ${${var}}))
+	$(info )
+
+showmacros: ;@true
+	$(info MACROS = $(MACROS))
+
+.PHONY: all info show showconf showdata showmacros
 
 .PRECIOUS: $$(PRECIOUS)
 
