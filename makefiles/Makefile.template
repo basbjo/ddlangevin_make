@@ -1,0 +1,9 @@
+prefix = ..
+makedir = $(prefix)/makefiles
+include $(makedir)/common.mk
+include $(makedir)/template.mk
+
+## settings
+
+## default targets
+all += target
