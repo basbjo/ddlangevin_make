@@ -9,5 +9,8 @@ target:
 
 ## rules
 
+## macros to be called later
+MACROS +=
+
 ## keep intermediate files
 PRECIOUS +=
