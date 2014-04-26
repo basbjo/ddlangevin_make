@@ -8,6 +8,7 @@ datadirs ?= $(prefix)# remote data directories
 DROPSUFFIX ?= # data filename suffix to be omitted in link names
 
 ## common variables
+SYMLINKS += $(DATALINKS)
 
 ## macros to be called later
 MACROS += rule_data_links
@@ -46,7 +47,8 @@ Specific targets:
 endef
 
 define INFO_common
-Common targets: info, show, showconf, showdata, showmacros.
+Common targets: info, show, showconf, showdata, showmacros,
+  mksymlinks, rmsymlinks.
 endef
 
 info: ;@true
@@ -73,7 +75,15 @@ showdata: ;@true
 showmacros: ;@true
 	$(info MACROS = $(MACROS))
 
-.PHONY: all info show showconf showdata showmacros
+mksymlinks: $$(SYMLINKS)
+
+rmsymlinks:
+	$(RM) $(foreach file,${SYMLINKS},$(if $(shell\
+		[ -h ${file} ] && echo yes),${file}))
+	@$(RM) .data
+
+.PHONY: all info show showconf showdata showmacros\
+	mksymlinks rmsymlinks
 
 .PRECIOUS: $$(PRECIOUS)
 
