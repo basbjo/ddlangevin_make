@@ -10,7 +10,7 @@ DROPSUFFIX ?= # data filename suffix to be omitted in link names
 ## common variables
 
 ## macros to be called later
-MACROS +=
+MACROS += rule_data_links
 
 ## macro to call several macros later
 define call_macros
@@ -22,6 +22,16 @@ DATA += $(sort $(wildcard ${DATA_HERE}) ${DATALINKS})#without repetitions
 REMOTEDATA += $(foreach wildcard,${DATA_LINK},$(foreach dir,${datadirs},\
 	      $(wildcard ${dir}/${wildcard})))
 DATALINKS = $(notdir $(patsubst %${DROPSUFFIX},%,${REMOTEDATA}))
+
+# symbolic links to source data files
+define template_data_links
+$(1): $(2)
+	$$(if $$(wildcard $$@),,ln -s $$< $$@)
+endef
+define rule_data_links
+$(foreach file,${REMOTEDATA},$(eval $(call template_data_links,\
+	$(notdir $(patsubst %${DROPSUFFIX},%,${file})),${file})))
+endef
 
 ## common phony targets
 .PHONY: all
