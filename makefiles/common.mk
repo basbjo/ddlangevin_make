@@ -38,7 +38,28 @@ endef
 .data: $$(DATALINKS); @touch $@
 
 ## common phony targets
-.PHONY: all
+define INFO_start
+
+Specific targets:
+  all            $(all)
+endef
+
+define INFO_common
+Common targets: info.
+endef
+
+info: ;@true
+	$(info ${INFO_start})
+	$(foreach target,${INFO},$(info $(shell\
+		printf "  %-12s\n" ${target} '${INFO_${target}}')))
+	$(foreach target,${INFOend},$(if $(filter\
+		${target},${INFO}),,$(info $(shell\
+		printf "  %-12s\n" ${target} '${INFO_${target}}'))))
+	$(info )
+	$(info ${INFO_common})
+	$(info ${INFOADD})
+
+.PHONY: all info
 
 .PRECIOUS: $$(PRECIOUS)
 

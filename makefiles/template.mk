@@ -12,5 +12,18 @@ target:
 ## macros to be called later
 MACROS +=
 
+## info
+ifndef INFO
+INFO = target
+define INFOADD
+
+Further information
+
+endef
+else
+INFOend += target
+endif
+INFO_target = description
+
 ## keep intermediate files
 PRECIOUS +=
