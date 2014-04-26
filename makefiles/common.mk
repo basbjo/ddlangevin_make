@@ -33,6 +33,10 @@ $(foreach file,${REMOTEDATA},$(eval $(call template_data_links,\
 	$(notdir $(patsubst %${DROPSUFFIX},%,${file})),${file})))
 endef
 
+# reread makefiles after creating links
+-include .data
+.data: $$(DATALINKS); @touch $@
+
 ## common phony targets
 .PHONY: all
 
