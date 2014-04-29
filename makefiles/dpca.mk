@@ -18,6 +18,8 @@ SHOWDATA +=
 COSSINDATA += $(addsuffix .cossin,${DATA})
 # projected data from principal component analysis
 PCADATA += $(addsuffix .pca,${COSSINDATA})
+# minima and maxima as reference for ranges
+MINMAXALL = $(PCADATA)
 
 ## rules
 %.cossin : %

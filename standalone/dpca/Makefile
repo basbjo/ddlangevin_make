@@ -17,7 +17,7 @@ DIH_MAX_COL = 16	# last column to be selected from source data
 # WARNING: recreate all affected data manually after changes
 
 ## default targets
-all += dpca
+all += dpca minmax
 
 ## call macros
 $(call_macros)

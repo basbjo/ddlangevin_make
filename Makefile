@@ -15,7 +15,7 @@ DROPSUFFIX =
 #see config.mk
 
 ## default targets
-all += dpca
+all += dpca minmax
 
 ## call macros
 $(call_macros)
