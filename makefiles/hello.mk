@@ -1,9 +1,12 @@
-.PHONY:
+.PHONY: hello
+hello:
+	@$(SCR)/print.sh '$(HELLO)'
 
 ## default settings
+HELLO ?= "Hello world!"
 
 # settings/data to be shown by showconf/showdata
-SHOWCONF +=
+SHOWCONF += HELLO
 SHOWDATA +=
 
 ## default settings that must be changed before including this file
@@ -17,7 +20,8 @@ MACROS +=
 
 ## info
 ifndef INFO
-INFO =
+INFO = hello
+INFO_hello = print »$(HELLO)«
 define INFOADD
 endef
 else

@@ -1,18 +1,19 @@
 prefix = ..
-datadirs = ..
 makedir = $(prefix)/makefiles
 include $(makedir)/common.mk
+include $(makedir)/hello.mk
 
 ## source data files in this directory (wildcards allowed)
-DATA_HERE =
+DATA_HERE = *.dat
 ## source data files in datadirs (wildcards allowed)
+datadirs += $(prefix)/data
 DATA_LINK = *.dat
-DROPSUFFIX = .dat
 
 ## settings
+HELLO = Hello world!
 
 ## default targets
-all +=
+all += hello
 
 ## call macros
 $(call_macros)
