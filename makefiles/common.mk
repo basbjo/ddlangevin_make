@@ -6,6 +6,8 @@ RST2HTML = rst2html -t
 PDF2PNG ?= pdftoppm -png -l 1
 PDF2EPS ?= pdftops -eps -l 1
 # scripts
+NCOLS ?= $(SCR)/shape.sh -c
+NROWS ?= $(SCR)/shape.sh -r
 
 ## default target
 .SECONDEXPANSION:
@@ -15,6 +17,7 @@ all: $$(all)
 SCR ?= $(makedir)/scripts# scripts directory
 datadirs ?= $(prefix)# remote data directories
 DROPSUFFIX ?= # data filename suffix to be omitted in link names
+IF_FUTURE ?= 0# 1 if last column for follower, 0 else
 
 ## common variables
 SYMLINKS += $(DATALINKS)
@@ -129,3 +132,8 @@ ifeq (${keeppdf},true)
 endif
 
 ## common macros
+# numeric minimum or maximum of a list of words
+getmin = $(shell echo ${1}|tr ' ' '\n'|sort -n |head -1)
+getmax = $(shell echo ${1}|tr ' ' '\n'|sort -nr|head -1)
+# columns in file $(1) minus $(IF_FUTURE)
+fcols = $(shell echo $$(($$(${NCOLS} ${1}) - ${IF_FUTURE})))
