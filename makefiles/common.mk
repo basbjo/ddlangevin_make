@@ -1,3 +1,12 @@
+## programs
+PDFLATEX ?= pdflatex
+# Python Docutils
+RST2HTML = rst2html -t
+# Debian package poppler-utils
+PDF2PNG ?= pdftoppm -png -l 1
+PDF2EPS ?= pdftops -eps -l 1
+# scripts
+
 ## default target
 .SECONDEXPANSION:
 all: $$(all)
@@ -105,5 +114,18 @@ del_plots: del_latex
 .PRECIOUS: $$(PRECIOUS)
 
 ## common rules
+%.html : %.rst ; $(RST2HTML) $< $@
+
+%.eps : %.pdf ; $(PDF2EPS) $<
+
+%.png : %.pdf ; $(PDF2PNG) $< > $@
+
+%.pdf : %.tex ; $(PDFLATEX) -halt-on-error $* >/dev/null && $(RM) $*.aux $*.log
+
+# by default keep intermediate pdf files
+keeppdf ?= true
+ifeq (${keeppdf},true)
+	PRECIOUS += $(patsubst %.png,%.pdf,${PLOTS_LIST})
+endif
 
 ## common macros
