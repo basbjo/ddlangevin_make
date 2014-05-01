@@ -15,7 +15,7 @@ DROPSUFFIX =
 #see config.mk
 
 ## default targets
-all += cossin
+all += dpca
 
 ## call macros
 $(call_macros)

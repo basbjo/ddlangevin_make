@@ -5,6 +5,8 @@ RST2HTML = rst2html -t
 # Debian package poppler-utils
 PDF2PNG ?= pdftoppm -png -l 1
 PDF2EPS ?= pdftops -eps -l 1
+# Stock group
+FASTCA ?= fastca
 # scripts
 MINMAX ?= $(SCR)/minmax.sh -d" " -f "%9.6f"
 NCOLS ?= $(SCR)/shape.sh -c
