@@ -15,13 +15,13 @@ SHOWDATA += SAMPDATA
 ## default settings that must be changed before including this file
 
 ## variables
-SAMPDATA += $(foreach rfac,${REDUCTION_FACTORS},\
-	     $(addsuffix _ds${rfac},${DATA}))
+SAMPDATA += $(foreach rfac,${REDUCTION_FACTORS},$(addsuffix _ds${rfac},\
+	     $(patsubst %${SPLIT_DROPSUFFIX},%,${DATA})))
 
 ## rules
 # include also split.mk to split data
 define template_sampling
-%_ds$(1) : % | $$(splitdir)/%-01
+%_ds$(1) : %$(SPLIT_DROPSUFFIX) | $$(splitdir)/%-01
 	$$(SCR)/downsampling.sh $$(splitdir) $$* $(1) $(strip ${SPLIT_FUTURE})
 endef
 
