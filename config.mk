@@ -20,3 +20,9 @@ DIH_MAX_COL = 16
 
 ## save split pca data here to avoid recalculation
 splitdir ?= $(firstword ${datadirs})/splitdata-pca
+
+## minima and maxima as reference for ranges
+MINMAXFILE = $(prefix)/minmax
+
+## settings for 2D histograms
+HIST2D_LAST_COL = 3	# last column (optional, >1)

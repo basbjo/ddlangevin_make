@@ -5,6 +5,8 @@ RST2HTML = rst2html -t
 # Debian package poppler-utils
 PDF2PNG ?= pdftoppm -png -l 1
 PDF2EPS ?= pdftops -eps -l 1
+# TISEAN
+HIST2D ?= histo2d -V0 -b $(HIST_NBINS)
 # Stock group
 FASTCA ?= fastca
 # scripts
