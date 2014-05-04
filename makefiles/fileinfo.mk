@@ -41,6 +41,17 @@ define add-V01-V02
 	  $(addsuffix -V${nn1}-V${nn2}${2},${file}))))
 endef
 
+# number of plots for file $(1) with maximum $(2) columns and $(3) per plot
+nplots = $(call divide_ceil,$(call ncols,${1},${2}),${3})
+
+# for each file in $(1) list file_$(2)##$(3) up to the smallest integer to group
+# NCOLS_file or $(4)_LAST_COL columns in files with $(4)_PLOT_NCOLS columns
+define add_01
+  $(foreach file,${1},$(foreach nn,$(call range,\
+	  $(call nplots,${file},${${4}_LAST_COL},${${4}_PLOT_NCOLS})),\
+	  $(addsuffix ${2}${nn}${3},${file})))
+endef
+
 ## macros to be called later
 MACROS += fileinfo
 
