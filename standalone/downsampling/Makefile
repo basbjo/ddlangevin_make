@@ -1,7 +1,10 @@
 prefix = ../..
 datadirs = ..
 makedir = $(prefix)/makefiles
+#splitdir = $(firstword ${datadirs})/splitdata
 include $(makedir)/common.mk
+include $(makedir)/downsampling.mk
+include $(makedir)/split.mk
 
 ## source data files in this directory (wildcards allowed)
 DATA_HERE =
@@ -10,9 +13,14 @@ DATA_LINK = *.dat
 DROPSUFFIX = .dat
 
 ## settings
+SPLIT_FUTURE = 2
+# if 1: data is split into consecutive trajectories such
+#       that each series ends when the last column is 0
+# if 2: data is not split
+REDUCTION_FACTORS = 2
 
 ## default targets
-all +=
+all += downsampling
 
 ## call macros
 $(call_macros)
