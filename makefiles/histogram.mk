@@ -1,4 +1,4 @@
-.PHONY: calc calc_hist1d calc_hist2d\
+.PHONY: calc calc_hist1d calc_hist2d calc_fel1d\
 	plot plot_hist2d
 
 calc: calc_hist1d calc_hist2d
@@ -8,12 +8,15 @@ plot: plot_hist2d
 calc_hist1d: $$(HIST1D_DATA)
 calc_hist2d: $$(HIST2D_DATA)
 
+calc_fel1d: calc_hist1d $$(FEL1D_DATA)
+
 plot_hist2d: calc_hist2d $$(HIST2D_PLOT)
 
 ## default settings
 HIST_NBINS ?= 100# number of bins within reference range
 # default settings 1D histograms
 HIST1D_LAST_COL ?= 20# last column (optional)
+KTFACTOR ?= 1# factor for temperature rescaling
 # default settings 2D histograms
 HIST2D_LAST_COL ?= 3# last column (optional, >1)
 HIST2D_REFDIR ?= $(prefix)/histogram# reference data is searched here
@@ -29,6 +32,7 @@ histdir2d ?= histdata2d
 
 ## variables
 HIST1D_DATA = $(addprefix $(histdir1d)/,$(call add-V01,${DATA},.hist,HIST1D))
+FEL1D_DATA = $(addprefix $(histdir1d)/,$(call add-V01,${DATA},.fel1d,HIST1D))
 HIST2D_DATA = $(addprefix $(histdir2d)/,$(call add-V01-V02,${DATA},.hist,HIST2D))
 HIST2D_PLOT = $(addprefix hist2d_,$(call add-V01-V02,${DATA},.png,HIST2D))
 DIR_LIST += $(histdir1d) $(histdir2d)
@@ -54,6 +58,9 @@ $(histdir2d)/$(1)-V$(2)-V$(3).hist : $$(MINMAXFILE) $(1) | $$(histdir2d)
 	cat $$+ | $$(HIST2D) -c $(2),$(3) -o $$@
 endef
 
+$(histdir1d)/%.fel1d : $(histdir1d)/%.hist
+	$(SCR)/calc_fel1d.py $< "$(strip ${KTFACTOR})" > $@
+
 # histogram plotting
 hist2d_%.pdf : $(histdir2d)/%.hist $(SCR)/wrapper_heatmap.sh
 	@$(SCR)/wrapper_heatmap.sh $(HEATMAP) $(HIST2D_REFDIR) $< -o $@
@@ -73,10 +80,11 @@ endef
 
 ## info
 ifndef INFO
-INFO = calc calc_hist1d calc_hist2d plot plot_hist2d
+INFO = calc calc_hist1d calc_hist2d calc_fel1d plot plot_hist2d
 INFO_calc        = calls the two targets below
 INFO_calc_hist1d = calculate 1D histogram data
 INFO_calc_hist2d = calculate 2D histogram data
+INFO_calc_fel1d  = calculate 1D free energy landscape
 INFO_plot = calls the two targets below
 INFO_plot_hist2d = plot 2D histograms
 define INFOADD
@@ -95,4 +103,4 @@ PRECIOUS +=
 ## clean
 PLOTS_LIST += $(HIST2D_PLOT)
 CLEAN_LIST += */*.tmp[0-9]*[0-9]
-PURGE_LIST += $(HIST1D_DATA) $(HIST2D_DATA)
+PURGE_LIST += $(HIST1D_DATA) $(HIST2D_DATA) $(FEL1D_DATA)

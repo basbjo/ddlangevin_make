@@ -18,6 +18,7 @@ DROPSUFFIX = .dat
 IF_FUTURE = 0           # 1 if last column for follower, 0 else
 # settings for 1D histograms
 HIST1D_LAST_COL = 20	# last column (optional)
+KTFACTOR = 1            # factor for temperature rescaling
 # settings for 2D histograms
 HIST2D_LAST_COL = 3	# last column (optional, >1)
 
