@@ -2,7 +2,6 @@ prefix = ..
 datadirs = ..
 makedir = $(prefix)/makefiles
 include $(makedir)/common.mk
-include $(makedir)/template.mk
 
 ## source data files in this directory (wildcards allowed)
 DATA_HERE =
@@ -13,7 +12,7 @@ DROPSUFFIX = .dat
 ## settings
 
 ## default targets
-all += target
+all +=
 
 ## call macros
 $(call_macros)

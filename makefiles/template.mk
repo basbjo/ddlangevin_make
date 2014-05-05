@@ -1,5 +1,4 @@
-.PHONY: target
-target:
+.PHONY:
 
 ## default settings
 
@@ -18,16 +17,12 @@ MACROS +=
 
 ## info
 ifndef INFO
-INFO = target
+INFO =
 define INFOADD
-
-Further information
-
 endef
 else
-INFOend += target
+INFOend +=
 endif
-INFO_target = description
 
 ## keep intermediate files
 PRECIOUS +=
