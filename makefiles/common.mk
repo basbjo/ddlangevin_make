@@ -7,6 +7,9 @@ SCR ?= $(makedir)/scripts# scripts directory
 
 ## common variables
 
+## source data files
+DATA += $(wildcard ${DATA_HERE})
+
 ## common phony targets
 .PHONY: all
 
