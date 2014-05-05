@@ -50,7 +50,7 @@ endef
 
 define INFO_common
 Common targets: info, show, showconf, showdata, showmacros,
-  mksymlinks, rmsymlinks, clean, purge.
+  mksymlinks, rmsymlinks, clean, del_latex, del_plots, purge.
 endef
 
 info: ;@true
@@ -87,12 +87,20 @@ rmsymlinks:
 clean:
 	$(if $(wildcard ${CLEAN_LIST}),$(RM) $(wildcard ${CLEAN_LIST}))
 
-purge: rmsymlinks clean
+purge: rmsymlinks clean del_plots
 	$(if $(wildcard ${PURGE_LIST}),$(RM) $(wildcard ${PURGE_LIST}))
 	@$(RM) .data
 
+del_latex:
+	$(RM) $(wildcard $(foreach suffix,tex aux log,\
+		$(addsuffix .${suffix},$(basename ${PLOTS_LIST}))))
+
+del_plots: del_latex
+	$(RM) $(wildcard ${PLOTS_LIST} $(foreach suffix,pdf png,\
+		$(addsuffix .${suffix},$(basename ${PLOTS_LIST}))))
+
 .PHONY: all info show showconf showdata showmacros\
-	mksymlinks rmsymlinks clean purge
+	mksymlinks rmsymlinks clean purge del_latex del_plots
 
 .PRECIOUS: $$(PRECIOUS)
 

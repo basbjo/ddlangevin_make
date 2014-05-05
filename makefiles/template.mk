@@ -33,5 +33,6 @@ INFO_target = description
 PRECIOUS +=
 
 ## clean
+PLOTS_LIST +=
 CLEAN_LIST +=
 PURGE_LIST +=
