@@ -1,7 +1,9 @@
-.PHONY: cossin dpca
+.PHONY: cossin dpca plot
 dpca: $$(PCADATA)
 
 cossin: $$(COSSINDATA)
+
+plot: dpca $$(CVARPLOT)
 
 ## default settings
 PCA_FUTURE ?= $(or ${IF_FUTURE},0)
@@ -18,6 +20,8 @@ SHOWDATA +=
 COSSINDATA += $(addsuffix .cossin,${DATA})
 # projected data from principal component analysis
 PCADATA += $(addsuffix .pca,${COSSINDATA})
+# plot of cumulative variances (eigenvalues)
+CVARPLOT = $(addsuffix .eigval.png,${COSSINDATA})
 # minima and maxima as reference for ranges
 MINMAXALL = $(PCADATA)
 
@@ -43,14 +47,18 @@ define appendlastcol_command
 	  mv $< $@)
 endef
 
+%.eigval.tex : %.pca $(SCR)/plot_cumulative.py
+	$(SCR)/plot_cumulative.py $(basename $@)
+
 ## macros to be called later
 MACROS +=
 
 ## info
 ifndef INFO
-INFO = cossin dpca clean
+INFO = cossin dpca plot clean
 INFO_cossin = create cos-/sin-transformed data
 INFO_dpca   = dihedral principal component analysis
+INFO_plot   = plot cumulative variances
 INFO_clean  = delete cos-/sin-transformed data
 define INFOADD
 endef
@@ -62,7 +70,7 @@ endif
 PRECIOUS += $(COSSINDATA)
 
 ## clean
-PLOTS_LIST +=
+PLOTS_LIST += $(CVARPLOT)
 CLEAN_LIST += $(COSSINDATA) $(addsuffix .tmp,${PCADATA})
 PURGE_LIST += $(foreach suffix,pca cov eigvec eigval,\
 	      $(addsuffix .${suffix},${COSSINDATA}))
