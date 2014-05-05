@@ -31,3 +31,7 @@ INFO_target = description
 
 ## keep intermediate files
 PRECIOUS +=
+
+## clean
+CLEAN_LIST +=
+PURGE_LIST +=

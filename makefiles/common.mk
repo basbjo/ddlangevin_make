@@ -9,6 +9,8 @@ DROPSUFFIX ?= # data filename suffix to be omitted in link names
 
 ## common variables
 SYMLINKS += $(DATALINKS)
+CLEAN_LIST +=
+PURGE_LIST +=
 
 ## macros to be called later
 MACROS += rule_data_links
@@ -48,7 +50,7 @@ endef
 
 define INFO_common
 Common targets: info, show, showconf, showdata, showmacros,
-  mksymlinks, rmsymlinks.
+  mksymlinks, rmsymlinks, clean, purge.
 endef
 
 info: ;@true
@@ -82,8 +84,15 @@ rmsymlinks:
 		[ -h ${file} ] && echo yes),${file}))
 	@$(RM) .data
 
+clean:
+	$(if $(wildcard ${CLEAN_LIST}),$(RM) $(wildcard ${CLEAN_LIST}))
+
+purge: rmsymlinks clean
+	$(if $(wildcard ${PURGE_LIST}),$(RM) $(wildcard ${PURGE_LIST}))
+	@$(RM) .data
+
 .PHONY: all info show showconf showdata showmacros\
-	mksymlinks rmsymlinks
+	mksymlinks rmsymlinks clean purge
 
 .PRECIOUS: $$(PRECIOUS)
 
