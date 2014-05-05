@@ -6,6 +6,7 @@ RST2HTML = rst2html -t
 PDF2PNG ?= pdftoppm -png -l 1
 PDF2EPS ?= pdftops -eps -l 1
 # scripts
+MINMAX ?= $(SCR)/minmax.sh -d" " -f "%9.6f"
 NCOLS ?= $(SCR)/shape.sh -c
 NROWS ?= $(SCR)/shape.sh -r
 
@@ -18,14 +19,16 @@ SCR ?= $(makedir)/scripts# scripts directory
 datadirs ?= $(prefix)# remote data directories
 DROPSUFFIX ?= # data filename suffix to be omitted in link names
 IF_FUTURE ?= 0# 1 if last column for follower, 0 else
+MINMAXFILE ?= minmax# minima and maxima as reference for ranges
+MINMAXALL ?= $(DATA)# all files considered for minima and maxima
 
 ## common variables
 SYMLINKS += $(DATALINKS)
 CLEAN_LIST +=
-PURGE_LIST +=
+PURGE_LIST += $(notdir ${MINMAXFILE})
 
 ## macros to be called later
-MACROS += rule_data_links
+MACROS += rule_data_links rule_minmax
 
 ## macro to call several macros later
 define call_macros
@@ -130,6 +133,26 @@ keeppdf ?= true
 ifeq (${keeppdf},true)
 	PRECIOUS += $(patsubst %.png,%.pdf,${PLOTS_LIST})
 endif
+
+# minima and maxima as reference for ranges
+%.minmax : %
+	$(MINMAX) $< > $@
+define template_minmax
+$(1): $$(MINMAXALL)
+	$$(if $$+,$$(MINMAX) $$+ > $$@)
+endef
+# apply this rule only in current directory
+# MINMAXALL in showdata only if MINMAXFILE in current directory
+# MINMAXFILE in info only if also MINMAXALL is non empty, however
+#  »INFO += minmax« is sufficient to always show the description
+define rule_minmax
+$(if ${MINMAXALL},$(eval $(call template_minmax,$(notdir ${MINMAXFILE}))))\
+$(if $(patsubst ./,,$(dir ${MINMAXFILE})),$(eval SHOWDATA += MINMAXFILE)\
+,$(if ${MINMAXFILE},$(eval SHOWDATA += MINMAXFILE MINMAXALL)\
+  $(if ${MINMAXALL},$(eval INFOend += $(patsubst ./%,%,${MINMAXFILE})))\
+  $(if ${INFO_$(patsubst ./%,%,${MINMAXFILE})},,$(eval\
+INFO_$(patsubst ./%,%,${MINMAXFILE}) = minima/maxima as reference for ranges))))
+endef
 
 ## common macros
 # numeric minimum or maximum of a list of words
