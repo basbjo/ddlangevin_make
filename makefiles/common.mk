@@ -27,7 +27,7 @@ MINMAXALL ?= $(DATA)# all files considered for minima and maxima
 ## common variables
 SYMLINKS += $(DATALINKS)
 CLEAN_LIST +=
-PURGE_LIST += $(notdir ${MINMAXFILE})
+PURGE_LIST += $(notdir ${MINMAXFILE}) $(SPLIT_WILD)
 
 ## macros to be called later
 MACROS += rule_data_links rule_minmax
@@ -106,6 +106,9 @@ clean:
 
 purge: rmsymlinks clean del_plots
 	$(if $(wildcard ${PURGE_LIST}),$(RM) $(wildcard ${PURGE_LIST}))
+	$(if $(wildcard $(filter-out .,${DIR_LIST})),\
+		rmdir --ignore-fail-on-non-empty $(wildcard\
+		$(filter-out .,${DIR_LIST})))
 	@$(RM) .data
 
 del_latex:
@@ -116,8 +119,14 @@ del_plots: del_latex
 	$(RM) $(wildcard ${PLOTS_LIST} $(foreach suffix,pdf png,\
 		$(addsuffix .${suffix},$(basename ${PLOTS_LIST}))))
 
+del_split:
+	$(if $(wildcard ${SPLIT_WILD}),$(RM) $(wildcard ${SPLIT_WILD}))
+	$(if $(wildcard ${splitdir}),$(if $(shell\
+		[ -d ${splitdir} ] && [ . != ${splitdir} ] && echo yes),\
+		rmdir --ignore-fail-on-non-empty ${splitdir}))
+
 .PHONY: all info show showconf showdata showmacros\
-	mksymlinks rmsymlinks clean purge del_latex del_plots
+	mksymlinks rmsymlinks clean purge del_latex del_plots del_split
 
 .PRECIOUS: $$(PRECIOUS)
 
