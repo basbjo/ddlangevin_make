@@ -97,7 +97,7 @@ showmacros: ;@true
 mksymlinks: $$(SYMLINKS)
 
 rmsymlinks:
-	$(RM) $(foreach file,${SYMLINKS},$(if $(shell\
+	$(RM) $(foreach file,${SYMLINKS} ${SAMPDATA},$(if $(shell\
 		[ -h ${file} ] && echo yes),${file}))
 	@$(RM) .data
 
