@@ -160,3 +160,9 @@ getmin = $(shell echo ${1}|tr ' ' '\n'|sort -n |head -1)
 getmax = $(shell echo ${1}|tr ' ' '\n'|sort -nr|head -1)
 # columns in file $(1) minus $(IF_FUTURE)
 fcols = $(shell echo $$(($$(${NCOLS} ${1}) - ${IF_FUTURE})))
+# range from 1 to $(1) in format "%02d"
+range = $(shell i=1; while [ "$(1)" != "" ] && [ $$i -le $(1) ]; do \
+	printf -- "%02d\n" $$i; i=`expr $$i + 1`; done)
+# range from 1 to ($1)-1 in format "%02d"
+rangeto = $(shell i=1; while [ "$(1)" != "" ] && [ $$i -lt $(1) ]; do \
+	  printf -- "%02d\n" $$i; i=`expr $$i + 1`; done)

@@ -23,6 +23,24 @@ define NCOLS_template
   NCOLS_$(1) = $(call fcols,${1})
 endef
 
+# columns in file $(1) minus $(IF_FUTURE), or $(2) if specified and smaller
+ncols = $(call getmin,${NCOLS_${1}} ${2})
+
+# for each file in $(1) list file-V##$(2) up to NCOLS_file or $(3)_LAST_COL
+define add-V01
+  $(foreach file,${1},$(foreach nn,$(call range,\
+	  $(call ncols,${file},${${3}_LAST_COL})),\
+	  $(addsuffix -V${nn}${2},${file})))
+endef
+
+# for each file in $(1) list file-V##-V##$(2) up to NCOLS_file or $(3)_LAST_COL
+define add-V01-V02
+  $(foreach file,${1},$(foreach nn2,\
+	  $(call range,$(call ncols,${file},${${3}_LAST_COL})),\
+	  $(foreach nn1,$(call rangeto,${nn2}),\
+	  $(addsuffix -V${nn1}-V${nn2}${2},${file}))))
+endef
+
 ## macros to be called later
 MACROS += fileinfo
 
