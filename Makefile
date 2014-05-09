@@ -3,6 +3,7 @@ datadirs = .
 include $(prefix)/config.mk
 include $(makedir)/common.mk
 include $(makedir)/readme.mk
+include $(makedir)/dpca.mk
 
 ## source data files in this directory (wildcards allowed)
 DATA_HERE = $(RAWDATA)
@@ -14,7 +15,7 @@ DROPSUFFIX =
 #see config.mk
 
 ## default targets
-all += doc
+all += cossin
 
 ## call macros
 $(call_macros)

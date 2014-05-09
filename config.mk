@@ -8,3 +8,8 @@ RAWDATA = alldih*_1$(TIME_UNIT)
 # data format: "[time] dihedral_angles... [future]"
 #      future: 0 at end of trajectory / 1 else
 IF_FUTURE ?= 1# 1 with future column, 0 else
+
+## first and last column to be selected from source data for dPCA
+# WARNING: recreate all affected data manually after changes
+DIH_MIN_COL = 7
+DIH_MAX_COL = 16
