@@ -13,3 +13,6 @@ IF_FUTURE ?= 1# 1 with future column, 0 else
 # WARNING: recreate all affected data manually after changes
 DIH_MIN_COL = 7
 DIH_MAX_COL = 16
+
+## save split pca data here to avoid recalculation
+splitdir ?= $(firstword ${datadirs})/splitdata-pca
