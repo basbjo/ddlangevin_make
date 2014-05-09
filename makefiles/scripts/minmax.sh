@@ -70,7 +70,7 @@ else
     cat /dev/stdin
 fi |
 grep -v "^[$COMMENT_CHARS]" |
-awk -v OFMT="$OFMT" -v OFS="$OFS" -v isfirstline=1 '
+awk -v OFMT="$OFMT" -v OFS="$OFS" -v isfirstline=1 -v script="$SCRIPTNAME" '
 {
 
     # get first values
@@ -97,8 +97,16 @@ awk -v OFMT="$OFMT" -v OFS="$OFS" -v isfirstline=1 '
             max[i] = $i
         }
     }
+    if(! (NR % 10000))
+    {
+        printf("\r%s: lines processed: %d", script, NR) > "/dev/stderr"
+    }
 }
 END {
+    if(NR>=10000) {
+        printf("\n") > "/dev/stderr"
+    }
+
     # print minima
     for(i=1; i<=ncols; i++) {
         printf(OFS OFMT, min[i])
