@@ -27,7 +27,7 @@ MINMAXALL ?= $(DATA)# all files considered for minima and maxima
 ## common variables
 SYMLINKS += $(DATALINKS)
 CLEAN_LIST +=
-PURGE_LIST += $(notdir ${MINMAXFILE}) $(SPLIT_WILD)
+PURGE_LIST += $(notdir ${MINMAXFILE} ${MINMAXFILE}.old) $(SPLIT_WILD)
 
 ## macros to be called later
 MACROS += rule_data_links rule_minmax
@@ -150,7 +150,9 @@ endif
 	$(MINMAX) $< > $@
 define template_minmax
 $(1): $$(MINMAXALL)
-	$$(if $$+,$$(MINMAX) $$+ > $$@)
+	$$(if $$(and $$?,$$(wildcard $$@)),\
+		cp -p $$@ $$@.old; $$(MINMAX) $$@.old $$? > $$@,\
+		$$(if $$?, $$(MINMAX) $$? > $$@))
 endef
 # apply this rule only in current directory
 # MINMAXALL in showdata only if MINMAXFILE in current directory
