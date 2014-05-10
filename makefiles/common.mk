@@ -41,7 +41,7 @@ endef
 DATA += $(sort $(wildcard ${DATA_HERE}) ${DATALINKS})#without repetitions
 REMOTEDATA += $(foreach wildcard,${DATA_LINK},$(foreach dir,${datadirs},\
 	      $(wildcard ${dir}/${wildcard})))
-DATALINKS = $(notdir $(patsubst %${DROPSUFFIX},%,${REMOTEDATA}))
+DATALINKS = $(notdir $(patsubst %$(strip ${DROPSUFFIX}),%,${REMOTEDATA}))
 SHOWDATA += DATA datadirs DROPSUFFIX REMOTEDATA# to be shown by showdata
 
 # symbolic links to source data files
@@ -51,7 +51,7 @@ $(1): $(2)
 endef
 define rule_data_links
 $(foreach file,${REMOTEDATA},$(eval $(call template_data_links,\
-	$(notdir $(patsubst %${DROPSUFFIX},%,${file})),${file})))
+	$(notdir $(patsubst %$(strip ${DROPSUFFIX}),%,${file})),${file})))
 endef
 
 # reread makefiles after creating links
