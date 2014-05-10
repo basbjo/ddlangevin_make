@@ -31,6 +31,10 @@ define INFOADD
 To extract say 3 columns from a data file, call »make file.3cols«.
 If IF_FUTURE is 1, also the last column of the file is appended.
 
+Save Langevin trajectories of a data file to »file.detail.lang«
+manually.  The detail commonly reflects the options, for options
+»-m5« and »-k50« the results may be saved to »file.m5.k50.lang«.
+
 endef
 else
 INFOend +=
