@@ -43,40 +43,36 @@ name=$2
 n=$3
 iffuture=$4
 
-# if last column denotes end of trajectories
-if [ ${iffuture} -eq 1 ]
-then
-    # denote end of trajectories by a 0
-    sedscr='$s/ 1 *$/ 0/'
-else
-    # do nothing
-    sedopt='-n'
-    sedscr='p'
-fi
-
 # down sampling
 find -type f -regex "./${name}_ds${n}\(-[0-9]*\)?" -delete
-start=1 # take first value of n values first
-while [ ${start} -le ${n} ]
-do
-    if [ ${iffuture} -eq 1 ]
-    then
-        find -L ${dir} -type f -regex ${dir}/${name}-[0-9]\* | sort
-    else
-        echo ${name}
-    fi \
-        | while read file
-          do
-              awk -vn=${n} -vstart=${start} '
-              !/^#/ {
-                  if(! ((NR-start) % n)) {
-                      print $0
-                  }
-              }' "$file" | sed ${sedopt} "${sedscr}" \
-                  >> `printf "%s_ds%d-%02d" ${name} ${n} ${start}`
-          done
-    start=`expr ${start} + 1`
-done
+if [ ${iffuture} -eq 1 ]
+then
+    find -L ${dir} -type f -regex ${dir}/${name}-[0-9]\* | sort
+else
+    echo ${name}
+fi \
+    | while read file
+        do
+            # down sampling
+            fileroot=`printf "%s_ds%d" ${name} ${n}`
+            awk -vn=${n} -vfileroot=${fileroot} '
+            !/^#/ {
+                print $0 >>sprintf("%s-%02d", fileroot, (((NR-1) % n) + 1) )
+            }' "${file}"
+
+            # if last column denotes end of trajectories
+            if [ ${iffuture} -eq 1 ]
+            then
+                # denote end of trajectories by a 0
+                sedscr='$s/ 1 *$/ 0/'
+                start=1
+                while [ ${start} -le ${n} ]
+                do
+                    sed -i "${sedscr}" `printf "%s_ds%d-%02d" ${name} ${n} ${start}`
+                    start=`expr ${start} + 1`
+                done
+            fi
+        done
 cat ${name}_ds${n}-[0-9]*[0-9] > ${name}_ds${n}
 
 exit $EXIT_SUCCESS
