@@ -25,7 +25,7 @@ MACROS += rule_langevin
 
 ## info
 ifndef INFO
-INFO =
+INFO = split
 define INFOADD
 
 To extract say 3 columns from a data file, call »make file.3cols«.
