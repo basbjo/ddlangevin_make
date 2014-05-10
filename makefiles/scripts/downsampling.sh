@@ -58,6 +58,14 @@ fi \
             awk -vn=${n} -vfileroot=${fileroot} '
             !/^#/ {
                 print $0 >>sprintf("%s-%02d", fileroot, (((NR-1) % n) + 1) )
+                if(! (NR % 10000)) {
+                    printf("\r%s: lines processed: %d", FILENAME, NR) > "/dev/stderr"
+                }
+            }
+            END {
+                if(NR>=10000) {
+                    printf("\n") > "/dev/stderr"
+                }
             }' "${file}"
 
             # if last column denotes end of trajectories
@@ -73,6 +81,7 @@ fi \
                 done
             fi
         done
-cat ${name}_ds${n}-[0-9]*[0-9] > ${name}_ds${n}
+echo "cat ${name}_ds${n}-[0-9]*[0-9] > ${name}_ds${n}"
+eval "cat ${name}_ds${n}-[0-9]*[0-9] > ${name}_ds${n}"
 
 exit $EXIT_SUCCESS
