@@ -55,31 +55,32 @@ fi \
         do
             # down sampling
             fileroot=`printf "%s_ds%d" ${name} ${n}`
-            awk -vn=${n} -vfileroot=${fileroot} '
+            awk -vn=${n} -vfileroot=${fileroot} -viffuture=${iffuture} '
             !/^#/ {
-                print $0 >>sprintf("%s-%02d", fileroot, (((NR-1) % n) + 1) )
-                if(! (NR % 10000)) {
-                    printf("\r%s: lines processed: %d", FILENAME, NR) > "/dev/stderr"
+                counter++
+                traj = ((counter-1) % n) + 1
+                if(last[traj] != "") {
+                    print last[traj] >>sprintf("%s-%02d", fileroot, traj)
+                }
+                last[traj] = $0
+
+                if(! (counter % 10000)) {
+                    printf("\r%s: lines processed: %d", FILENAME, counter) > "/dev/stderr"
                 }
             }
             END {
-                if(NR>=10000) {
+                if(counter>=10000) {
                     printf("\n") > "/dev/stderr"
                 }
+                for(traj=1;traj<=n;traj++) {
+                    if(last[traj] != "") {
+                        if(iffuture == 1) {
+                            sub(" 1$"," 0",last[traj])
+                        }
+                        print last[traj] >>sprintf("%s-%02d", fileroot, traj)
+                    }
+                }
             }' "${file}"
-
-            # if last column denotes end of trajectories
-            if [ ${iffuture} -eq 1 ]
-            then
-                # denote end of trajectories by a 0
-                sedscr='$s/ 1 *$/ 0/'
-                start=1
-                while [ ${start} -le ${n} ]
-                do
-                    sed -i "${sedscr}" `printf "%s_ds%d-%02d" ${name} ${n} ${start}`
-                    start=`expr ${start} + 1`
-                done
-            fi
         done
 echo "cat ${name}_ds${n}-[0-9]*[0-9] > ${name}_ds${n}"
 eval "cat ${name}_ds${n}-[0-9]*[0-9] > ${name}_ds${n}"
