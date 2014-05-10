@@ -54,7 +54,7 @@ if(! (NR % 10000)) {\
 endef
 
 ## macros to be called later
-MACROS +=
+#MACROS +=
 
 ## info
 ifndef INFO
