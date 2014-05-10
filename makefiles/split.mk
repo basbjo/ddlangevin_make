@@ -14,7 +14,7 @@ splitdir ?= splitdata
 
 ## variables
 SPLIT_LIST ?= $(DATA)
-SPLIT_DROP = $(patsubst %${SPLIT_DROPSUFFIX},%,$(wildcard ${SPLIT_LIST}))
+SPLIT_DROP = $(patsubst %$(strip ${SPLIT_DROPSUFFIX}),%,$(wildcard ${SPLIT_LIST}))
 SPLIT_DATA = $(addsuffix -01,$(addprefix ${splitdir}/,${SPLIT_DROP}))
 DIR_LIST += $(splitdir)
 
@@ -25,7 +25,7 @@ $(splitdir):
 # split data into consecutive trajectories / in two parts
 # - end of each series when last column is 0
 # - if SPLIT_FUTURE==0 split trajectory into two
-$(splitdir)/%-01 : %$$(SPLIT_DROPSUFFIX) | $$(splitdir)
+$(splitdir)/%-01 : %$$(strip $${SPLIT_DROPSUFFIX}) | $$(splitdir)
 	@$(split_command)
 
 define split_command
