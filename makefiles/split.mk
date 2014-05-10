@@ -34,6 +34,7 @@ define split_command
 	  awk 'BEGIN { i=1 } !/^#/ {\
 	      print $$0 >sprintf("$(@D)/$*-%02d", i);\
 	      if ($$NF==0) i++;\
+	      $(awk_status)\
 	  }' $<)
   $(if $(shell [ ${SPLIT_FUTURE} -eq 0 ] && echo yes),\
 	  $(info Split file $< in two parts $(@D)/$*-##.)\
@@ -42,7 +43,14 @@ define split_command
 	      count++;\
 	      print $$0 >sprintf("$(@D)/$*-%02d", i);\
 	      if (count==half) i++;\
+	      $(awk_status)\
 	  }' $<)
+endef
+
+define awk_status
+if(! (NR % 10000)) {\
+	printf("\rsplit: lines processed: %d", NR) > "/dev/stderr";\
+}} END { if(NR>=10000) { printf("\n") > "/dev/stderr" }
 endef
 
 ## macros to be called later
