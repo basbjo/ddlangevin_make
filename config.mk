@@ -9,8 +9,9 @@ RAWDATA = alldih*_1$(TIME_UNIT)
 #      future: 0 at end of trajectory / 1 else
 IF_FUTURE ?= 1# 1 with future column, 0 else
 
-## factors for downsampling
-REDUCTION_FACTORS = 2
+## data and factors for downsampling
+SAMPORIG = $(RAWDATA)
+REDUCTION_FACTORS = 5
 
 ## first and last column to be selected from source data for dPCA
 # WARNING: recreate all affected data manually after changes
