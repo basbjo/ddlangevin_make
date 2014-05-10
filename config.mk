@@ -4,7 +4,8 @@ makedir = $(prefix)/makefiles
 ## source data
 TIME_UNIT = ps
 RAWDATA = alldih*_1$(TIME_UNIT)
-# name format: <unique name without dots>[.suffixes]_<num>$(TIME_UNIT)
+# name format: <first part>_<num>$(TIME_UNIT)[<second part>]
+#      the occurance of _<num>$(TIME_UNIT) must be unique
 # data format: "[time] dihedral_angles... [future]"
 #      future: 0 at end of trajectory / 1 else
 IF_FUTURE ?= 1# 1 with future column, 0 else

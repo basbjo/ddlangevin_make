@@ -43,16 +43,25 @@ infile=$3
 shift ${NARGS_NEEDED}
 options=$*
 suffix=$(echo ${infile}|egrep -o -- '-V[0-9]+-V[0-9]+(\..*)?')
-base=${infile/${suffix}/}
-reffiles=$(echo ${refdir}/${base%%.*}*${suffix})
-reffile=${reffiles%% *} # consider one file only
+# omit suffixes until a reference file is found in refdir
+pattern=${infile/${suffix}/}
+while [[ "${reffile}" == "" ]] && [[ "${pattern}" != "" ]]
+do
+    reffile=$(find -L ${refdir} -type f -regex ${refdir}/${pattern}${suffix})
+    if [[ ${pattern%.*} == ${pattern} ]]
+    then
+        # stop searching if no reference file exists
+        break
+    fi
+    pattern=${pattern%.*}
+done
 
 # plot title
 name=$(basename ${infile})
 title="-t \"${TITLESTART} ${name%.*}\""
 
 # reference file to set z-range
-if [ -f ${reffile} ]
+if [[ "${reffile}" != "" ]]
 then
     zref="--z-ref ${reffile}"
 fi
