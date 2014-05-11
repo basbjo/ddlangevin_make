@@ -8,6 +8,7 @@ RAWDATA = alldih*_1$(TIME_UNIT)
 # data format: "[time] dihedral_angles... [future]"
 #      future: 0 at end of trajectory / 1 else
 IF_FUTURE ?= 1# 1 with future column, 0 else
+SHOWDATA += RAWDATA
 
 ## data and factors for downsampling
 SAMPORIG = $(RAWDATA)

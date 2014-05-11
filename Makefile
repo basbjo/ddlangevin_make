@@ -16,7 +16,7 @@ DROPSUFFIX =
 ## settings
 #see config.mk
 SPLIT_DROPSUFFIX = .cossin.pca
-SPLIT_LIST = *$(SPLIT_DROPSUFFIX)
+SPLIT_LIST = $(addsuffix *${SPLIT_DROPSUFFIX},${RAWDATA})
 
 ## default targets
 all += dpca minmax
