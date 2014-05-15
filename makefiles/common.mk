@@ -6,6 +6,7 @@ RST2HTML = rst2html -t
 PDF2PNG ?= pdftoppm -png -l 1
 PDF2EPS ?= pdftops -eps -l 1
 # TISEAN
+HIST1D ?= histogram -V0 -b $(HIST_NBINS)
 HIST2D ?= histo2d -V0 -b $(HIST_NBINS)
 # Stock group
 FASTCA ?= fastca

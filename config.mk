@@ -24,5 +24,8 @@ splitdir ?= $(firstword ${datadirs})/splitdata-pca
 ## minima and maxima as reference for ranges
 MINMAXFILE = $(prefix)/minmax
 
+## settings for 1D histograms
+HIST1D_LAST_COL = 20	# last column (optional)
+
 ## settings for 2D histograms
 HIST2D_LAST_COL = 3	# last column (optional, >1)
