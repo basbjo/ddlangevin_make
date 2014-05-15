@@ -13,6 +13,7 @@ FASTCA ?= fastca
 MINMAX ?= $(SCR)/minmax.sh -d" " -f "%9.6f"
 NCOLS ?= $(SCR)/shape.sh -c
 NROWS ?= $(SCR)/shape.sh -r
+HEATMAP ?= $(SCR)/heatmap.py
 
 ## default target
 .SECONDEXPANSION:
