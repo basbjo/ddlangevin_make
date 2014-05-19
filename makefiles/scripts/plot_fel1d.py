@@ -48,7 +48,8 @@ for setting in settings:
 outfilenameroot = "%s.%s_%02d" % (filenameroot, suffix, nthplot)
 d = []
 for i in range(ncols):
-    d.append(Gnuplot.Data(data[i], title=('V%s' % str(i+offset+1))))
+    d.append(Gnuplot.Data(data[i], cols=(0,1,2),
+        title=('V%s' % str(i+offset+1))))
 g('set style data yerrorlines')
 g('set output "%s"' % (outfilenameroot+'e.tex'))
 g.plot(*d)

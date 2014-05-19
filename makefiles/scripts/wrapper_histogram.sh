@@ -1,6 +1,6 @@
 #!/bin/bash
 #Calculate averaged 1D histogram file-V#.hist from file-##
-#Uses av_second_cols.awk
+#Uses av_second_column.py
 
 SCRIPTNAME=$(basename $0 .sh)
 EXIT_SUCCESS=0
@@ -8,8 +8,6 @@ EXIT_FAILURE=1
 EXIT_ERROR=2
 NARGS=$#
 NARGS_NEEDED=6
-
-DELIMITER=" "
 
 function usage {
     echo -e "
@@ -53,6 +51,12 @@ shift ${NARGS_NEEDED}
 options=$*
 outfile=${outdir}/${name}-V${column}.hist
 
+# test histogram version (need patch with option -r)
+${program} histogram -h 2>&1 | grep -q -- '-r reference file for binning' || {
+    echo "Wrong histogram version! Option '-r' needed." >&2
+    exit $EXIT_ERROR
+}
+
 # calculate histograms for each trajectory
 find -L ${splitdir} -regex "[./]*${splitdir}/${name}-[0-9]+" | while read traj
 do
@@ -63,8 +67,7 @@ do
         ${program} -c${column} ${options} ${traj} -o ${outfile}.tmp${num}
     elif [ -f ${minmax} ] && [ $(wc -l ${minmax}|awk '{print $1}') -eq 2 ]
     then
-        cat ${minmax} ${traj}\
-            | ${program} -c${column} ${options} -o ${outfile}.tmp${num}
+        ${program} -c${column} ${options} -r ${minmax} ${traj} -o ${outfile}.tmp${num}
     else
         echo "Error: »${minmax}« does not exist or has wrong format." >&2
         exit $EXIT_ERROR
@@ -73,9 +76,7 @@ done || exit $EXIT_ERROR
 
 # paste and average
 echo "Calculate histogram for ${name}, col ${column}, average"
-paste -d"${DELIMITER}" ${outfile}.tmp[0-9]*[0-9] \
-    | ${scripts}/av_second_cols.awk \
-    > ${outfile} &&
+${scripts}/av_second_column.py ${outfile}.tmp[0-9]*[0-9] > ${outfile} &&
     find -type f -regex "[./]*${outfile}.tmp[0-9]+" -delete
 
 exit $EXIT_SUCCESS
