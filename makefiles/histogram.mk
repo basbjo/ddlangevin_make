@@ -57,10 +57,7 @@ endef
 
 define template_calc2d
 $(histdir2d)/$(1)-V$(2)-V$(3).hist : $$(MINMAXFILE) $(1) | $$(histdir2d)
-	$$(if $$(wildcard $${MINMAXFILE}),$$(if $$(shell\
-		[ $$(shell $${NROWS} $$<) -eq 2 ] || echo false),\
-		$$(error Error: »$${MINMAXFILE}« has wrong format)))
-	cat $$+ | $$(HIST2D) -c $(2),$(3) -o $$@
+	$$(HIST2D) -c $(2),$(3) $$(if $${MINMAXFILE},-r )$$+ -o $$@
 endef
 
 $(histdir1d)/%.fel1d : $(histdir1d)/%.hist $$(MINMAXFILE)
