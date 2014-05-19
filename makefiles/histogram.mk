@@ -63,8 +63,12 @@ $(histdir2d)/$(1)-V$(2)-V$(3).hist : $$(MINMAXFILE) $(1) | $$(histdir2d)
 	cat $$+ | $$(HIST2D) -c $(2),$(3) -o $$@
 endef
 
-$(histdir1d)/%.fel1d : $(histdir1d)/%.hist
-	$(SCR)/calc_fel1d.py $< "$(strip ${KTFACTOR})" > $@
+$(histdir1d)/%.fel1d : $(histdir1d)/%.hist $$(MINMAXFILE)
+	$(calc_fel1d_command)
+
+define calc_fel1d_command
+$(SCR)/calc_fel1d.py $<  "$(strip ${MINMAXFILE})" "$(strip ${KTFACTOR})" > $@
+endef
 
 # histogram plotting
 define template_plot1d
