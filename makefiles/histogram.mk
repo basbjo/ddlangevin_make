@@ -75,12 +75,13 @@ $(1).fel1d_$(2)%.tex : $$(SCR)/plot_fel1d.py $$(addprefix $${histdir1d}/,\
 		$(2) $$(NCOLS_${1}_HIST1D) "$$(strip $${HIST1D_YRANGE})"
 endef
 
-hist2d_%.pdf : $(histdir2d)/%.hist $(SCR)/wrapper_heatmap.sh
+hist2d_%.pdf : $(histdir2d)/%.hist $$(MINMAXFILE) $(SCR)/wrapper_heatmap.sh
 	@$(heatmap_command)
 
 define heatmap_command
 $(SCR)/wrapper_heatmap.sh $(HEATMAP) $<\
-	$(HIST2D_REFDIR) "$(strip ${TIME_UNIT})" -o $@
+	$(HIST2D_REFDIR) "$(strip ${TIME_UNIT})"\
+	$(if ${MINMAXFILE},--minmax ${MINMAXFILE}) -o $@
 endef
 
 ## macros to be called later
