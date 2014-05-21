@@ -72,13 +72,17 @@ def plotHeatmap(col_x,
     x = np.array(x)
     y = np.array(y)
     val = np.array(val)
-  N = int(np.sqrt(x.shape[0]))
-  hist = np.zeros((N,N))
-  ext = (min(x), max(x), min(y), max(y))
-  for i in xrange(N):
-    for j in xrange(N):
+  nbinsx = len(set(x))
+  nbinsy = len(set(y))
+  sizex = (max(x)-min(x))/(nbinsx-1)
+  sizey = (max(y)-min(y))/(nbinsy-1)
+  hist = np.zeros((nbinsy,nbinsx))
+  ext = (min(x)-sizex/2, max(x)+sizex/2,
+         min(y)-sizey/2, max(y)+sizey/2)
+  for i in xrange(nbinsx):
+    for j in xrange(nbinsy):
       # swap indices for proper alignment of axis
-      hist[j][i] = val[i*N+j]
+      hist[j][i] = val[i*nbinsy+j]
   hist[hist==max(val)] = None
 
   if pdf_out:
