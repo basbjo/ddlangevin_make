@@ -26,6 +26,8 @@ MINMAXFILE = $(prefix)/minmax
 
 ## settings for 1D histograms
 HIST1D_LAST_COL = 20	# last column (optional)
+HIST1D_PLOT_NCOLS = 4	# number of columns per plot
+HIST1D_YRANGE =		# yrange (optional, format: ymin:ymax)
 
 ## settings for 2D histograms
 HIST2D_LAST_COL = 3	# last column (optional, >1)
