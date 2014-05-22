@@ -6,7 +6,7 @@ EXIT_SUCCESS=0
 EXIT_FAILURE=1
 EXIT_ERROR=2
 NARGS=$#
-NARGS_NEEDED=3
+NARGS_NEEDED=4
 
 TITLESTART="2D FEL for"
 
@@ -14,11 +14,12 @@ function usage {
     echo -e "
 $SCRIPTNAME: Plot a 2D histograms with heatmap
 
-Usage: $0 heatmap refdir infile [options]
+Usage: $0 heatmap infile refdir unit [options]
 Arguments:
     - heatmap:      path to heatmap script
-    - refdir:       directory where to search for a reference file
     - infile:       input filename such as root.detail-V01-V02.hist
+    - refdir:       directory where to search for a reference file
+    - unit:         unit to find reference with different sampling time
     - options:      options that are passed to the heatmap script
 
 For a filename with format »[dir/]root[.detail]-V##-V##[.suffix]«, a reference
@@ -38,20 +39,33 @@ fi
 
 # get command line arguments
 heatmap=$1
-refdir=$2
-infile=$3
+infile=$2
+refdir=$3
+unit=$4
 shift ${NARGS_NEEDED}
 options=$*
 suffix=$(echo ${infile}|egrep -o -- '-V[0-9]+-V[0-9]+(\..*)?')
 # omit suffixes until a reference file is found in refdir
 pattern=${infile/${suffix}/}
+startpattern=${pattern}
+timewildsearch=
 while [[ "${reffile}" == "" ]] && [[ "${pattern}" != "" ]]
 do
     reffile=$(find -L ${refdir} -type f -regex ${refdir}/${pattern}${suffix})
     if [[ ${pattern%.*} == ${pattern} ]]
     then
-        # stop searching if no reference file exists
-        break
+        if [[ "${unit}" != "" ]]
+        then
+            # search files with different sampling time
+            time=$(echo ${startpattern}|egrep -o -- "_[0-9]+${unit}")
+            pattern=${startpattern/${time}/_[0-9]+${unit}}
+            # stop searching
+            test ${timewildsearch} && break
+            timewildsearch=true
+        else
+            # stop searching
+            break
+        fi
     fi
     pattern=${pattern%.*}
 done

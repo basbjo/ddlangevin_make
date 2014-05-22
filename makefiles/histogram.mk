@@ -23,10 +23,11 @@ KTFACTOR ?= 1# factor for temperature rescaling
 # default settings 2D histograms
 HIST2D_LAST_COL ?= 3# last column (optional, >1)
 HIST2D_REFDIR ?= $(prefix)/histogram# reference data is searched here
+TIME_UNIT ?=# to find reference data with different time step
 
 # settings/data to be shown by showconf/showdata
 SHOWCONF += HIST_NBINS HIST2D_LAST_COL HIST2D_REFDIR\
-	    HIST1D_LAST_COL HIST1D_PLOT_NCOLS HIST1D_YRANGE
+	    HIST1D_LAST_COL HIST1D_PLOT_NCOLS HIST1D_YRANGE TIME_UNIT
 SHOWDATA += splitdir histdir1d histdir2d
 
 ## default settings that must be changed before including this file
@@ -74,7 +75,12 @@ $(1).fel1d_$(2)%.tex : $$(SCR)/plot_fel1d.py $$(addprefix $${histdir1d}/,\
 endef
 
 hist2d_%.pdf : $(histdir2d)/%.hist $(SCR)/wrapper_heatmap.sh
-	@$(SCR)/wrapper_heatmap.sh $(HEATMAP) $(HIST2D_REFDIR) $< -o $@
+	@$(heatmap_command)
+
+define heatmap_command
+$(SCR)/wrapper_heatmap.sh $(HEATMAP) $<\
+	$(HIST2D_REFDIR) "$(strip ${TIME_UNIT})" -o $@
+endef
 
 ## macros to be called later
 MACROS += rule_histogram
