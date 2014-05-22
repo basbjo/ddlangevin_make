@@ -72,11 +72,8 @@ endef
 
 info: ;@true
 	$(info ${INFO_start})
-	$(foreach target,${INFO},$(info $(shell\
-		printf "  %-12s\n" ${target} '${INFO_${target}}')))
-	$(foreach target,${INFOend},$(if $(filter\
-		${target},${INFO}),,$(info $(shell\
-		printf "  %-12s\n" ${target} '${INFO_${target}}'))))
+	$(foreach target,$(shell ${SCR}/sorteduniq.py ${INFO} ${INFOend}),\
+	  $(info $(shell printf "  %-12s\n" ${target} '${INFO_${target}}')))
 	$(info )
 	$(info ${INFO_common})
 	$(info ${INFOADD})
