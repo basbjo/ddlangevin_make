@@ -80,7 +80,7 @@ hist2d_%.pdf : $(histdir2d)/%.hist $$(MINMAXFILE) $(SCR)/wrapper_heatmap.sh
 
 define heatmap_command
 $(SCR)/wrapper_heatmap.sh $(HEATMAP) $<\
-	$(HIST2D_REFDIR) "$(strip ${TIME_UNIT})"\
+	"$(shell ${SCR}/reffile_search.sh ${HIST2D_REFDIR} $< ${TIME_UNIT})"\
 	$(if ${MINMAXFILE},--minmax ${MINMAXFILE}) -o $@
 endef
 
