@@ -20,6 +20,7 @@ HIST1D_LAST_COL ?= 20# last column (optional)
 HIST1D_PLOT_NCOLS ?= 4# number of columns per plot
 HIST1D_YRANGE ?= # yrange (optional, format: ymin:ymax)
 KTFACTOR ?= 1# factor for temperature rescaling
+HIST1D_REFDIR ?= $(prefix)/histogram# reference data is searched here
 # default settings 2D histograms
 HIST2D_LAST_COL ?= 3# last column (optional, >1)
 HIST2D_REFDIR ?= $(prefix)/histogram# reference data is searched here
@@ -71,8 +72,10 @@ endef
 define template_plot1d
 $(1).fel1d_$(2)%.tex : $$(SCR)/plot_fel1d.py $$(addprefix $${histdir1d}/,\
 	$$(filter $(1)%,$$(notdir $${FEL1D_DATA})))
-	$$(SCR)/plot_fel1d.py $(1) $$(histdir1d) $$(strip $${HIST1D_PLOT_NCOLS})\
-		$(2) $$(NCOLS_${1}_HIST1D) "$$(strip $${HIST1D_YRANGE})"
+	$$(SCR)/plot_fel1d.py $(1) $$(histdir1d)\
+		$$(strip $${HIST1D_PLOT_NCOLS}) $(2) $$(NCOLS_${1}_HIST1D)\
+		"$$(shell $${SCR}/reffile_search.sh $${HIST1D_REFDIR} ${1})"\
+		"$$(strip $${HIST1D_YRANGE})"
 endef
 
 hist2d_%.pdf : $(histdir2d)/%.hist $$(MINMAXFILE) $(SCR)/wrapper_heatmap.sh
@@ -112,8 +115,9 @@ INFO_plot_hist1d = plot 1D free energy landscape
 INFO_plot_hist2d = plot 2D histograms
 define INFOADD
 
-Histogram ranges are read from »$(MINMAXFILE)«. Reference files
-to set color bar ranges are searched in »$(HIST2D_REFDIR)/«.
+Histogram ranges are read from »$(MINMAXFILE)«.
+Reference files are searched in »$(HIST2D_REFDIR)/«. They are
+used for 1D histogram x-range and 2D histgoram color bar.
 
 endef
 else

@@ -7,8 +7,9 @@ import sys, os
 import numpy as np
 import Gnuplot, Gnuplot.funcutils
 
-if len(sys.argv) != 7:
-    print("Usage: %s filenameroot histdir cols_per_plot nthplot lastplot yrange" % sys.argv[0])
+if len(sys.argv) != 8:
+    print(("Usage: %s filenameroot histdir cols_per_plot nthplot lastplot"
+            + " pseudo_reffilename yrange") % sys.argv[0])
     sys.exit(1)
 
 suffix = "fel1d"
@@ -17,11 +18,21 @@ datadir = sys.argv[2]
 cols_per_plot = int(sys.argv[3])
 nthplot = int(sys.argv[4])
 lastplot = int(sys.argv[5])
-y_range = sys.argv[6].strip().split(":")
+reffileroot = sys.argv[6]
+if reffileroot:
+    reffileroot = sys.argv[6].split("/")
+    reffileroot.insert(-1,datadir)
+    reffileroot = os.path.join(*reffileroot)
+y_range = sys.argv[7].strip().split(":")
 
 # read data from selected files filenameroot-V[0-9][0-9]+.suffix
 data = []
 offset = (nthplot-1)*cols_per_plot
+if reffileroot:
+    refdata = []
+    for i in range(1+offset, 1+min(nthplot*cols_per_plot,lastplot)):
+        filename = reffileroot+("-V%02d.%s" % (i, suffix))
+        refdata.append(np.loadtxt(filename))
 for i in range(1+offset, 1+min(nthplot*cols_per_plot,lastplot)):
     filename = os.path.join(datadir, filenameroot+("-V%02d.%s" % (i, suffix)))
     data.append(np.loadtxt(filename))
@@ -46,6 +57,14 @@ for setting in settings:
 
 # generate two plots with and without errorbars
 outfilenameroot = "%s.%s_%02d" % (filenameroot, suffix, nthplot)
+if reffileroot:
+    r = []
+    for i in range(ncols):
+        r.append(Gnuplot.Data(refdata[i], cols=(0,1,2)))
+    g('set output "%s"' % (outfilenameroot+'e.tex'))
+    g('set xrange [] writeback')
+    g.plot(*r)
+    g('set xrange restore')
 d = []
 for i in range(ncols):
     d.append(Gnuplot.Data(data[i], cols=(0,1,2),
