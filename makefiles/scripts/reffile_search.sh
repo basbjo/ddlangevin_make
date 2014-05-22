@@ -70,7 +70,15 @@ do
     pattern=${pattern%.*}
 done
 
-# print reffile or empty string
-echo ${reffile}
+# print reffile if not identical to filename or not found
+if [[ "${reffile}" != "" ]] && [[ "${filename}" != "" ]]
+then
+    path=$(readlink -f ${filename})
+    refpath=$(readlink -f ${reffile})
+fi
+if [[ "${reffile}" != "" ]] && [[ "${path}" != "${refpath}" ]]
+then
+    echo ${reffile}
+fi
 
 exit $EXIT_SUCCESS
