@@ -81,11 +81,13 @@ info: ;@true
 show: showconf showdata showmacros
 
 showconf: ;@true
-	$(foreach var,${SHOWCONF},$(info ${var} = ${${var}}))
+	$(foreach var,$(shell ${SCR}/sorteduniq.py ${SHOWCONF}),\
+		$(info ${var} = ${${var}}))
 	$(info )
 
 showdata: ;@true
-	$(foreach var,${SHOWDATA},$(info ${var} = ${${var}}))
+	$(foreach var,$(shell ${SCR}/sorteduniq.py ${SHOWDATA}),\
+		$(info ${var} = ${${var}}))
 	$(info )
 
 showmacros: ;@true

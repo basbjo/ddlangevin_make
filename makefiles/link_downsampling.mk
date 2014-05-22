@@ -4,7 +4,7 @@ downsampling: $$(SAMPDATA)
 ## default settings
 
 # settings/data to be shown by showconf/showdata
-$(if $(filter TIME_UNIT,${SHOWCONF}),,$(eval SHOWCONF += TIME_UNIT))
+SHOWCONF += TIME_UNIT
 SHOWDATA += REDUCTION_FACTORS SAMPORIG SAMPDATA
 
 ## default settings that must be changed before including this file
