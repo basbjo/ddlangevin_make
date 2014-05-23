@@ -8,9 +8,8 @@ import numpy as np
 import Gnuplot, Gnuplot.funcutils
 
 if len(sys.argv) != 8:
-    print(("Usage: %s filenameroot histdir cols_per_plot nthplot lastplot"
+    sys.exit(("Usage: %s filenameroot histdir cols_per_plot nthplot lastplot"
             + " pseudo_reffilename yrange") % sys.argv[0])
-    sys.exit(1)
 
 suffix = "fel1d"
 filenameroot = sys.argv[1]

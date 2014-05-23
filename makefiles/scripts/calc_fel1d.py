@@ -7,9 +7,8 @@ import sys
 import re
 import numpy as np
 
-if len(sys.argv) != 4:
-    print("Usage: %s filename minmaxfile kT_factor" % sys.argv[0])
-    sys.exit(1)
+if len(sys.argv) <= 3:
+    sys.exit("Usage: %s filename minmaxfile kT_factor" % sys.argv[0])
 
 filename = sys.argv[1]
 minmaxfile = sys.argv[2]

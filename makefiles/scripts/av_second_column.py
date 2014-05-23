@@ -10,8 +10,7 @@ PRECISION=5
 FMT="%.6e "
 
 if len(sys.argv) <= 1:
-    print("Usage: %s filenames" % sys.argv[0])
-    sys.exit(1)
+    sys.exit("Usage: %s filenames" % sys.argv[0])
 
 filenames = sys.argv[1:]
 
