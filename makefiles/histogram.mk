@@ -65,7 +65,7 @@ $(histdir1d)/%.fel1d : $(histdir1d)/%.hist $$(MINMAXFILE)
 	$(calc_fel1d_command)
 
 define calc_fel1d_command
-$(SCR)/calc_fel1d.py $<  "$(strip ${MINMAXFILE})" "$(strip ${KTFACTOR})" > $@
+$(SCR)/calc_fel1d.py $< "$(strip ${KTFACTOR})" > $@
 endef
 
 # histogram plotting

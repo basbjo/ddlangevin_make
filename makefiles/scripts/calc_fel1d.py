@@ -7,12 +7,15 @@ import sys
 import re
 import numpy as np
 
-if len(sys.argv) <= 3:
-    sys.exit("Usage: %s filename minmaxfile kT_factor" % sys.argv[0])
+if len(sys.argv) < 3:
+    sys.exit("Usage: %s filename kT_factor [minmaxfile]" % sys.argv[0])
 
 filename = sys.argv[1]
-minmaxfile = sys.argv[2]
-kT_factor = sys.argv[3]
+kT_factor = sys.argv[2]
+if len(sys.argv) >= 4:
+    minmaxfile = sys.argv[3]
+else:
+    minmaxfile = None
 data = np.loadtxt(filename)
 
 # remove lines with zeros
