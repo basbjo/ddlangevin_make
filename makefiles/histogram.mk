@@ -70,12 +70,13 @@ endef
 
 # histogram plotting
 define template_plot1d
+$(eval reffile := $(shell ${SCR}/reffile_search.sh\
+	${HIST1D_REFDIR} $(1) ${TIME_UNIT}))
 $(1).fel1d_$(2)%.tex : $$(SCR)/plot_fel1d.py $$(addprefix $${histdir1d}/,\
 	$$(filter $(1)%,$$(notdir $${FEL1D_DATA})))
 	$$(SCR)/plot_fel1d.py $(1) $$(histdir1d)\
 		$$(strip $${HIST1D_PLOT_NCOLS}) $(2) $$(NCOLS_${1}_HIST1D)\
-		"$$(shell $${SCR}/reffile_search.sh $${HIST1D_REFDIR} ${1})"\
-		"$$(strip $${HIST1D_YRANGE})"
+		"$$(reffile)" "$$(strip $${HIST1D_YRANGE})"
 endef
 
 hist2d_%.pdf : $(histdir2d)/%.hist $$(MINMAXFILE)
