@@ -3,19 +3,19 @@ split: $$(SPLIT_DATA)
 
 ## default settings
 SPLIT_FUTURE ?= $(or ${IF_FUTURE},1)# 1 if last column for follower, 0 else
-SPLIT_DROPSUFFIX ?= # drop suffix of source filenames
 
 # settings/data to be shown by showconf/showdata
 SHOWCONF += SPLIT_FUTURE
-SHOWDATA += splitdir SPLIT_DROPSUFFIX SPLIT_LIST
+SHOWDATA += splitdir SPLIT_LIST
 
 ## default settings that must be changed before including this file
 splitdir ?= splitdata
 
 ## variables
+SPLIT_SUFFIX =# only needed to find split data if split.mk is not included
 SPLIT_LIST ?= $(DATA)
-SPLIT_DROP = $(patsubst %$(strip ${SPLIT_DROPSUFFIX}),%,$(wildcard ${SPLIT_LIST}))
-SPLIT_DATA = $(addsuffix -01,$(addprefix ${splitdir}/,${SPLIT_DROP}))
+SPLIT_DATA = $(addsuffix -01,$(addprefix ${splitdir}/,\
+	     $(wildcard ${SPLIT_LIST})))
 DIR_LIST += $(splitdir)
 
 ## rules
@@ -25,7 +25,7 @@ $(splitdir):
 # split data into consecutive trajectories / in two parts
 # - end of each series when last column is 0
 # - if SPLIT_FUTURE==0 split trajectory into two
-$(splitdir)/%-01 : %$$(strip $${SPLIT_DROPSUFFIX}) | $$(splitdir)
+$(splitdir)/%-01 : % | $(splitdir)
 	@$(split_command)
 
 define split_command
@@ -71,4 +71,4 @@ INFO_del_split = delete split data
 PRECIOUS +=
 
 ## clean
-SPLIT_WILD = $(addsuffix -[0-9]*[0-9],$(addprefix ${splitdir}/,${SPLIT_DROP}))
+SPLIT_WILD = $(addsuffix -[0-9]*[0-9],$(addprefix ${splitdir}/,${SPLIT_LIST}))

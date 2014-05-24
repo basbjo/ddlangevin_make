@@ -15,6 +15,7 @@ plot_hist2d: calc_hist2d $$(HIST2D_PLOT)
 
 ## default settings
 HIST_NBINS ?= 100# number of bins within reference range
+SPLIT_SUFFIX ?= $(DROPSUFFIX)# to find split data in remote directory
 # default settings 1D histograms
 HIST1D_LAST_COL ?= 20# last column (optional)
 HIST1D_PLOT_NCOLS ?= 4# number of columns per plot
@@ -29,7 +30,7 @@ TIME_UNIT ?=# to find reference data with different time step
 # settings/data to be shown by showconf/showdata
 SHOWCONF += HIST_NBINS HIST2D_LAST_COL HIST2D_REFDIR\
 	    HIST1D_LAST_COL HIST1D_PLOT_NCOLS HIST1D_YRANGE TIME_UNIT
-SHOWDATA += splitdir histdir1d histdir2d
+SHOWDATA += histdir1d histdir2d splitdir SPLIT_SUFFIX
 
 ## default settings that must be changed before including this file
 histdir1d ?= histdata1d
@@ -51,9 +52,9 @@ $(histdir1d) $(histdir2d):
 # include also split.mk to split data
 define template_calc1d
 $(histdir1d)/$(1)-V$(2).hist : $$(MINMAXFILE) $(1)\
-	| $$(histdir1d) $$(splitdir)/$(1)-01
+	| $$(histdir1d) $$(splitdir)/$(1)$$(SPLIT_SUFFIX)-01
 	$$(SCR)/wrapper_histogram.sh $(1) $(2) "$$(strip $${MINMAXFILE})"\
-		$$(splitdir) $$(@D) $$(HIST1D)
+		$$(splitdir)/$(1)$$(SPLIT_SUFFIX) $$(@D) $$(HIST1D)
 endef
 
 define template_calc2d

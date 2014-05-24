@@ -12,7 +12,7 @@ SHOWDATA += splitdir
 DATA_HERE =
 ## source data files in datadirs (wildcards allowed)
 DATA_LINK = $(SPLIT_LIST)
-DROPSUFFIX = $(SPLIT_DROPSUFFIX)
+DROPSUFFIX = .lang
 
 ## settings
 # see config.mk and localconf.mk

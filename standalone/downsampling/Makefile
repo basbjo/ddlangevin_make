@@ -10,7 +10,6 @@ include $(makedir)/split.mk
 DATA_HERE =
 ## source data files in datadirs (wildcards allowed)
 DATA_LINK = *.dat
-DROPSUFFIX = .dat
 
 ## settings
 SPLIT_FUTURE = 2

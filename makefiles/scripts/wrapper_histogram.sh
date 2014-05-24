@@ -13,19 +13,19 @@ function usage {
     echo -e "
 $SCRIPTNAME: Calculate averaged 1D histogram for one column
 
-Usage: $0 name column minmax splitdir outdir program [options]
+Usage: $0 name column minmax splitprefix outdir program [options]
 Arguments:
     - name:         filename root
     - column:       column number
     - minmax:       reference file with minima and maxima or \"\",
                     must contain two lines with minima and maxima
-    - splitdir:     directory with split data name-01, name-02, ...
+    - splitprefix:  split dir and name prefix to splitprefix-##
     - outdir:       directory for temporary files and result
     - program:      typically TISEAN histogram with option -V0
     - options:      options that are passed to program
 
 The minimum range is set by concatenating minmax to input.
-The average of the histograms of »splitdir/name-##« where
+The average of the histograms of »splitprefix-##« where
 ## = 01,02,... is written to »outdir/name-V<col>.hist«.
 " >&2
     [[ $NARGS -eq 1 ]] && exit $1 || exit $EXIT_FAILURE
@@ -44,7 +44,7 @@ scripts=$(dirname $0)
 name=$1
 column=$2
 minmax=$3
-splitdir=$4
+splitprefix=$4
 outdir=$5
 program=$6
 shift ${NARGS_NEEDED}
@@ -58,7 +58,8 @@ ${program} histogram -h 2>&1 | grep -q -- '-r reference file for binning' || {
 }
 
 # calculate histograms for each trajectory
-find -L ${splitdir} -regex "[./]*${splitdir}/${name}-[0-9]+" | while read traj
+find -L $(dirname ${splitprefix}) -regex "[./]*${splitprefix}-[0-9]+" |
+while read traj
 do
     num=${traj##*-}
     echo "Calculate histogram for ${name}, col ${column}, traj ${num}"
