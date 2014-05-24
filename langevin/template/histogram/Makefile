@@ -6,7 +6,6 @@ include $(makedir)/fileinfo.mk
 include $(makedir)/histogram.mk
 include $(firstword ${datadirs})/localconf.mk
 splitdir := $(firstword ${datadirs})/$(splitdir)
-SHOWDATA += splitdir
 
 ## source data files in this directory (wildcards allowed)
 DATA_HERE =

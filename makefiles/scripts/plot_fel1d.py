@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #Write plots of 1D histograms in several files filenameroot-V#.fel1d
-#Where # = 01, 02, ... to file.fel1d_##.tex
+#Where # = 01, 02, ... to file.fel1d_##n.tex and file.fel1d_##e.tex
 #Infile format: "x y [yerr]" in each file
 
 import sys, os
@@ -66,7 +66,8 @@ if reffileroot:
     g('set xrange restore')
 d = []
 for i in range(ncols):
-    d.append(Gnuplot.Data(data[i], cols=(0,1,2),
+    d.append(Gnuplot.Data(data[i],
+        cols=(0,1,2),
         title=('V%s' % str(i+offset+1))))
 g('set style data yerrorlines')
 g('set output "%s"' % (outfilenameroot+'e.tex'))

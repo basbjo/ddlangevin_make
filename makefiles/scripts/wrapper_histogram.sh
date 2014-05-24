@@ -26,7 +26,7 @@ Arguments:
 
 The minimum range is set by concatenating minmax to input.
 The average of the histograms of »splitprefix-##« where
-## = 01,02,... is written to »outdir/name-V<col>.hist«.
+## = 01,02,... is written to »outdir/name-V<column>.hist«.
 " >&2
     [[ $NARGS -eq 1 ]] && exit $1 || exit $EXIT_FAILURE
 }
@@ -42,22 +42,22 @@ fi
 # get command line arguments
 scripts=$(dirname $0)
 name=$1
-column=$2
+column=$((10#$2)) # decimal representation forced, leading zeros removed
 minmax=$3
 splitprefix=$4
 outdir=$5
 program=$6
 shift ${NARGS_NEEDED}
 options=$*
-outfile=${outdir}/${name}-V${column}.hist
+outfile=${outdir}/$(printf "%s-V%02d.hist" ${name} ${column})
 
 # test histogram version (need patch with option -r)
-${program} histogram -h 2>&1 | grep -q -- '-r reference file for binning' || {
+${program} -h 2>&1 | grep -q -- '-r reference file for binning' || {
     echo "Wrong histogram version! Option '-r' needed." >&2
     exit $EXIT_ERROR
 }
 
-# calculate histograms for each trajectory
+# iterate trajectories
 find -L $(dirname ${splitprefix}) -regex "[./]*${splitprefix}-[0-9]+" |
 while read traj
 do
@@ -75,7 +75,7 @@ do
     fi
 done || exit $EXIT_ERROR
 
-# paste and average
+# average
 echo "Calculate histogram for ${name}, col ${column}, average"
 ${scripts}/av_second_column.py ${outfile}.tmp[0-9]*[0-9] > ${outfile} &&
     find -type f -regex "[./]*${outfile}.tmp[0-9]+" -delete
