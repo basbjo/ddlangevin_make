@@ -52,7 +52,7 @@ timewildsearch=
 while [[ "${reffile}" == "" ]] && [[ "${pattern}" != "" ]]
 do
     reffile=$(find -L ${refdir} -type f -regex ${refdir}/${pattern}${suffix})
-    if [[ ${pattern%.*} == ${pattern} ]]
+    if [[ "${pattern%.*}" == "${pattern}" ]]
     then
         if [[ "${unit}" != "" ]]
         then
