@@ -33,3 +33,6 @@ HIST1D_YRANGE =		# yrange (optional, format: ymin:ymax)
 
 ## settings for 2D histograms
 HIST2D_LAST_COL = 3	# last column (optional, >1)
+
+## settings for autocorrelations
+CORR_LAST_COL = 18	# last column (optional)

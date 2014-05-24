@@ -1,9 +1,10 @@
 .PHONY:
 
 ## default settings
+CORR_LAST_COL ?= 18# last column (optional)
 
 # settings/data to be shown by showconf/showdata
-SHOWCONF +=
+SHOWCONF += CORR_LAST_COL
 SHOWDATA +=
 
 ## default settings that must be changed before including this file
@@ -14,6 +15,8 @@ SHOWDATA +=
 
 ## macros to be called later
 #MACROS +=
+
+FILEINFO_NAMES = CORR
 
 ## info
 ifndef INFO
