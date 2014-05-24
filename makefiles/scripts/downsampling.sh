@@ -6,20 +6,21 @@ EXIT_SUCCESS=0
 EXIT_FAILURE=1
 EXIT_ERROR=2
 NARGS=$#
-NARGS_NEEDED=4
+NARGS_NEEDED=5
 
 function usage {
     echo -e "
 $SCRIPTNAME: Downsampling and concatenation of several trajectories
 
-Usage: $0 splitdir name step iffuture
+Usage: $0 splitdir splitname name step iffuture
 Arguments:
     - splitdir:     directory with split data name-01, name-02, ...
-    - name:         filename root
+    - splitname:    splitfilename root
+    - name:         outfilename root
     - step:         down sampling step
     - iffuture:     1 in case of several trajectories, 0 else
 
-Trajectories splitdir/name-## are down sampled with starting points
+Trajectories splitdir/splitname-## are down sampled with starting points
 # = 1,2,...,step, concatenated and written to name_ds<step>-#.
 Then these files are concatenated and written to name_ds<step>.
 If iffuture is 1, the last column should be 0 at the end of files and 1
@@ -39,15 +40,16 @@ fi
 
 # get command line arguments
 dir=$1
-name=$2
-n=$3
-iffuture=$4
+splitname=$2
+name=$3
+n=$4
+iffuture=$5
 
 # down sampling
 find -type f -regex "./${name}_ds${n}\(-[0-9]*\)?" -delete
 if [ ${iffuture} -eq 1 ]
 then
-    find -L ${dir} -type f -regex ${dir}/${name}-[0-9]\* | sort
+    find -L ${dir} -type f -regex ${dir}/${splitname}-[0-9]\* | sort
 else
     echo ${name}
 fi \
