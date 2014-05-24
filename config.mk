@@ -12,7 +12,7 @@ IF_FUTURE ?= 1# 1 with future column, 0 else
 SHOWDATA += RAWDATA
 
 ## data and factors for downsampling
-SAMPORIG = $(RAWDATA)
+SAMPORIG = $(addsuffix .cossin.pca,${RAWDATA})
 REDUCTION_FACTORS = 5
 
 ## first and last column to be selected from source data for dPCA

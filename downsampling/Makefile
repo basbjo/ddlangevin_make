@@ -8,7 +8,7 @@ include $(makedir)/split.mk
 ## source data files in this directory (wildcards allowed)
 DATA_HERE =
 ## source data files in datadirs (wildcards allowed)
-DATA_LINK = $(RAWDATA)
+DATA_LINK = $(addsuffix .cossin.pca,${RAWDATA})
 
 ## settings
 # see config.mk

@@ -8,7 +8,7 @@ include $(makedir)/split.mk
 include $(makedir)/link_downsampling.mk
 
 ## source data files in this directory (wildcards allowed)
-DATA_HERE = $(RAWDATA) $(SAMPDATA)
+DATA_HERE = $(RAWDATA)
 ## source data files in datadirs (wildcards allowed)
 DATA_LINK =
 DROPSUFFIX =
