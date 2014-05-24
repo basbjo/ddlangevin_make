@@ -34,7 +34,7 @@ MINMAXALL = $(PCADATA)
 
 %.cossin.pca.tmp : %.cossin
 	# perform principal component analysis on $<
-	name=$<; $(FASTCA) -f $$name -p $@ -c $$name.cov -v $$name.eigvec -V $$name.eigval >/dev/null
+	name=$<; $(FASTCA) -f $$name -p $@ -c $$name.cov -v $$name.eigvec -V $$name.eigval
 
 %.cossin.pca : %.cossin.pca.tmp
 	$(appendlastcol_command)
