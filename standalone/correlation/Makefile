@@ -1,9 +1,12 @@
 prefix = ../..
 datadirs = ..
 makedir = $(prefix)/makefiles
+# include split.mk only in one makefile that uses the following splitdir
+#splitdir = $(firstword ${datadirs})/splitdata
 include $(makedir)/common.mk
 include $(makedir)/fileinfo.mk
 include $(makedir)/correlation.mk
+include $(makedir)/split.mk
 
 ## source data files in this directory (wildcards allowed)
 DATA_HERE =
@@ -19,7 +22,7 @@ CORR_XRANGE =		# xrange (optional, format: xmin:xmax)
 TIME_UNIT =		# time unit to be shown in x label
 
 ## default targets
-all +=
+all += calc
 
 ## call macros
 $(call_macros)

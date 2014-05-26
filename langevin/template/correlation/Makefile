@@ -5,6 +5,7 @@ include $(makedir)/common.mk
 include $(makedir)/fileinfo.mk
 include $(makedir)/correlation.mk
 include $(firstword ${datadirs})/localconf.mk
+splitdir := $(firstword ${datadirs})/$(splitdir)
 
 ## source data files in this directory (wildcards allowed)
 DATA_HERE =
@@ -17,7 +18,7 @@ DROPSUFFIX = .lang
 IF_FUTURE = $(SPLIT_FUTURE)
 
 ## default targets
-all +=
+all += calc
 
 ## call macros
 $(call_macros)

@@ -14,7 +14,7 @@ DATA_LINK = $(addsuffix ${DROPSUFFIX},${RAWDATA})
 # see config.mk
 
 ## default targets
-all +=
+all += calc
 
 ## call macros
 $(call_macros)

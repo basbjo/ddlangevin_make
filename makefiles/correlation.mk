@@ -1,10 +1,12 @@
-.PHONY: calc_times plot_times
+.PHONY: calc calc_times plot_times
+calc: $$(CORR_DATA) calc_times
 
 calc_times: $$(TAU_ESTIMATE)
 
 plot_times: calc_times $$(TAU_PLOT)
 
 ## default settings
+SPLIT_SUFFIX ?= $(DROPSUFFIX)# to find split data in remote directory
 ESTIMLENGTH ?= 1000000# max correlation length for first estimate
 RANGEFACTOR ?= 6# times correlation time for final data
 CORR_LAST_COL ?= 18# last column (optional)
@@ -13,21 +15,24 @@ TIME_UNIT ?=# time unit to be shown in x label
 
 # settings/data to be shown by showconf/showdata
 SHOWCONF += CORR_LAST_COL CORR_XRANGE TIME_UNIT
-SHOWDATA += fitdir
+SHOWDATA += fitdir cordir SPLIT_SUFFIX
 
 ## default settings that must be changed before including this file
 fitdir ?= estimation
+cordir ?= corrdata
 
 ## variables
-DIR_LIST += $(fitdir)
+DIR_LIST += $(fitdir) $(cordir)
 # initial fit for correlation time estimation data
 ESTIM_DATA = $(addprefix ${fitdir}/,$(call add-V01,${DATA},.fit,CORR))
 DEL_FITCOR = $(addsuffix .*,${ESTIM_DATA})
 TAU_ESTIMATE = $(addsuffix .tau,${DATA})
 TAU_PLOT = $(addsuffix .png,${TAU_ESTIMATE})
+# final time correlation data and plots
+CORR_DATA = $(addprefix ${cordir}/,$(call add-V01,${DATA},.cor,CORR))
 
 ## rules
-$(fitdir):
+$(fitdir) $(cordir):
 	mkdir -p $@
 
 # initial fit for correlation time estimation
@@ -51,6 +56,15 @@ endef
 %.tau.tex : %.tau
 	$(SCR)/plot_corrtime.sh $< "$(strip ${CORR_XRANGE})" $(TIME_UNIT)
 
+# calculate final autocorrelation data
+# include also split.mk to split data
+define template_calc
+$(cordir)/$(1)-V$(2).cor : $$(fitdir)/$(1)-V$(2).fit\
+	| $$(cordir) $$(splitdir)/$(1)$$(SPLIT_SUFFIX)-01
+	$$(SCR)/wrapper_corr.sh $(1) $(2) $$(fitdir)\
+		$$(splitdir)/$(1)$$(SPLIT_SUFFIX) $$(@D) $$(CORR)
+endef
+
 ## macros to be called later
 MACROS += rule_correlation
 
@@ -60,20 +74,21 @@ $(foreach file,${DATA},\
 	$(eval $(call template_tau,${file}))\
 	$(foreach col,$(call range,${lastcol}),\
 		$(eval $(call template_estim,${file},${col})))\
+	$(foreach col,$(call range,${lastcol}),\
+		$(eval $(call template_calc,${file},${col})))\
 )
 endef
 
-FILEINFO_NAMES = CORR
-
 ## info
 ifndef INFO
-INFO = calc_times plot_times del_estim
+INFO = calc_times calc plot_times del_estim
 define INFOADD
 endef
 else
 INFOend +=
 endif
 INFO_calc_times = estimate correlation times
+INFO_calc       = calculate time correlation data
 INFO_plot_times = plot correlation times
 INFO_del_estim  = delete linear fit data and plots
 
@@ -82,8 +97,8 @@ PRECIOUS +=
 
 ## clean
 PLOTS_LIST += $(TAU_PLOT)
-CLEAN_LIST +=
-PURGE_LIST += $(DEL_FITCOR) $(ESTIM_DATA) $(TAU_ESTIMATE)
+CLEAN_LIST += */*.tmp[0-9]*[0-9]
+PURGE_LIST += $(DEL_FITCOR) $(ESTIM_DATA) $(TAU_ESTIMATE) $(CORR_DATA)
 
 .PHONY: del_estim
 del_estim:
