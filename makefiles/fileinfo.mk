@@ -76,3 +76,7 @@ define fileinfo
   $(foreach file,${DATA},$(foreach name,${FILEINFO_PLOTS},\
 	  $(eval $(call PLOTS_template,${file},${name}))))
 endef
+
+## info
+INFOend += showncols
+INFO_showncols = Show numbers of data columns
