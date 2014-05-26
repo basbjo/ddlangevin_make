@@ -1,13 +1,18 @@
-.PHONY: calc_times
+.PHONY: calc_times plot_times
+
 calc_times: $$(TAU_ESTIMATE)
+
+plot_times: calc_times $$(TAU_PLOT)
 
 ## default settings
 ESTIMLENGTH ?= 1000000# max correlation length for first estimate
 RANGEFACTOR ?= 6# times correlation time for final data
 CORR_LAST_COL ?= 18# last column (optional)
+CORR_XRANGE ?= # xrange (optional, format: xmin:xmax)
+TIME_UNIT ?=# time unit to be shown in x label
 
 # settings/data to be shown by showconf/showdata
-SHOWCONF += CORR_LAST_COL
+SHOWCONF += CORR_LAST_COL CORR_XRANGE TIME_UNIT
 SHOWDATA += fitdir
 
 ## default settings that must be changed before including this file
@@ -18,6 +23,7 @@ DIR_LIST += $(fitdir)
 # initial fit for correlation time estimation data
 ESTIM_DATA = $(addprefix ${fitdir}/,$(call add-V01,${DATA},.fit,CORR))
 TAU_ESTIMATE = $(addsuffix .tau,${DATA})
+TAU_PLOT = $(addsuffix .png,${TAU_ESTIMATE})
 
 ## rules
 $(fitdir):
@@ -41,6 +47,9 @@ $(1).tau : $$(filter $$(fitdir)/${1}%,$${ESTIM_DATA})
 	     | paste -d\  $$@.tmp - > $$@ && $$(RM) $$@.tmp
 endef
 
+%.tau.tex : %.tau
+	$(SCR)/plot_corrtime.sh $< "$(strip ${CORR_XRANGE})" $(TIME_UNIT)
+
 ## macros to be called later
 MACROS += rule_correlation
 
@@ -57,13 +66,14 @@ FILEINFO_NAMES = CORR
 
 ## info
 ifndef INFO
-INFO = calc_times
+INFO = calc_times plot_times
 define INFOADD
 endef
 else
 INFOend +=
 endif
 INFO_calc_times = estimate correlation times
+INFO_plot_times = plot correlation times
 
 ## keep intermediate files
 PRECIOUS +=

@@ -36,3 +36,4 @@ HIST2D_LAST_COL = 3	# last column (optional, >1)
 
 ## settings for autocorrelations
 CORR_LAST_COL = 18	# last column (optional)
+CORR_XRANGE =		# xrange (optional, format: xmin:xmax)
