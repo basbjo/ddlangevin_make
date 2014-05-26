@@ -22,6 +22,7 @@ fitdir ?= estimation
 DIR_LIST += $(fitdir)
 # initial fit for correlation time estimation data
 ESTIM_DATA = $(addprefix ${fitdir}/,$(call add-V01,${DATA},.fit,CORR))
+DEL_FITCOR = $(addsuffix .*,${ESTIM_DATA})
 TAU_ESTIMATE = $(addsuffix .tau,${DATA})
 TAU_PLOT = $(addsuffix .png,${TAU_ESTIMATE})
 
@@ -66,7 +67,7 @@ FILEINFO_NAMES = CORR
 
 ## info
 ifndef INFO
-INFO = calc_times plot_times
+INFO = calc_times plot_times del_estim
 define INFOADD
 endef
 else
@@ -74,11 +75,19 @@ INFOend +=
 endif
 INFO_calc_times = estimate correlation times
 INFO_plot_times = plot correlation times
+INFO_del_estim  = delete linear fit data and plots
 
 ## keep intermediate files
 PRECIOUS +=
 
 ## clean
-PLOTS_LIST +=
+PLOTS_LIST += $(TAU_PLOT)
 CLEAN_LIST +=
-PURGE_LIST += $(ESTIM_DATA) $(TAU_ESTIMATE)
+PURGE_LIST += $(DEL_FITCOR) $(ESTIM_DATA) $(TAU_ESTIMATE)
+
+.PHONY: del_estim
+del_estim:
+	$(if $(wildcard ${DEL_FITCOR}),$(RM) $(wildcard ${DEL_FITCOR}))
+	$(if $(wildcard ${fitdir}),$(if $(shell\
+		[ -d ${fitdir} ] && [ . != ${fitdir} ] && echo yes),\
+		rmdir --ignore-fail-on-non-empty ${fitdir}))
