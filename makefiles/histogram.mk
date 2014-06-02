@@ -74,8 +74,10 @@ define template_plot1d
 $(eval reffile := $(shell ${SCR}/reffile_search.sh\
 	${HIST1D_REFDIR} $(1) ${TIME_UNIT}))
 $(1).fel1d_$(2)e.tex : $(1).fel1d_$(2)n.tex
+$(1).fel1d_$(2)e.pdf : $(1).fel1d_$(2)n.pdf
+$(1).fel1d_$(2)e.png : $(1).fel1d_$(2)n.png
 $(1).fel1d_$(2)n.tex : $$(SCR)/plot_fel1d.py\
-	$$(filter $${histdir1d}/${1}%,$${FEL1D_DATA})
+	$$(addprefix $${histdir1d}/,$$(call plot-V01,${1},${2},.fel1d,HIST1D))
 	$$(SCR)/plot_fel1d.py $(1) $$(histdir1d)\
 		$$(strip $${HIST1D_PLOT_NCOLS}) $(2) $$(NCOLS_${1}_HIST1D)\
 		"$(reffile)" "$$(strip $${HIST1D_YRANGE})"
