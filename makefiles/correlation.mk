@@ -72,8 +72,10 @@ endef
 # plot final autocorrelation data
 define template_plot
 $(1).cor_$(2)e.tex : $(1).cor_$(2)n.tex
+$(1).cor_$(2)e.pdf : $(1).cor_$(2)n.pdf
+$(1).cor_$(2)e.png : $(1).cor_$(2)n.png
 $(1).cor_$(2)n.tex : $$(SCR)/plot_autocorr.py\
-	$$(filter $${cordir}/${1}%,$${CORR_DATA})
+	$$(addprefix $${cordir}/,$$(call plot-V01,${1},${2},.cor,CORR))
 	$$(SCR)/plot_autocorr.py $(1) $$(cordir)\
 		$$(strip $${CORR_PLOT_NCOLS}) $(2) $$(NCOLS_${1}_CORR)\
 		"$$(strip $${CORR_XRANGE})" $(TIME_UNIT)
