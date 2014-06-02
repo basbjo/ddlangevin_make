@@ -61,6 +61,13 @@ define add_01
 	  $(addsuffix ${2}${nn}${3},${file})))
 endef
 
+# for each column needed for $(2)'th plot to file $(1) list file-V##$(3) with
+# $(4)_PLOT_NCOLS columns per plot and a total of NCOLS_file_$(4) columns
+define plot-V01
+  $(foreach nn,$(call plotcols,${${4}_PLOT_NCOLS},${2},${NCOLS_${1}_${4}}),\
+	  $(addsuffix -V${nn}${3},${1}))
+endef
+
 ## macros to be called later
 MACROS += fileinfo
 
