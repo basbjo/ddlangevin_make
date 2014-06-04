@@ -68,7 +68,7 @@ do
     fi
     # call TISEAN corr and do binning on the fly
     eval "${program} ${options} -c${column} -D${corrlength} ${traj} \
-      | ${scripts}/logbinning.awk -vxmin=0 -vxmax=${corrlength} -vbins=${BINS} \
+      | ${scripts}/logbinning.awk -vxmin=1 -vxmax=${corrlength} -vbins=${BINS} \
       > ${outfile}.tmp${num}"
 done || exit $EXIT_ERROR
 
