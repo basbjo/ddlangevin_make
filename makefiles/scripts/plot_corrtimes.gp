@@ -8,31 +8,26 @@ if(!exists("SCALE")) SCALE=1
 if(exists("UNIT")) in_units=sprintf(" [%s]", UNIT)
 if(!exists("UNIT")) UNIT=""
 if(exists("ymin")) set yrange [ymin:]
-if(!exists("ymin")) ymin=0
+if(!exists("ymin")) ymin=1
 
-REGEX = ".*-V([0-9]*).*tau = ([0-9.]+)( \\+/- )?([0-9.]+)?.* ([0-9]+)"
-REPLACE = "\\1 \\2 \\4 \\5"
-SEDSCR = sprintf("'s:%s:%s:'", REGEX, REPLACE)  # get right columns
-LASCOL = "'s:.*-V([0-9]*).* ([0-9]+):\\1 \\2:'" # get last column
+SEDSCR = "'s/.*-V0*//;s/\.cor://'"
 AWKSCR = sprintf("'{if (%g*$NF>%g) print $0}'", SCALE, ymin) # ignore values below ymin
-DATA = sprintf("<sed -r %s %s | sort -k2 -gr | awk %s | sed 's/^0*//'", SEDSCR, FILE, AWKSCR)
-LCOL = sprintf("<sed -r %s %s | sort -k2 -gr | awk %s | sed 's/^0*//'", LASCOL, FILE, AWKSCR)
+DATA = sprintf("<sed -r %s %s | awk %s", SEDSCR, FILE, AWKSCR)
 set xlabel "Principal component"
-set ylabel "Estimated correlation time".in_units
+set ylabel "Time of decay to $e^{-1}$".in_units
+set x2tics
 set log y
 set grid
 set key Left spacing 2
 set title sprintf("Correlation times for \\verb|%s|", FILE)
 plot \
-    DATA u 0:(SCALE*$2) lt 1 title "Estimate from fit", \
-    LCOL u 0:(SCALE*$2):xticlabels(1) lt 4 title "Time of decay to $e^{-1}$", \
-    DATA u 0:(SCALE*$2):3 lt 1 w yerror notitle, \
+    DATA u 0:(SCALE*$2):(SCALE*$3):(SCALE*$4) w e lt 1 title "", \
+    DATA u 0:(SCALE*$2):xticlabels(1) lt 1 title "", \
+    DATA u 0:(SCALE*$2):x2ticlabels(1) lt 1 title "", \
     DATA u 0:(SCALE*$2):(sprintf("%d %s",SCALE*$2,UNIT)) \
-         with labels offset graph +0.05,+0.11 rotate by 60 notitle, \
-    LCOL u 0:(SCALE*$2):(sprintf("%d %s",SCALE*$2,UNIT)) \
-         with labels offset graph -0.05,-0.11 rotate by 60 notitle
-set xrange [-2+GPVAL_X_MIN:GPVAL_X_MAX+2]
+         with labels offset graph -0.04,-0.1 rotate by 60 notitle
+set xrange [-2+GPVAL_X_MIN:GPVAL_X_MAX+1]
 if(!exists("ymax")) ymax = GPVAL_Y_MAX
-set yrange [GPVAL_Y_MIN/6:ymax*12]
+set yrange [GPVAL_Y_MIN/6:ymax]
 set output FILE.".tex"
 replot

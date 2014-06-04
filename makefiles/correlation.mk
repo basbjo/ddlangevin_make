@@ -1,11 +1,13 @@
-.PHONY: calc plot calc_times plot_times
-calc: $$(CORR_DATA) calc_times
+.PHONY: calc plot calc_estim calc_times plot_times
+calc: $$(CORR_DATA) calc_estim
 
 plot: calc plot_times $$(CORR_PLOT)
 
-calc_times: $$(TAU_ESTIMATE)
+calc_estim: $$(ESTIM_DATA)
 
-plot_times: calc_times $$(TAU_PLOT)
+calc_times: $$(TIMES)
+
+plot_times: calc_times $$(TIMES_PLOT) $$(TIME_PLOT)
 
 ## default settings
 SPLIT_SUFFIX ?= $(DROPSUFFIX)# to find split data in remote directory
@@ -29,11 +31,12 @@ DIR_LIST += $(fitdir) $(cordir)
 # initial fit for correlation time estimation data
 ESTIM_DATA = $(addprefix ${fitdir}/,$(call add-V01,${DATA},.fit,CORR))
 DEL_FITCOR = $(addsuffix .*,${ESTIM_DATA})
-TAU_ESTIMATE = $(addsuffix .tau,${DATA})
-TAU_PLOT = $(addsuffix .png,${TAU_ESTIMATE})
 # final time correlation data and plots
 CORR_DATA = $(addprefix ${cordir}/,$(call add-V01,${DATA},.cor,CORR))
 CORR_PLOT = $(foreach a,n e,$(call add_01,${DATA},.cor_,${a}.png,CORR))
+TIMES = $(addsuffix .tau,${DATA})
+TIMES_PLOT = $(addsuffix .png,${TIMES})
+TIME_PLOT = $(addprefix ${cordir}/,$(call add-V01,${DATA},.png,CORR))
 
 ## rules
 $(fitdir) $(cordir):
@@ -46,18 +49,7 @@ $(fitdir)/$(1)-V$(2).fit : $(1) | $$(fitdir)
 		$$(ESTIMLENGTH) $$(RANGEFACTOR) $$(CORR)
 endef
 
-define template_tau
-$(1).tau : $$(filter $$(fitdir)/${1}%,$${ESTIM_DATA})
-	$$(info Write summary of estimated correlation times to $$@.)
-	@for file in $$(fitdir)/$(1)-V[0-9]*[0-9].fit; do \
-		grep -H 'tau *=' $$$${file} | tail -n1 \
-		  | sed 's/:/& /;s/  */ /g' >> $$@.tmp; done
-	@$$(NROWS) $$(fitdir)/$(1)-V[0-9]*[0-9].fit.cor \
-	     | awk '{if ($$$$1>2) print $$$$1-1}' \
-	     | paste -d\  $$@.tmp - > $$@ && $$(RM) $$@.tmp
-endef
-
-%.tau.tex : %.tau
+%.tau.tex : %.tau $(SCR)/plot_corrtimes.gp $(SCR)/plot_corrtimes.sh
 	$(SCR)/plot_corrtimes.sh $< "$(strip ${CORR_XRANGE})" $(TIME_UNIT)
 
 # calculate final autocorrelation data
@@ -67,6 +59,24 @@ $(cordir)/$(1)-V$(2).cor : $$(fitdir)/$(1)-V$(2).fit\
 	| $$(cordir) $$(splitdir)/$(1)$$(SPLIT_SUFFIX)-01
 	$$(SCR)/wrapper_corr.sh $(1) $(2) $$(fitdir)\
 		$$(splitdir)/$(1)$$(SPLIT_SUFFIX) $$(@D) $$(CORR)
+endef
+
+# calculate correlation times
+define template_timeplot
+$(cordir)/$(1)-V$(2).png : $$(cordir)/$(1)-V$(2).cor $(1).tau\
+	$(SCR)/plot_corrtime.gp | $$(cordir)
+	$$(eval tau := $$(shell grep $$+ | cut -d\  -f2))
+	gnuplot -e 'FILE="$$(basename $$<)"; TAU=$$(tau)'\
+		$$(SCR)/plot_corrtime.gp
+endef
+
+define template_tau
+$(1).tau : $$(filter $$(cordir)/${1}%,$${CORR_DATA})
+	$$(info Write estimated correlation times to $$@.)
+	@$$(RM) $$@
+	@for file in $$+; do times=$$$$($(SCR)/get_corrtime.awk $$$${file})\
+		&& echo $$$${file}: $$$${times}; done\
+		| sort -k2 -gr | tee -a $$@
 endef
 
 # plot final autocorrelation data
@@ -90,23 +100,24 @@ define rule_correlation
 $(foreach file,${DATA},\
 	$(eval $(call template_tau,${file}))\
 	$(foreach col,$(call range,${lastcol}),\
-		$(eval $(call template_estim,${file},${col})))\
-	$(foreach col,$(call range,${lastcol}),\
-		$(eval $(call template_calc,${file},${col})))\
+		$(eval $(call template_estim,${file},${col}))\
+		$(eval $(call template_calc,${file},${col}))\
+		$(eval $(call template_timeplot,${file},${col})))\
 	$(foreach N,$(call range,${lastplot}),\
 		$(eval $(call template_plot,${file},${N}))))
 endef
 
 ## info
 ifndef INFO
-INFO = calc_times calc plot_times plot del_estim
+INFO = calc_estim calc calc_times plot_times plot del_estim
 define INFOADD
 endef
 else
 INFOend +=
 endif
-INFO_calc_times = estimate correlation times
+INFO_calc_estim = estimate correlation times
 INFO_calc       = calculate time correlation data
+INFO_calc_times = calculate correlation times
 INFO_plot_times = plot correlation times
 INFO_plot       = plot time correlation data
 INFO_del_estim  = delete linear fit data and plots
@@ -115,9 +126,9 @@ INFO_del_estim  = delete linear fit data and plots
 PRECIOUS +=
 
 ## clean
-PLOTS_LIST += $(TAU_PLOT) $(CORR_PLOT)
+PLOTS_LIST += $(TIMES_PLOT) $(TIME_PLOT) $(CORR_PLOT)
 CLEAN_LIST += */*.tmp[0-9]*[0-9]
-PURGE_LIST += $(DEL_FITCOR) $(ESTIM_DATA) $(TAU_ESTIMATE) $(CORR_DATA)
+PURGE_LIST += $(DEL_FITCOR) $(ESTIM_DATA) $(TIMES) $(CORR_DATA)
 
 .PHONY: del_estim
 del_estim:
