@@ -1,6 +1,6 @@
 #!/bin/bash
-#Wrapper for plot_corrtime.gp
-#Uses plot_corrtime.gp
+#Wrapper for plot_corrtimes.gp
+#Uses plot_corrtimes.gp
 
 SCRIPTNAME=$(basename $0 .sh)
 EXIT_SUCCESS=0
@@ -11,7 +11,7 @@ NARGS_NEEDED=2
 
 function usage {
     echo -e "
-$SCRIPTNAME: Wrapper for plot_corrtime.gp
+$SCRIPTNAME: Wrapper for plot_corrtimes.gp
 
 Usage: $0 file xrange [unit]
 Arguments:
@@ -58,7 +58,7 @@ then
     options="${options}; SCALE=${scale}; UNIT=\\\"${unit}\\\""
 fi
 
-echo "gnuplot -e \"${options}\" ${scripts}/plot_corrtime.gp"
-eval "gnuplot -e \"${options}\" ${scripts}/plot_corrtime.gp"
+echo "gnuplot -e \"${options}\" ${scripts}/plot_corrtimes.gp"
+eval "gnuplot -e \"${options}\" ${scripts}/plot_corrtimes.gp"
 
 exit $EXIT_SUCCESS

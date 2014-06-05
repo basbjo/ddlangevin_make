@@ -58,7 +58,7 @@ $(1).tau : $$(filter $$(fitdir)/${1}%,$${ESTIM_DATA})
 endef
 
 %.tau.tex : %.tau
-	$(SCR)/plot_corrtime.sh $< "$(strip ${CORR_XRANGE})" $(TIME_UNIT)
+	$(SCR)/plot_corrtimes.sh $< "$(strip ${CORR_XRANGE})" $(TIME_UNIT)
 
 # calculate final autocorrelation data
 # include also split.mk to split data
