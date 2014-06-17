@@ -1,7 +1,7 @@
 .PHONY: calc plot calc_estim calc_times plot_times
 calc: $$(CORR_DATA) calc_estim
 
-plot: calc plot_times $$(CORR_PLOT)
+plot: calc calc_times $$(CORR_PLOT)
 
 calc_estim: $$(ESTIM_DATA)
 
@@ -109,7 +109,7 @@ endef
 
 ## info
 ifndef INFO
-INFO = calc_estim calc calc_times plot_times plot del_estim
+INFO = calc_estim calc calc_times plot plot_times del_estim
 define INFOADD
 endef
 else
