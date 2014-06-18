@@ -1,4 +1,4 @@
-.PHONY: calc plot calc_estim calc_times plot_times plot_ratios
+.PHONY: calc plot calc_estim calc_times plot_times plot_ratios plot_all
 calc: $$(CORR_DATA) calc_estim
 
 plot: calc calc_times $$(CORR_PLOT)
@@ -10,6 +10,8 @@ calc_times: $$(TIMES)
 plot_times: calc_times $$(TIMES_PLOT) $$(TIME_PLOT)
 
 plot_ratios: calc_times $$(RATIOS_PLOT)
+
+plot_all: plot plot_times plot_ratios
 
 ## default settings
 SPLIT_SUFFIX ?= $(DROPSUFFIX)# to find split data in remote directory
@@ -123,7 +125,7 @@ endef
 
 ## info
 ifndef INFO
-INFO = calc_estim calc calc_times plot plot_times plot_ratios del_estim
+INFO = calc_estim calc calc_times plot plot_times plot_ratios plot_all del_estim
 define INFOADD
 endef
 else
@@ -135,6 +137,7 @@ INFO_calc_times = calculate correlation times
 INFO_plot_times = plot correlation times
 INFO_plot_ratios = plot ratios between correlation times
 INFO_plot       = plot time correlation data
+INFO_plot_all   = call all plot targets
 INFO_del_estim  = delete linear fit data and plots
 
 ## keep intermediate files
