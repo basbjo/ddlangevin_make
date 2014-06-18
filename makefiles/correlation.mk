@@ -1,13 +1,13 @@
 .PHONY: calc plot calc_estim calc_times plot_times plot_ratios plot_all
 calc: $$(CORR_DATA) calc_estim
 
-plot: calc calc_times $$(CORR_PLOT)
+plot: calc calc_times $$(CORR_PLOT) $$(TIMES_PLOT)
 
 calc_estim: $$(ESTIM_DATA)
 
 calc_times: $$(TIMES)
 
-plot_times: calc_times $$(TIMES_PLOT) $$(TIME_PLOT)
+plot_times: calc_times $$(TIME_PLOT)
 
 plot_ratios: calc_times $$(RATIOS_PLOT)
 
@@ -134,9 +134,9 @@ endif
 INFO_calc_estim = estimate correlation times
 INFO_calc       = calculate time correlation data
 INFO_calc_times = calculate correlation times
-INFO_plot_times = plot correlation times
+INFO_plot       = plot correlation functions and times
+INFO_plot_times = plot correlation times in »$(cordir)«
 INFO_plot_ratios = plot ratios between correlation times
-INFO_plot       = plot time correlation data
 INFO_plot_all   = call all plot targets
 INFO_del_estim  = delete linear fit data and plots
 
