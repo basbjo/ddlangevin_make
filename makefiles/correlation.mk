@@ -1,4 +1,4 @@
-.PHONY: calc plot calc_estim calc_times plot_times
+.PHONY: calc plot calc_estim calc_times plot_times plot_ratios
 calc: $$(CORR_DATA) calc_estim
 
 plot: calc calc_times $$(CORR_PLOT)
@@ -9,6 +9,8 @@ calc_times: $$(TIMES)
 
 plot_times: calc_times $$(TIMES_PLOT) $$(TIME_PLOT)
 
+plot_ratios: calc_times $$(RATIOS_PLOT)
+
 ## default settings
 SPLIT_SUFFIX ?= $(DROPSUFFIX)# to find split data in remote directory
 ESTIMLENGTH ?= 1000000# max correlation length for first estimate
@@ -16,7 +18,8 @@ RANGEFACTOR ?= 6# times correlation time for final data
 CORR_LAST_COL ?= 18# last column (optional)
 CORR_PLOT_NCOLS ?= 6# number of columns per plot
 CORR_XRANGE ?= # xrange (optional, format: xmin:xmax)
-TIME_UNIT ?=# time unit to be shown in x label
+CORR_MAXRATIO ?= # maximum ratio between correlation times (optional)
+TIME_UNIT ?= # time unit to be shown in x label (optional)
 
 # settings/data to be shown by showconf/showdata
 SHOWCONF += CORR_LAST_COL CORR_PLOT_NCOLS CORR_XRANGE TIME_UNIT
@@ -36,6 +39,7 @@ CORR_DATA = $(addprefix ${cordir}/,$(call add-V01,${DATA},.cor,CORR))
 CORR_PLOT = $(foreach a,n e,$(call add_01,${DATA},.cor_,${a}.png,CORR))
 TIMES = $(addsuffix .tau,${DATA})
 TIMES_PLOT = $(addsuffix .png,${TIMES})
+RATIOS_PLOT = $(addsuffix .ratios.png,${TIMES})
 TIME_PLOT = $(addprefix ${cordir}/,$(call add-V01,${DATA},.png,CORR))
 
 ## rules
@@ -79,6 +83,16 @@ $(1).tau : $$(filter $$(cordir)/${1}%,$${CORR_DATA})
 		| sort -k2 -gr | tee -a $$@
 endef
 
+# plot ratios between correlation times
+%.tau.ratios.tex : %.tau $(SCR)/plot_tau_ratios.gp
+	$(ratios_command)
+
+define ratios_command
+gnuplot -e 'FILE="$<"'\
+	$(if ${CORR_MAXRATIO},-e 'ymax=$(strip ${CORR_MAXRATIO})')\
+	$(SCR)/plot_tau_ratios.gp
+endef
+
 # plot final autocorrelation data
 define template_plot
 $(1).cor_$(2)e.tex : $(1).cor_$(2)n.tex
@@ -109,7 +123,7 @@ endef
 
 ## info
 ifndef INFO
-INFO = calc_estim calc calc_times plot plot_times del_estim
+INFO = calc_estim calc calc_times plot plot_times plot_ratios del_estim
 define INFOADD
 endef
 else
@@ -119,6 +133,7 @@ INFO_calc_estim = estimate correlation times
 INFO_calc       = calculate time correlation data
 INFO_calc_times = calculate correlation times
 INFO_plot_times = plot correlation times
+INFO_plot_ratios = plot ratios between correlation times
 INFO_plot       = plot time correlation data
 INFO_del_estim  = delete linear fit data and plots
 
@@ -126,7 +141,7 @@ INFO_del_estim  = delete linear fit data and plots
 PRECIOUS +=
 
 ## clean
-PLOTS_LIST += $(TIMES_PLOT) $(TIME_PLOT) $(CORR_PLOT)
+PLOTS_LIST += $(TIMES_PLOT) $(RATIOS_PLOT) $(TIME_PLOT) $(CORR_PLOT)
 CLEAN_LIST += */*.tmp[0-9]*[0-9]
 PURGE_LIST += $(DEL_FITCOR) $(ESTIM_DATA) $(TIMES) $(CORR_DATA)
 

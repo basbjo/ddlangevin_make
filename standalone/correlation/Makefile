@@ -20,6 +20,7 @@ IF_FUTURE = 0		# 1 if last column for follower, 0 else
 CORR_LAST_COL = 18	# last column (optional)
 CORR_PLOT_NCOLS = 6	# number of columns per plot
 CORR_XRANGE =		# xrange (optional, format: xmin:xmax)
+CORR_MAXRATIO =		# maximum ratio between correlation times (optional)
 TIME_UNIT =		# time unit to be shown in x label
 
 ## default targets
