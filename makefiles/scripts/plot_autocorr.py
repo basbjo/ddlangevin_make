@@ -20,10 +20,10 @@ lastplot = int(sys.argv[5])
 x_range = sys.argv[6].strip().split(":")
 unit = sys.argv[7].strip()
 if unit:
+    step = float(filenameroot.split(unit)[0].split('_')[-1])
     unit = ' [%s]' % unit
-    step = int(filenameroot.split('.')[0].split('_')[-1].strip(unit))
 else:
-    step = 1
+    step = 1.0
 
 # read data from selected files filenameroot-V[0-9][0-9]+.suffix
 data = []

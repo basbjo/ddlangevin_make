@@ -57,8 +57,8 @@ do
         if [[ "${unit}" != "" ]]
         then
             # search files with different sampling time
-            time=$(echo ${startpattern}|egrep -o -- "_[0-9]+${unit}")
-            pattern=${startpattern/${time}/_[0-9]+${unit}}
+            time=$(echo ${startpattern}|egrep -o -- "_[0-9.]+${unit}")
+            pattern=${startpattern/${time}/_[0-9]+\\.\?[0-9]*${unit}}
             # stop searching
             test ${timewildsearch} && break
             timewildsearch=true
@@ -66,8 +66,9 @@ do
             # stop searching
             break
         fi
+    else
+        pattern=${pattern%.*}
     fi
-    pattern=${pattern%.*}
 done
 
 # print reffile if not identical to filename or not found

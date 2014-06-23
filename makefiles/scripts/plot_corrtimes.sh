@@ -52,9 +52,7 @@ fi
 
 if [ $# -eq 3 ]
 then
-    scale=${file%%.*}
-    scale=${scale##*_}
-    scale=${scale/$unit*/}
+    scale=$(echo ${file}|egrep -o -- "_[0-9.]+${unit}"|grep -o '[0-9.]*[0-9]')
     options="${options}; SCALE=${scale}; UNIT=\\\"${unit}\\\""
 fi
 

@@ -28,10 +28,10 @@ endef
 ## macros
 define down_sampled_linkname
 $(shell name=$(1); unit=$(2); factor=$(3);
-prefix=`echo $${name}|sed -r "s/_[0-9]+$${unit}.*//"`;
-suffix=`echo $${name}|sed -r "s/.*_[0-9]+$${unit}//"`;
-oldvalue=`echo $${name}|egrep -o "_[0-9]+$${unit}($$|\.)"|grep -o '[0-9]*'`;
-newvalue=$$(($${oldvalue}*$${factor}));
+prefix=`echo $${name}|sed -r "s/_[0-9.]+$${unit}.*//"`;
+suffix=`echo $${name}|sed -r "s/.*_[0-9.]+$${unit}//"`;
+oldvalue=`echo $${name}|egrep -o "_[0-9.]+$${unit}($$|\.)"|grep -o '[0-9.]*[0-9]'`;
+newvalue=`echo $${oldvalue}*$${factor}|bc`;
 echo $${prefix}_$${newvalue}$${unit}$${suffix})
 endef
 
