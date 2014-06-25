@@ -42,6 +42,21 @@ ncols = len(data)
 
 # configuration
 g = Gnuplot.Gnuplot()
+Gnuplot.PlotItem._option_sequence.append('linestyle')
+Gnuplot.PlotItems._FileItem._option_list.update({'linestyle' : lambda self, value: self.set_option_colonsep('linestyle', value)})
+
+linestyle_color = {
+        "1": "-1",
+        "2": "1",
+        "3": "2",
+        "4": "3",
+        "5": "7",
+        "6": "5",
+        "7": "4",
+        }
+for style, color in linestyle_color.items():
+    g('set style line %d linecolor %d' % (int(style), int(color)))
+
 g.xlabel('Principal component')
 g.ylabel('Free energy $F - F_0$ [kT]')
 g.title(r'1D free energy landscape for \\verb|%s|' % filenameroot)
@@ -67,7 +82,7 @@ if reffileroot:
 d = []
 for i in range(ncols):
     d.append(Gnuplot.Data(data[i],
-        cols=(0,1,2),
+        cols=(0,1,2), linestyle=i+1,
         title=('V%s' % str(i+offset+1))))
 g('set style data yerrorlines')
 g('set output "%s"' % (outfilenameroot+'e.tex'))
