@@ -38,6 +38,21 @@ ncols = len(data)
 
 # configuration
 g = Gnuplot.Gnuplot()
+Gnuplot.PlotItem._option_sequence.append('linestyle')
+Gnuplot.PlotItems._FileItem._option_list.update({'linestyle' : lambda self, value: self.set_option_colonsep('linestyle', value)})
+
+linestyle_color = {
+        "1": "-1",
+        "2": "1",
+        "3": "2",
+        "4": "3",
+        "5": "7",
+        "6": "5",
+        "7": "4",
+        }
+for style, color in linestyle_color.items():
+    g('set style line %d linecolor %d' % (int(style), int(color)))
+
 g.xlabel('Time%s' % unit)
 g.ylabel('Normalized autocorrelation')
 g.title(r'Autocorrelations for \\verb|%s|' % filenameroot)
@@ -57,7 +72,7 @@ for i in range(ncols):
     x = data[i][:,:1]*step
     y = data[i][:,1:]
     d.append(Gnuplot.Data(np.concatenate([x, y], axis=1),
-        cols=(0,1,2),
+        cols=(0,1,2), linestyle=i+1,
         title=('V%s' % str(i+offset+1))))
 g('set style data yerrorlines')
 g('set output "%s"' % (outfilenameroot+'e.tex'))
