@@ -12,7 +12,7 @@ IF_FUTURE ?= 1# 1 with future column, 0 else
 SHOWDATA += RAWDATA
 
 ## projected data, e.g. from principal component analysis
-projtarget = dpca
+projtarget = tica
 projmakefile = $(makedir)/$(projtarget).mk
 # suffix for projected data that is further analysed
 $(eval $(shell grep '^PROJSUFFIX =' ${projmakefile}))
