@@ -18,7 +18,7 @@ DROPSUFFIX =
 SPLIT_LIST = *$(PROJSUFFIX)
 
 ## default targets
-all += $(projtarget) minmax
+all += cossin
 
 ## call macros
 $(call_macros)
