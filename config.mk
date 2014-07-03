@@ -12,7 +12,7 @@ IF_FUTURE ?= 1# 1 with future column, 0 else
 SHOWDATA += RAWDATA
 
 ## projected data, e.g. from principal component analysis
-projtarget = tica
+projtarget = dpca
 projmakefile = $(makedir)/$(projtarget).mk
 # lag times in units of one time frame in data files (tica only)
 LAG_TIMES = 100
