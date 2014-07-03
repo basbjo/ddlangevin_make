@@ -20,7 +20,7 @@ DIH_MAX_COL = 16	# last column to be selected from source data
 LAG_TIMES = 100
 
 ## default targets
-all += tica
+all += tica minmax
 
 ## call macros
 $(call_macros)
