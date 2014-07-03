@@ -14,6 +14,8 @@ SHOWDATA += RAWDATA
 ## projected data, e.g. from principal component analysis
 projtarget = tica
 projmakefile = $(makedir)/$(projtarget).mk
+# lag times in units of one time frame in data files (tica only)
+LAG_TIMES = 100
 # suffix for projected data that is further analysed
 $(eval $(shell grep '^PROJSUFFIX =' ${projmakefile}))
 $(eval $(shell grep '^PROJDROPSUFFIX =' ${projmakefile}))

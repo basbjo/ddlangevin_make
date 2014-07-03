@@ -12,6 +12,7 @@ HIST1D ?= histogram -V0 -b $(HIST_NBINS) -D
 HIST2D ?= histo2d -V0 -b $(HIST_NBINS)
 # Stock group
 FASTCA ?= fastca
+DELAYPCA ?= $(SCR)/delayPCA.py
 # scripts
 MINMAX ?= $(SCR)/minmax.sh -d" " -f "%9.6f"
 NCOLS ?= $(SCR)/shape.sh -c
