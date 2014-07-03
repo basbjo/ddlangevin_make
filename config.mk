@@ -11,8 +11,16 @@ RAWDATA = alldih*_1$(TIME_UNIT)
 IF_FUTURE ?= 1# 1 with future column, 0 else
 SHOWDATA += RAWDATA
 
+## projected data, e.g. from principal component analysis
+projtarget = dpca
+projmakefile = $(makedir)/$(projtarget).mk
+# suffix for projected data that is further analysed
+$(eval $(shell grep '^PROJSUFFIX =' ${projmakefile}))
+$(eval $(shell grep '^PROJDROPSUFFIX =' ${projmakefile}))
+SHOWDATA += PROJSUFFIX
+
 ## data and factors for downsampling
-SAMPORIG = $(addsuffix .cossin.pca,${RAWDATA})
+SAMPORIG = $(addsuffix ${PROJSUFFIX},${RAWDATA})
 REDUCTION_FACTORS = 5
 
 ## first and last column to be selected from source data for dPCA

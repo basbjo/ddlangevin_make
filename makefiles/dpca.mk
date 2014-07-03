@@ -20,6 +20,9 @@ SHOWDATA +=
 COSSINDATA += $(addsuffix .cossin,${DATA})
 # projected data from principal component analysis
 PCADATA += $(addsuffix .pca,${COSSINDATA})
+# suffix for projected data that is further analysed
+PROJSUFFIX = .cossin.pca
+PROJDROPSUFFIX = .cossin.pca # drop this in subdirs
 # plot of cumulative variances (eigenvalues)
 CVARPLOT = $(addsuffix .eigval.png,${COSSINDATA})
 # minima and maxima as reference for ranges
@@ -32,11 +35,11 @@ MINMAXALL = $(PCADATA)
 		-v dih_min_col=$(strip ${DIH_MIN_COL})\
 		-v dih_max_col=$(strip ${DIH_MAX_COL}) $< > $@
 
-%.cossin.pca.tmp : %.cossin
+%$(PROJSUFFIX).tmp : %.cossin
 	# perform principal component analysis on $<
 	name=$<; $(FASTCA) -f $$name -p $@ -c $$name.cov -v $$name.eigvec -V $$name.eigval
 
-%.cossin.pca : %.cossin.pca.tmp
+%$(PROJSUFFIX) : %$(PROJSUFFIX).tmp
 	$(appendlastcol_command)
 
 define appendlastcol_command

@@ -2,7 +2,7 @@ prefix = .
 include $(prefix)/config.mk
 include $(makedir)/common.mk
 include $(makedir)/readme.mk
-include $(makedir)/dpca.mk
+include $(projmakefile)
 include $(makedir)/split.mk
 include $(makedir)/link_downsampling.mk
 
@@ -15,10 +15,10 @@ DROPSUFFIX =
 
 ## settings
 #see config.mk
-SPLIT_LIST = *.cossin.pca
+SPLIT_LIST = *$(PROJSUFFIX)
 
 ## default targets
-all += dpca minmax
+all += $(projtarget) minmax
 
 ## call macros
 $(call_macros)
