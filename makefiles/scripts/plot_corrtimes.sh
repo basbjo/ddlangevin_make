@@ -38,7 +38,9 @@ unit=$3
 ymin=${xrange%%:*}
 ymax=${xrange##*:}
 
-options="FILE=\\\"${file}\\\""
+lag=`echo $file | egrep -o 'lag[0-9]+' | grep -o '[0-9]*'`
+
+options="FILE=\\\"${file}\\\";LAG=${lag}"
 
 if [ "${ymin}" != "" ]
 then

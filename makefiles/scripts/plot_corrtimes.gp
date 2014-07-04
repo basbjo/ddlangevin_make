@@ -22,6 +22,7 @@ set grid
 set key Left spacing 2
 set title sprintf("Correlation times for \\verb|%s|", FILE)
 plot \
+    SCALE*LAG lc 5 title sprintf("Lag time %g%s",LAG*SCALE,UNIT), \
     DATA u ($0+1):(SCALE*$2):(SCALE*$3):(SCALE*$4) w e lt 1 notitle, \
     DATA u ($0+1):(SCALE*$2):xticlabels(1) lt 1 notitle, \
     DATA u ($0+1):(SCALE*$2):x2ticlabels(sprintf("%d",$0+1)) lt 1 notitle, \
