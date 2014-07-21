@@ -7,9 +7,9 @@ import sys, os
 import numpy as np
 import Gnuplot, Gnuplot.funcutils
 
-if len(sys.argv) != 8:
+if len(sys.argv) < 7:
     sys.exit(("Usage: %s filenameroot cordir cols_per_plot nthplot lastplot"
-            + " xrange unit") % sys.argv[0])
+            + " xrange [unit]") % sys.argv[0])
 
 suffix = "cor"
 filenameroot = sys.argv[1]
@@ -18,12 +18,13 @@ cols_per_plot = int(sys.argv[3])
 nthplot = int(sys.argv[4])
 lastplot = int(sys.argv[5])
 x_range = sys.argv[6].strip().split(":")
-unit = sys.argv[7].strip()
-if unit:
-    step = float(filenameroot.split(unit)[0].split('_')[-1])
-    unit = ' [%s]' % unit
-else:
-    step = 1.0
+unit = ""
+step = 1.0
+if len(sys.argv) > 7:
+    unit = sys.argv[7].strip()
+    if unit:
+        step = float(filenameroot.split(unit)[0].split('_')[-1])
+        unit = ' [%s]' % unit
 
 # read data from selected files filenameroot-V[0-9][0-9]+.suffix
 data = []
