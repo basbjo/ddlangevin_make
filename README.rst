@@ -7,6 +7,11 @@ Makefiles for data analysis and data driven langevin equations
 
 .. Contents::
 
+To read this file as html, call ``make doc``.
+
+This is not yet supposed to be a full documentation but rather
+a minimal guideline for typical usage of the scripts provided.
+
 Writing new makefiles
 =====================
 - Create a topic directory, e.g. ``topic``.
@@ -21,3 +26,148 @@ Writing new makefiles
 - Update ``INFO``, ``INFOend`` and ``INFOADD`` in ``makefiles/topic.mk``.
 - Foreach target in ``INFO`` or ``INFOend``, define a description ``INFO_target``.
 - Set default targets and optionally define settings in ``topic/Makefile``.
+
+Workflow for the main directory
+===============================
+In contrast to the workflow described here, subdirectories of ``standalone/``
+are supposed to be used to apply one analysis to data files as they are.
+
+- Obtain a new clone of the repository as main directory::
+
+    git clone git://github.com/basbjo/ddlangevin_make name_of_working_directory
+
+*Makefile information and configuration*
+
+- To verify the configuration and selected data, use the makefile targets
+  ``show`` or ``showconf``, ``showdata`` and ``showmacros`` in any directory.
+
+- Get a target description with ``make info`` and use ``make -n [target]``
+  to see what make will do when calling a specific target.
+
+*Configuration*
+
+- Select a transformation by setting ``projtarget`` in ``config.mk``.
+  Currently, ``dpca`` and ``tica`` are available.
+  To select the latter, consider calling::
+
+    git merge origin/tica
+
+  which adds a few further changes instead of setting ``projtarget`` manually.
+
+- Put source data (dihedral angles) into main directory and define
+  ``TIME_UNIT``, the wildcard ``RAWDATA`` for source data and the
+  ``IF_FUTURE`` value in ``config.mk`` as described there.
+
+- For ``tica``, select ``LAG_TIMES`` (unit: time frames) in ``config.mk``.
+
+- Select the first and last column of the source data to be considered as
+  ``DIH_MIN_COL`` and ``DIH_MAX_COL`` in ``config.mk``.
+
+*Data projection*
+
+- Perform transformations to obtain projected data to work with::
+
+    make
+
+- Split projected trajectories before calculating histograms/correlations/etc.::
+
+    make split
+
+*Analysis in the main directory*
+
+- To generate histograms, you may first calculate and then plot them::
+
+    cd histogram/
+    make
+    make plot
+
+  If this does not work, you probably have to call the ``split`` or ``minmax``
+  target in the main directory (the ``minmax`` file is used to define
+  compareable bins).
+
+- To generate correlations, you may first calculate and then plot them::
+
+    cd ../correlation/
+    make
+    make plot_all
+
+  If this does not work, you probably have to call the ``split``
+  target in the main directory.
+
+- To recreate plots after changes in ``config.mk`` in main directory, call::
+
+    make del_plots; make plot[_all]
+
+*Downsampling (optional)*
+
+- To obtain a set of down sampled projected trajectories including trajectories
+  with all possible starting points, set ``REDUCTION_FACTORS`` in ``config.mk``
+  and call::
+
+    make downsampling
+
+  Sets of trajectories with one starting point are saved in ``downsampling/``.
+
+  Down sampled data is by default taken into account by the ``split`` target
+  but ignored in the subdirectories ``histogram/`` and ``correlation/``, see
+  ``DATA_LINK`` in the subdirectory makefiles.
+
+*Analysis of derived data such as data-driven Langevin equations*
+
+- Go to directory ``langevin/`` and usually make a copy of ``template/``::
+
+    cd langevin/
+    cp -r template/ new_data/
+    cd new_data/
+
+- Create links to projected data and optionally create files with few columns::
+
+    make
+    make file.3cols # example to extract 3 columns from file
+
+  When extracting columns, the last column is kept as well if ``IF_FUTURE=1``.
+
+- Provide derived data files and update ``localconf.mk``, for example::
+
+    SPLIT_LIST = *.lang
+    SPLIT_FUTURE = 1
+
+  for filenames with the suffix ``.lang`` and if the last column is 1 or 0 to
+  denote ends of consecutive trajectories (else set ``SPLIT_FUTURE=0``).
+
+  Filenames must start with exact names of the projected data files and may
+  contain additional information before the suffix.
+
+- Split trajectories by calling ``make`` or ``make split``::
+
+    make split
+
+- To generate histograms, you may first calculate and then plot them::
+
+    cd histogram/
+    make
+    make plot
+
+  If this does not work, you probably have to call the target ``split``
+  in the parent directory or ``minmax`` in the main directory (the ``minmax``
+  file is used to define compareable bins).
+
+  If a similar histogram files exists in the ``histogram/`` subdirectory of
+  the main directory, it is used as reference file to set plot ranges.
+  In case no exactly matching reference file is found, also filenames with
+  different time steps are tried as a reference which is useful when working
+  on down sampled data.
+
+- To generate correlations, you may first calculate and then plot them::
+
+    cd ../correlation/
+    make
+    make plot_all
+
+  If this does not work, you probably have to call the target ``split``
+  in the parent directory.
+
+- To recreate plots after changes in ``config.mk`` or when new reference
+  data is provided in the main directory, call::
+
+    make del_plots; make plot[_all]
