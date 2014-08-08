@@ -137,7 +137,8 @@ del_split:
 .PRECIOUS: $$(PRECIOUS)
 
 ## common rules
-%.html : %.rst ; $(RST2HTML) $< $@
+%.html : %.rst $(makedir)/readme.css $(makedir)/readme.sed
+	$(RST2HTML) --stylesheet=$(word 2,$+) $< | sed -f $(word 3,$+) > $@
 
 %.eps : %.pdf ; $(PDF2EPS) $<
 
