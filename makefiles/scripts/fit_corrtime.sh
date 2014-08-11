@@ -59,7 +59,7 @@ rm -f ${fitlog}*
 if [ ${future} == 1 ]
 then
     # only use the first continuous trajectory
-    sed '/0$/q' ${name} # quits if last column is zero
+    sed '/^[^#].* 0$/q' ${name} # quits if last column is zero
 else
     # use whole file
     cat ${name}

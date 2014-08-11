@@ -4,9 +4,10 @@
 set terminal tikz standalone tightboundingbox
 set output FILE.".tex"
 
-if(!exists("SCALE")) SCALE=1
+in_units=""
 if(exists("UNIT")) in_units=sprintf(" [%s]", UNIT)
 if(!exists("UNIT")) UNIT=""
+if(!exists("SCALE")) SCALE=1
 if(exists("ymin")) set yrange [ymin:]
 if(!exists("ymin")) ymin=1
 
