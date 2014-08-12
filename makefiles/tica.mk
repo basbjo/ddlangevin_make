@@ -24,7 +24,10 @@ define template_tica
 	# perform time lagged independent component analysis on $$<\
 		(lag time $(1) frames)
 	mkdir -p $$(@D)
-	cd $$(@D) && ../$$(DELAYPCA) --trajectory ../$$< --lagtime $(1) --tica
+	$$(if $$(shell [ $${IF_FUTURE} -eq 0 ] && echo yes)\
+	  ,cd $$(@D) && $$(DELAYPCA) --trajectory ../$$< --lagtime $(1) --tica\
+	  ,cd $$(@D) && awk '{print $$$$NF}' ../$$* | paste -d\  ../$$< - \
+		  | $$(DELAYPCA) --break --lagtime $(1) --tica)
 	$(RM) $$(@D)/principal_components.dat
 %.cossin.lag$(1).tica :\
 	%.cossin.lag$(1).tica_dir/time_independent_components.dat
