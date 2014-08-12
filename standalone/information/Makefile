@@ -2,6 +2,7 @@ prefix = ../..
 datadirs = ..
 makedir = $(prefix)/makefiles
 include $(makedir)/common.mk
+include $(makedir)/information.mk
 
 ## source data files in this directory (wildcards allowed)
 DATA_HERE =
@@ -10,6 +11,7 @@ DATA_LINK = *.dat
 DROPSUFFIX = .dat
 
 ## settings
+IF_FUTURE = 0		# 1 if last column for follower, 0 else
 
 ## default targets
 all +=
