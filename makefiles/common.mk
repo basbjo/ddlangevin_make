@@ -24,7 +24,7 @@ HEATMAP ?= $(SCR)/heatmap.py
 all: $$(all)
 
 ## default variables
-SCR ?= $(makedir)/scripts# scripts directory
+SCR ?= $(realpath ${makedir}/scripts)# scripts directory
 datadirs ?= $(prefix)# remote data directories
 DROPSUFFIX ?= # data filename suffix to be omitted in link names
 IF_FUTURE ?= 0# 1 if last column for follower, 0 else
