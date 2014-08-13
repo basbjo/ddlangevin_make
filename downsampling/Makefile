@@ -1,5 +1,4 @@
 prefix = ..
-splitdir = $(firstword ${datadirs})/splitdata
 include $(prefix)/config.mk
 include $(makedir)/common.mk
 include $(makedir)/downsampling.mk

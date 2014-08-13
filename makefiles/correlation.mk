@@ -25,7 +25,7 @@ TIME_UNIT ?= # time unit to be shown in x label (optional)
 
 # settings/data to be shown by showconf/showdata
 SHOWCONF += CORR_LAST_COL CORR_PLOT_NCOLS CORR_XRANGE TIME_UNIT
-SHOWDATA += fitdir cordir SPLIT_SUFFIX
+SHOWDATA += fitdir cordir splitdir SPLIT_SUFFIX
 
 ## default settings that must be changed before including this file
 fitdir ?= estimation

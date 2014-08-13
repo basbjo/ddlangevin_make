@@ -31,7 +31,7 @@ DIH_MIN_COL = 7
 DIH_MAX_COL = 16
 
 ## save split pca data here to avoid recalculation
-splitdir ?= $(firstword ${datadirs})/splitdata
+splitdir ?= $(or $(firstword ${datadirs}),.)/splitdata
 
 ## minima and maxima as reference for ranges
 MINMAXFILE = $(prefix)/minmax
