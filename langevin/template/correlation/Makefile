@@ -11,7 +11,7 @@ splitdir := $(firstword ${datadirs})/$(splitdir)
 DATA_HERE =
 ## source data files in datadirs (wildcards allowed)
 DATA_LINK = $(SPLIT_LIST)
-DROPSUFFIX = .lang
+DROPSUFFIX = $(SUBDIR_DROPSUFFIX)
 
 ## settings
 # see config.mk and localconf.mk
