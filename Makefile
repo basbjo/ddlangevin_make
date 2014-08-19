@@ -15,7 +15,7 @@ DROPSUFFIX =
 
 ## settings
 #see config.mk
-SPLIT_LIST = *$(PROJSUFFIX)
+SPLIT_LIST = $(addsuffix ${PROJSUFFIX},${RAWDATA})
 
 ## default targets
 all += $(projtarget) minmax
