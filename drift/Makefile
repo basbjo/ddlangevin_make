@@ -1,15 +1,16 @@
 prefix = ..
-datadirs = ..
-makedir = $(prefix)/makefiles
+include $(prefix)/config.mk
 include $(makedir)/common.mk
+include $(makedir)/drift.mk
 
 ## source data files in this directory (wildcards allowed)
 DATA_HERE =
 ## source data files in datadirs (wildcards allowed)
-DATA_LINK = *.dat
-DROPSUFFIX = .dat
+DROPSUFFIX = $(PROJDROPSUFFIX)
+DATA_LINK = $(addsuffix ${PROJSUFFIX},${RAWDATA})
 
 ## settings
+# see config.mk
 
 ## default targets
 all +=
