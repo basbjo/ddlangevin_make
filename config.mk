@@ -49,3 +49,6 @@ CORR_LAST_COL = 18	# last column (optional)
 CORR_PLOT_NCOLS = 6	# number of columns per plot
 CORR_XRANGE =		# xrange (optional, format: xmin:xmax)
 CORR_MAXRATIO =		# maximum ratio between correlation times (optional)
+
+## settings for drift fields
+DRIFT_LAST_COL = 3	# last column (optional, >1)
