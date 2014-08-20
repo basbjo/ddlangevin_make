@@ -11,11 +11,11 @@ NARGS_NEEDED=7
 
 usage() {
     echo "
-$SCRIPTNAME: Estimate corrtimes and append range for subsequent data creation to name.fit
+$SCRIPTNAME: Estimate corrtimes and append range for subsequent data creation to .fit file
 
-Usage: $0 name column fitdir if_future estimlength rangefactor program [options]
+Usage: $0 file column fitdir if_future estimlength rangefactor program [options]
 Arguments:
-    - name:         filename root
+    - file:         data file
     - column:       column number
     - fitdir:       directory for results from corrtime estimation
     - if_future:    1 in case of several trajectories, 0 else
@@ -41,7 +41,7 @@ fi
 
 # get command line arguments
 scripts=$(dirname $0)
-name=$1
+file=$1
 column=$((10#$2)) # decimal representation forced, leading zeros removed
 fitdir=$3
 future=$4
@@ -51,10 +51,10 @@ program=$7
 shift ${NARGS_NEEDED}
 options=$*
 minrange=100
-fitlog=${fitdir}/$(printf "%s-V%02d.fit" ${name} ${column})
+fitlog=${fitdir}/$(printf "%s-V%02d.fit" ${file} ${column})
 corfile=${fitlog}.cor
 
-echo "Estimate correlation time for ${name} (column ${column})..."
+echo "Estimate correlation time for ${file} (column ${column})..."
 
 # remove old fit results
 rm -f ${fitlog}*
@@ -63,10 +63,10 @@ rm -f ${fitlog}*
 if [ ${future} == 1 ]
 then
     # only use the first continuous trajectory
-    sed '/^[^#].* 0$/q' ${name} # quits if last column is zero
+    sed '/^[^#].* 0$/q' ${file} # quits if last column is zero
 else
     # use whole file
-    cat ${name}
+    cat ${file}
 fi | ${program} ${options} -c${column} -D ${estimlength} \
    | awk '!/^#/ {if($2<exp(-1))exit;print $0}' > ${corfile}
    # stop calculation when correlation falls below exp(-1)

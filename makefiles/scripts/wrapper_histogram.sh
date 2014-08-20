@@ -15,7 +15,7 @@ $SCRIPTNAME: Calculate averaged 1D histogram for one column
 
 Usage: $0 name column minmax splitprefix outdir program [options]
 Arguments:
-    - name:         filename root
+    - name:         outfilename root
     - column:       column number
     - minmax:       reference file with minima and maxima or \"\",
                     must contain two lines with minima and maxima

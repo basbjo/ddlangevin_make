@@ -18,7 +18,7 @@ $SCRIPTNAME: Calculate averaged autocorrelation for one column
 
 Usage: $0 name column fitdir splitprefix outdir program [options]
 Arguments:
-    - name:         filename root
+    - name:         outfilename and fitfilename root
     - column:       column number
     - fitdir:       directory with results from corrtime estimation
     - splitprefix:  split dir and name prefix to splitprefix-##
