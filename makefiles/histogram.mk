@@ -123,7 +123,7 @@ INFO_plot_hist1d = plot 1D free energy landscape
 INFO_plot_hist2d = plot 2D histograms
 define INFOADD
 
-Histogram ranges are read from »$(MINMAXFILE)«.
+Reference binning ranges are read from »$(MINMAXFILE)«.
 Reference files are searched in »$(HIST2D_REFDIR)/«. They are
 used for 1D histogram x-range and 2D histogram color bar.
 
