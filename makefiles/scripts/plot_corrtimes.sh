@@ -17,7 +17,7 @@ Usage: $0 file xrange [unit]
 Arguments:
     - file:         data file
     - xrange:       xrange in format \"[xmin]:[xmax]\"
-    - unit:         time unit to be shown in x label
+    - unit:         time unit for x label and scaling
 " >&2
     [ $NARGS -eq 1 ] && exit $1 || exit $EXIT_FAILURE
 }
@@ -54,9 +54,14 @@ then
     options="${options}; ymax=${ymax}"
 fi
 
-if [ $# -eq 3 ]
+if [ $# -eq 3 ] && [ -n "${unit}" ]
 then
     scale=$(echo ${file}|egrep -o -- "_[0-9.]+${unit}"|grep -o '[0-9.]*[0-9]')
+    if [ -z "${scale}" ]
+    then
+        echo "Error: time step with unit »${unit}« cannot be extracted from filename »${file}«." >&2
+        exit $EXIT_ERROR
+    fi
     options="${options}; SCALE=${scale}; UNIT=\\\"${unit}\\\""
 fi
 
