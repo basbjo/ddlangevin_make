@@ -9,8 +9,8 @@ EXIT_ERROR=2
 NARGS=$#
 NARGS_NEEDED=6
 
-function usage {
-    echo -e "
+usage() {
+    echo "
 $SCRIPTNAME: Calculate averaged 1D histogram for one column
 
 Usage: $0 name column minmax splitprefix outdir program [options]
@@ -28,10 +28,14 @@ The minimum range is set by concatenating minmax to input.
 The average of the histograms of »splitprefix-##« where
 ## = 01,02,... is written to »outdir/name-V<column>.hist«.
 " >&2
-    [[ $NARGS -eq 1 ]] && exit $1 || exit $EXIT_FAILURE
+    [ $NARGS -eq 1 ] && exit $1 || exit $EXIT_FAILURE
 }
 
 # get command line options
+if [ "$1" = "-h" ]
+then
+    usage $EXIT_SUCCESS
+fi
 
 # missing arguments
 if [ $NARGS -lt $NARGS_NEEDED ]
@@ -63,7 +67,7 @@ while read traj
 do
     num=${traj##*-}
     echo "Calculate histogram for ${name}, col ${column}, traj ${num}"
-    if [[ "${minmax}" == "" ]]
+    if [ -z "${minmax}" ]
     then
         ${program} -c${column} ${options} ${traj} -o ${outfile}.tmp${num}
     elif [ -f ${minmax} ] && [ $(wc -l ${minmax}|awk '{print $1}') -eq 2 ]

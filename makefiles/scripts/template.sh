@@ -8,8 +8,8 @@ EXIT_ERROR=2
 NARGS=$#
 NARGS_NEEDED=1
 
-function usage {
-    echo -e "
+usage() {
+    echo "
 $SCRIPTNAME: Description
 
 Usage: $0 [-o opt|-n] argument
@@ -22,7 +22,7 @@ Arguments:
 
 Detailed description
 " >&2
-    [[ $NARGS -eq 1 ]] && exit $1 || exit $EXIT_FAILURE
+    [ $NARGS -eq 1 ] && exit $1 || exit $EXIT_FAILURE
 }
 
 # get command line options

@@ -8,8 +8,8 @@ EXIT_ERROR=2
 NARGS=$#
 NARGS_NEEDED=2
 
-function usage {
-    echo -e "
+usage() {
+    echo "
 $SCRIPTNAME: Search reference file by omitting suffixes/changing time step
 
 Usage: $0 refdir filename [unit]
@@ -21,10 +21,14 @@ Arguments:
 For a filename with format »[dir/]root[.detail]-V##[-V##][.suffix]«, a reference
 filename »refdir/[dir/]root*-V##[-V##][.suffix]« is printed, if the file exists.
 " >&2
-    [[ $NARGS -eq 1 ]] && exit $1 || exit $EXIT_FAILURE
+    [ $NARGS -eq 1 ] && exit $1 || exit $EXIT_FAILURE
 }
 
 # get command line options
+if [ "$1" = "-h" ]
+then
+    usage $EXIT_SUCCESS
+fi
 
 # missing arguments
 if [ $NARGS -lt $NARGS_NEEDED ]
@@ -40,7 +44,7 @@ unit=$3
 
 # extract suffix from filename
 suffix=$(echo ${filename}|egrep -o -- '-V[0-9]+-V[0-9]+(\..*)?')
-if [[ "${suffix}" == "" ]]
+if [ -z "${suffix}" ]
 then
     suffix=$(echo ${filename}|egrep -o -- '-V[0-9]+(\..*)?')
 fi
@@ -49,12 +53,12 @@ fi
 pattern=${filename/${suffix}/}
 startpattern=${pattern}
 timewildsearch=
-while [[ "${reffile}" == "" ]] && [[ "${pattern}" != "" ]]
+while [ -z "${reffile}" ] && [ -n "${pattern}" ]
 do
     reffile=$(find -L ${refdir} -type f -regex ${refdir}/${pattern}${suffix})
-    if [[ "${pattern%.*}" == "${pattern}" ]]
+    if [ "${pattern%.*}" = "${pattern}" ]
     then
-        if [[ "${unit}" != "" ]]
+        if [ -n "${unit}" ]
         then
             # search files with different sampling time
             time=$(echo ${startpattern}|egrep -o -- "_[0-9.]+${unit}")
@@ -72,12 +76,12 @@ do
 done
 
 # print reffile if not identical to filename or not found
-if [[ "${reffile}" != "" ]] && [[ "${filename}" != "" ]]
+if [ -n "${reffile}" ] && [ -n "${filename}" ]
 then
     path=$(readlink -f ${filename})
     refpath=$(readlink -f ${reffile})
 fi
-if [[ "${reffile}" != "" ]] && [[ "${path}" != "${refpath}" ]]
+if [ -n "${reffile}" ] && [ "${path}" != "${refpath}" ]
 then
     echo ${reffile}
 fi

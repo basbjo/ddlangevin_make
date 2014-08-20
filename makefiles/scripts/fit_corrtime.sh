@@ -9,8 +9,8 @@ EXIT_ERROR=2
 NARGS=$#
 NARGS_NEEDED=7
 
-function usage {
-    echo -e "
+usage() {
+    echo "
 $SCRIPTNAME: Estimate corrtimes and append range for subsequent data creation to name.fit
 
 Usage: $0 name column fitdir if_future estimlength rangefactor program [options]
@@ -24,10 +24,14 @@ Arguments:
     - program:      typically TISEAN corr with option -V0
     - options:      options that are passed to program
 " >&2
-    [[ $NARGS -eq 1 ]] && exit $1 || exit $EXIT_FAILURE
+    [ $NARGS -eq 1 ] && exit $1 || exit $EXIT_FAILURE
 }
 
 # get command line options
+if [ "$1" = "-h" ]
+then
+    usage $EXIT_SUCCESS
+fi
 
 # missing arguments
 if [ $NARGS -lt $NARGS_NEEDED ]

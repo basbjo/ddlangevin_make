@@ -12,8 +12,8 @@ NARGS_NEEDED=6
 DELIMITER=" "
 BINS=100 # number of values in each data file (in fact it's BINS+1)
 
-function usage {
-    echo -e "
+usage() {
+    echo "
 $SCRIPTNAME: Calculate averaged autocorrelation for one column
 
 Usage: $0 name column fitdir splitprefix outdir program [options]
@@ -30,10 +30,14 @@ The range is set by the last line of »fitdir/name-V<column>.fit«.
 The average of the correlations of »splitprefix-##« where
 ## = 01,02,... is written to »outdir/name-V<column>.cor«.
 " >&2
-    [[ $NARGS -eq 1 ]] && exit $1 || exit $EXIT_FAILURE
+    [ $NARGS -eq 1 ] && exit $1 || exit $EXIT_FAILURE
 }
 
 # get command line options
+if [ "$1" = "-h" ]
+then
+    usage $EXIT_SUCCESS
+fi
 
 # missing arguments
 if [ $NARGS -lt $NARGS_NEEDED ]

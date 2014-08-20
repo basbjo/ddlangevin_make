@@ -9,8 +9,8 @@ EXIT_ERROR=2
 NARGS=$#
 NARGS_NEEDED=2
 
-function usage {
-    echo -e "
+usage() {
+    echo "
 $SCRIPTNAME: Wrapper for plot_corrtimes.gp
 
 Usage: $0 file xrange [unit]
@@ -19,10 +19,14 @@ Arguments:
     - xrange:       xrange in format \"[xmin]:[xmax]\"
     - unit:         time unit to be shown in x label
 " >&2
-    [[ $NARGS -eq 1 ]] && exit $1 || exit $EXIT_FAILURE
+    [ $NARGS -eq 1 ] && exit $1 || exit $EXIT_FAILURE
 }
 
 # get command line options
+if [ "$1" = "-h" ]
+then
+    usage $EXIT_SUCCESS
+fi
 
 # missing arguments
 if [ $NARGS -lt $NARGS_NEEDED ]
