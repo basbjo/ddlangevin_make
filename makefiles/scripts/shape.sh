@@ -77,11 +77,11 @@ do
         test $PRINT_ALL && echo -en "$i" || true
         test $PRINT_ALL && echo -en "$OFS" || true
         test $PRINT_COLS && echo -en \
-            "$(grep -v "^[$COMMENT_CHARS]" "$i" | head -1 | wc -w)" \
+            "$(egrep -v "^([$COMMENT_CHARS]| *$)" "$i" | head -1 | wc -w)" \
             || true
         test $PRINT_ALL  && echo -en "$OFS" || true
         test $PRINT_ROWS && echo -en \
-            "$(grep -v "^[$COMMENT_CHARS]" "$i" | wc -l)" \
+            "$(egrep -v "^([$COMMENT_CHARS]| *$)" "$i" | wc -l)" \
             || true
         echo -en "\n"
     fi

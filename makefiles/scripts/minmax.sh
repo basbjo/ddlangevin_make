@@ -68,7 +68,7 @@ else
     # read from stdin
     cat /dev/stdin
 fi |
-grep -v "^[$COMMENT_CHARS]" |
+egrep -v "^([$COMMENT_CHARS]| *$)" |
 awk -v OFMT="$OFMT" -v OFS="$OFS" -v isfirstline=1 -v script="$SCRIPTNAME" '
 {
 
