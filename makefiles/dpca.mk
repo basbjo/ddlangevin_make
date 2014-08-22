@@ -15,14 +15,14 @@ SHOWDATA += PCADATA
 # projected data from principal component analysis
 PCADATA += $(addsuffix .pca,${COSSINDATA})
 # suffix for projected data that is further analysed
-PROJSUFFIX = .cossin.pca
-PROJDROPSUFFIX = .cossin.pca# drop this in subdirs
+PROJSUFFIX = .cs.pca
+PROJDROPSUFFIX = .cs.pca# drop this in subdirs
 # plot of cumulative variances (eigenvalues)
 CVARPLOT = $(addsuffix .eigval.png,${COSSINDATA})
 # minima and maxima as reference for ranges
 MINMAXALL = $(PCADATA)
 
-%$(PROJSUFFIX).tmp : %.cossin
+%$(PROJSUFFIX).tmp : %.cs
 	# perform principal component analysis on $<
 	name=$<; $(FASTCA) -f $$name -p $@ -c $$name.cov -v $$name.eigvec -V $$name.eigval
 

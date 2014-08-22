@@ -14,13 +14,13 @@ SHOWDATA += TICADATA
 TICADATA += $(foreach lt,${LAG_TIMES},$(addsuffix .lag${lt}.tica,${COSSINDATA}))
 DIR_LIST += $(addsuffix _dir,${TICADATA})
 # suffix for projected data that is further analysed
-PROJSUFFIX = .cossin.lag*.tica
+PROJSUFFIX = .cs.lag*.tica
 # minima and maxima as reference for ranges
 MINMAXALL = $(TICADATA)
 
 ## rules
 define template_tica
-%.cossin.lag$(1).tica_dir/time_independent_components.dat : %.cossin
+%.cs.lag$(1).tica_dir/time_independent_components.dat : %.cs
 	# perform time lagged independent component analysis on $$<\
 		(lag time $(1) frames)
 	mkdir -p $$(@D)
@@ -29,8 +29,8 @@ define template_tica
 	  ,cd $$(@D) && awk '{print $$$$NF}' ../$$* | paste -d\  ../$$< - \
 		  | $$(DELAYPCA) --break --lagtime $(1) --tica)
 	$(RM) $$(@D)/principal_components.dat
-%.cossin.lag$(1).tica :\
-	%.cossin.lag$(1).tica_dir/time_independent_components.dat
+%.cs.lag$(1).tica :\
+	%.cs.lag$(1).tica_dir/time_independent_components.dat
 	$$(appendlastcol_command)
 endef
 

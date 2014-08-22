@@ -14,10 +14,10 @@ SHOWDATA +=
 
 ## variables
 # cos-/sin-transformed dihedral angles
-COSSINDATA += $(addsuffix .cossin,${DATA})
+COSSINDATA += $(addsuffix .cs,${DATA})
 
 ## rules
-%.cossin : %
+%.cs : %
 	# cos-/sin-transform of inner dihedrals in $<
 	$(SCR)/cos_sin_tran.awk\
 		-v dih_min_col=$(strip ${DIH_MIN_COL})\
