@@ -16,7 +16,7 @@ SHOWDATA += PCADATA
 PCADATA += $(addsuffix .pca,${COSSINDATA})
 # suffix for projected data that is further analysed
 PROJSUFFIX = .cs.pca
-PROJDROPSUFFIX = .cs.pca# drop this in subdirs
+PROJDROPSUFFIX =# drop this suffix in subdirs
 # plot of cumulative variances (eigenvalues)
 CVARPLOT = $(addsuffix .eigval.png,${COSSINDATA})
 # minima and maxima as reference for ranges

@@ -15,6 +15,7 @@ TICADATA += $(foreach lt,${LAG_TIMES},$(addsuffix .lag${lt}.tica,${COSSINDATA}))
 DIR_LIST += $(addsuffix _dir,${TICADATA})
 # suffix for projected data that is further analysed
 PROJSUFFIX = .cs.lag*.tica
+PROJDROPSUFFIX =# drop this suffix in subdirs
 # minima and maxima as reference for ranges
 MINMAXALL = $(TICADATA)
 
