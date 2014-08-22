@@ -77,7 +77,7 @@ $(cordir)/$(1)-V$(2).png : $$(cordir)/$(1)-V$(2).cor $(1).tau\
 endef
 
 define template_tau
-$(1).tau : $$(filter $$(cordir)/${1}%,$${CORR_DATA})
+$(1).tau : $$(filter $$(cordir)/${1}-V%,$${CORR_DATA})
 	$$(info Write estimated correlation times to $$@.)
 	@$$(RM) $$@
 	@for file in $$+; do times=$$$$($(SCR)/get_corrtime.awk $$$${file})\
