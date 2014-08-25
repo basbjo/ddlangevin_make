@@ -75,6 +75,8 @@ are supposed to be used to apply one analysis to data files as they are.
 
 *Analysis in the main directory*
 
+Subdirectories besides ``histogram`` and ``correlation`` may be used likewise.
+
 - To generate histograms, you may first calculate and then plot them::
 
     cd histogram/
@@ -97,6 +99,20 @@ are supposed to be used to apply one analysis to data files as they are.
 - To recreate plots after changes in ``config.mk`` in main directory, call::
 
     make del_plots; make plot[_all]
+
+  For convenience, the ``plot_all`` target should always exist even
+  if it is equivalent to the ``plot`` target.
+
+*Fast data projection and analysis*
+
+- You can project data and calculate results in the subdirectories
+  ``histogram`` and ``correlation`` with a oneliner::
+
+    make; make split; make correlation histogram
+
+  where it may be convenient to use ``-j [number]`` for parallelization.
+  If plots and maybe other targets shall be created with the same call, add
+  the wished targets to the variable ``all`` in the subdirectory makefiles.
 
 *Downsampling (optional)*
 
@@ -152,7 +168,7 @@ are supposed to be used to apply one analysis to data files as they are.
   in the parent directory or ``minmax`` in the main directory (the ``minmax``
   file is used to define compareable bins).
 
-  If a similar histogram files exists in the ``histogram/`` subdirectory of
+  If a similar histogram file exists in the ``histogram/`` subdirectory of
   the main directory, it is used as reference file to set plot ranges.
   In case no exactly matching reference file is found, also filenames with
   different time steps are tried as a reference which is useful when working
@@ -171,3 +187,20 @@ are supposed to be used to apply one analysis to data files as they are.
   data is provided in the main directory, call::
 
     make del_plots; make plot[_all]
+
+  For convenience, the ``plot_all`` target should always exist even
+  if it is equivalent to the ``plot`` target.
+
+- Subdirectories besides ``histogram`` and ``correlation`` may be used
+  likewise.  Use ``make info`` and ``make show`` to see what will happen.
+
+*Fast data splitting and analysis*
+
+- You can split data into single trajectories and calculate results in the
+  subdirectories ``histogram`` and ``correlation`` with a oneliner::
+
+    make split; make correlation histogram
+
+  where it may be convenient to use ``-j [number]`` for parallelization.
+  If plots and maybe other targets shall be created with the same call, add
+  the wished targets to the variable ``all`` in the subdirectory makefiles.
