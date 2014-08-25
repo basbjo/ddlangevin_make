@@ -18,7 +18,7 @@ DROPSUFFIX = $(SUBDIR_DROPSUFFIX)
 IF_FUTURE = $(SPLIT_FUTURE)
 
 ## default targets
-all += calc
+all += calc #plot_all
 
 ## call macros
 $(call_macros)

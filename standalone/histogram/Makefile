@@ -26,7 +26,7 @@ KTFACTOR = 1		# factor for temperature rescaling
 HIST2D_LAST_COL = 3	# last column (optional, >1)
 
 ## default targets
-all += calc
+all += calc #plot_all
 
 ## call macros
 $(call_macros)

@@ -1,9 +1,11 @@
 .PHONY: calc calc_hist1d calc_hist2d calc_fel1d\
-	plot plot_hist1d plot_hist2d
+	plot plot_hist1d plot_hist2d plot_all
 
 calc: calc_hist1d calc_hist2d
 
 plot: calc plot_hist1d plot_hist2d
+
+plot_all: plot
 
 calc_hist1d: $$(HIST1D_DATA)
 calc_hist2d: $$(HIST2D_DATA)

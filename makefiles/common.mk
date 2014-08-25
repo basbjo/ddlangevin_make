@@ -35,6 +35,8 @@ MINMAXALL ?= $(DATA)# all files considered for minima and maxima
 SYMLINKS += $(DATALINKS)
 CLEAN_LIST +=
 PURGE_LIST += $(notdir ${MINMAXFILE} ${MINMAXFILE}.old) $(SPLIT_WILD)
+# subdirectories in which make can be called by a double-colon rule
+COMMON_SUBDIRS = correlation histogram
 
 ## macros to be called later
 MACROS += rule_data_links rule_minmax
@@ -135,6 +137,16 @@ del_split:
 	mksymlinks rmsymlinks clean purge del_latex del_plots del_split
 
 .PRECIOUS: $$(PRECIOUS)
+
+## common double-colon rules to call make in subdirectories
+define template_double_colon
+$(1)::
+	cd $$@ && $$(MAKE)
+endef
+
+$(foreach name,$(patsubst %/Makefile,%,$(wildcard\
+	$(addsuffix /Makefile,${COMMON_SUBDIRS}))),\
+	$(eval $(call template_double_colon,${name})))
 
 ## common rules
 %.html : %.rst $(makedir)/readme.css $(makedir)/readme.sed

@@ -20,7 +20,7 @@ IF_FUTURE = $(SPLIT_FUTURE)
 KTFACTOR = 1            # factor for temperature rescaling
 
 ## default targets
-all += calc
+all += calc #plot_all
 
 ## call macros
 $(call_macros)
