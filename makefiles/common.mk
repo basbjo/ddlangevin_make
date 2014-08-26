@@ -43,6 +43,7 @@ MACROS += rule_data_links rule_minmax
 
 ## macro to call several macros later
 define call_macros
+$(eval MACROS += rule_common_subdirs)\
 $(foreach macro,${MACROS},$(call ${macro}))
 endef
 
@@ -144,9 +145,13 @@ $(1)::
 	cd $$@ && $$(MAKE)
 endef
 
+define rule_common_subdirs
 $(foreach name,$(patsubst %/Makefile,%,$(wildcard\
 	$(addsuffix /Makefile,${COMMON_SUBDIRS}))),\
-	$(eval $(call template_double_colon,${name})))
+	$(eval $(call template_double_colon,${name}))\
+	$(eval INFOend += ${name})\
+	$(eval INFO_${name} = call make in subdirectory ${name}))
+endef
 
 ## common rules
 %.html : %.rst $(makedir)/readme.css $(makedir)/readme.sed
