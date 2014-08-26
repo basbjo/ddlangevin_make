@@ -125,7 +125,7 @@ define INFOADD
 
 Histogram ranges are read from »$(MINMAXFILE)«.
 Reference files are searched in »$(HIST2D_REFDIR)/«. They are
-used for 1D histogram x-range and 2D histgoram color bar.
+used for 1D histogram x-range and 2D histogram color bar.
 
 endef
 else
