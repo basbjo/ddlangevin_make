@@ -1,5 +1,12 @@
-.PHONY: calc
+.PHONY: calc\
+	plot plot_drift2d plot_all
 calc: $$(DRIFT_DATA)
+
+plot: plot_drift2d
+
+plot_all: plot
+
+plot_drift2d: calc $$(DRIFT2D_PLOT)
 
 ## default settings
 DRIFT_LAST_COL ?= 2# last column (optional)
@@ -15,6 +22,7 @@ driftdir ?= driftdata
 DIR_LIST += $(driftdir)
 DRIFT_DATA = $(addprefix $(driftdir)/,$(call add-V01-V02,\
 	     ${DATA},.2ddrifthist,DRIFT))
+DRIFT2D_PLOT = $(addprefix drift2d_,$(call add-V01-V02,${DATA},.png,DRIFT))
 
 ## rules
 $(driftdir):
@@ -26,6 +34,13 @@ $(driftdir)/$(1)-V$(2)-V$(3).2ddrifthist : $$(MINMAXFILE) $(1) | $$(driftdir)
 	$$(SCR)/calc_drift.sh $(1) $(2) $(3) "$$(strip $${MINMAXFILE})"\
 		$$(driftdir) $$(strip $${IF_FUTURE}) $$(strip $${TIME_UNIT})
 endef
+
+# drift field plotting
+drift2d_%.tex : $(driftdir)/%.2ddrifthist
+	$(eval std = $(shell python -c "import numpy as np; \
+		x, y = np.loadtxt('$<', usecols=(2,3), unpack=True); \
+		print(np.std(np.sqrt(x**2+y**2)))"))
+	gnuplot -e "dir='$(driftdir)';name='$*';std=$(std)" $(SCR)/plot_drift2d.gp
 
 ## macros to be called later
 MACROS += rule_drift
@@ -40,11 +55,16 @@ endef
 
 ## info
 ifndef INFO
-INFO = calc
+INFO = calc plot plot_drift2d
 INFO_calc = calculate drift fields
+INFO_plot = calls the plot targets below
+INFO_plot_drift2d = plot 2d drift fields
 define INFOADD
 
 Reference binning ranges are read from »$(MINMAXFILE)«.
+
+There are 2d drift field plots with all arrows in »$(driftdir)«
+while very long arrows are omitted in this directory.
 
 endef
 else
@@ -55,6 +75,6 @@ endif
 PRECIOUS +=
 
 ## clean
-PLOTS_LIST +=
+PLOTS_LIST += $(DRIFT2D_PLOT) $(addprefix ${driftdir}/,${DRIFT2D_PLOT})
 CLEAN_LIST += $(DRIFT_DATA) $(patsubst %.2ddrifthist,%.1ddrifthist,${DRIFT_DATA})
 PURGE_LIST +=
