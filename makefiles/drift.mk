@@ -37,9 +37,9 @@ endef
 
 # drift field plotting
 drift2d_%.tex : $(driftdir)/%.2ddrifthist
-	$(eval std = $(shell python -c "import numpy as np; \
-		x, y = np.loadtxt('$<', usecols=(2,3), unpack=True); \
-		print(np.std(np.sqrt(x**2+y**2)))"))
+	$(if $(wildcard $<),$(eval std = $(shell python -c "import numpy as np;\
+		x, y = np.loadtxt('$<', usecols=(2,3), unpack=True);\
+		print(np.std(np.sqrt(x**2+y**2)))")),$(eval std = <stddev>))
 	gnuplot -e "dir='$(driftdir)';name='$*';std=$(std)" $(SCR)/plot_drift2d.gp
 
 ## macros to be called later
