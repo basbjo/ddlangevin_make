@@ -1,6 +1,7 @@
 prefix = ..
 include $(prefix)/config.mk
 include $(makedir)/common.mk
+include $(makedir)/fileinfo.mk
 include $(makedir)/information.mk
 
 ## source data files in this directory (wildcards allowed)
@@ -13,7 +14,7 @@ DATA_LINK = $(addsuffix ${PROJSUFFIX},${RAWDATA})
 # see config.mk
 
 ## default targets
-all +=
+all += negentropy
 
 ## call macros
 $(call_macros)

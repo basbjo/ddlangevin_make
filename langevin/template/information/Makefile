@@ -2,6 +2,7 @@ prefix = ../../..
 datadirs = ..
 include $(prefix)/config.mk
 include $(makedir)/common.mk
+include $(makedir)/fileinfo.mk
 include $(makedir)/information.mk
 include $(firstword ${datadirs})/localconf.mk
 
@@ -16,7 +17,7 @@ DROPSUFFIX = $(SUBDIR_DROPSUFFIX)
 IF_FUTURE = $(SPLIT_FUTURE)
 
 ## default targets
-all +=
+all += negentropy
 
 ## call macros
 $(call_macros)

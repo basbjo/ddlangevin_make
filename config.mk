@@ -52,3 +52,6 @@ CORR_MAXRATIO =		# maximum ratio between correlation times (optional)
 
 ## settings for drift fields
 DRIFT_LAST_COL = 3	# last column (optional, >1)
+
+## settings for negentropies
+NEGENT_LAST_COL = 20	# last column (optional)
