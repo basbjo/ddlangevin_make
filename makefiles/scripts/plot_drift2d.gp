@@ -5,7 +5,7 @@ suffix = '.2ddrifthist'
 # omit arrows longer than range/cutdivisor
 cutdivisor = 10
 # factor to guess appropriate scaling
-scalefactor = 0.3/std
+scalefactor = 0.5/std
 
 # newline after filename unit in title
 set macros
@@ -16,7 +16,6 @@ titlestring = sprintf("Drift field for \\verb|%s|", @titlemacro)
 # settings
 set title titlestring
 set size square
-set cbtics format "" #"%.1e"
 unset colorbox
 AWKSCR = sprintf("<awk '{%%sprint $0,sqrt(($3*$3)+($4*$4))}' %s/%s%s",\
 							dir, name, suffix)
@@ -36,7 +35,7 @@ set label 1 sprintf("arrow scale = %f", scale)
 replot
 
 # plot with same scaling and cut arrow lengths
-set terminal tikz standalone tightboundingbox
+set terminal tikz standalone tightboundingbox gparrows scale 1.4,1.4
 set output sprintf("drift2d_%s.tex", name)
 xsqmax = ((GPVAL_X_MAX-GPVAL_X_MIN)/scale/cutdivisor)**2
 ysqmax = ((GPVAL_Y_MAX-GPVAL_Y_MIN)/scale/cutdivisor)**2
