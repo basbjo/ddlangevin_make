@@ -88,19 +88,26 @@ if __name__ == "__main__":
             default=False, help=("divide each column by its standard"
                 + " deviation."))
 
-    # get command line arguments
+    # get command line arguments and data
     args = parser.parse_args()
 
     if args.input_file == None:
         args.input_file = sys.stdin
-    timeseries = np.loadtxt(args.input_file, ndmin=2)
+    if args.nrcomp == 0:
+        usecols = None
+    else:
+        usecols = range(args.nrcomp)
+    try:
+        timeseries = np.loadtxt(args.input_file, ndmin=2, usecols=usecols)
+    except IndexError:
+        timeseries = np.loadtxt(args.input_file, ndmin=2)
 
     nrcol = timeseries.shape[1]
     if args.nrcomp > nrcol:
         sys.stderr.write("number of colums exceeds file content -> set to %d\n"
                 % nrcol)
         args.nrcomp = nrcol
-    if args.nrcomp == 0:
+    elif args.nrcomp == 0:
         args.nrcomp = nrcol
         sys.stderr.write("using all %i columns\n" % nrcol)
 
