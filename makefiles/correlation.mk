@@ -70,8 +70,9 @@ endef
 # calculate correlation times
 define template_timeplot
 $(cordir)/$(1)-V$(2).png : $$(cordir)/$(1)-V$(2).cor $(1).tau\
-	$(SCR)/plot_corrtime.gp | $$(cordir)
-	$$(eval tau := $$(shell grep $$+ | cut -d\  -f2))
+	$$(SCR)/plot_corrtime.gp | $$(cordir)
+	$$(eval tau := $$(if $$(wildcard $$(word 2,$$+)),\
+		$$(shell grep $$+ |cut -d\  -f2)))
 	gnuplot -e 'FILE="$$(basename $$<)"; TAU=$$(tau)'\
 		$$(SCR)/plot_corrtime.gp
 endef
