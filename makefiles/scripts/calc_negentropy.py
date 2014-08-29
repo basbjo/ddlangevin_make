@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 #Calculate component-wise negentropies of multivariate data
 
-import sys, os, argparse
+import sys, argparse
 import numpy as np
-from scipy.integrate import quadrature
 
 def gaussian(x, mu, var):
     """
