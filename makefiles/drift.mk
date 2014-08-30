@@ -10,9 +10,10 @@ plot_drift2d: calc $$(DRIFT2D_PLOT)
 
 ## default settings
 DRIFT_LAST_COL ?= 2# last column (optional)
+DRIFT_REFDIR ?= $(prefix)/drift# reference data is searched here (optional)
 
 # settings/data to be shown by showconf/showdata
-SHOWCONF += DRIFT_LAST_COL
+SHOWCONF += DRIFT_LAST_COL DRIFT_REFDIR
 SHOWDATA +=
 
 ## default settings that must be changed before including this file
@@ -37,8 +38,12 @@ endef
 
 # drift field plotting
 drift2d_%.tex : $(driftdir)/%.2ddrifthist
-	$(if $(wildcard $<),$(eval std = $(shell python -c "import numpy as np;\
-		x, y = np.loadtxt('$<', usecols=(2,3), unpack=True);\
+	$(if ${DRIFT_REFDIR},$(eval reffile := $(shell\
+		${SCR}/reffile_search.sh ${DRIFT_REFDIR} $< ${TIME_UNIT})))
+	$(if ${reffile},,$(eval reffile := $(wildcard $<)))
+	$(info # determine arrow stddev from ${reffile})
+	$(if ${reffile},$(eval std = $(shell python -c "import numpy as np;\
+		x, y = np.loadtxt('${reffile}', usecols=(2,3), unpack=True);\
 		print(np.std(np.sqrt(x**2+y**2)))")),$(eval std = <stddev>))
 	gnuplot -e "dir='$(driftdir)';name='$*';std=$(std)" $(SCR)/plot_drift2d.gp
 
@@ -62,6 +67,8 @@ INFO_plot_drift2d = plot 2d drift fields
 define INFOADD
 
 Reference binning ranges are read from »$(MINMAXFILE)«.
+Reference files are searched in »$(DRIFT_REFDIR)/«. Their
+variances are used to set the scale of arrow lengths.
 
 There are 2d drift field plots with all arrows in »$(driftdir)«
 while very long arrows are omitted in this directory.
