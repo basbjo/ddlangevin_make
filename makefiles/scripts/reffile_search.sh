@@ -38,7 +38,7 @@ fi
 
 # get command line arguments
 scripts=$(dirname $0)
-refdir=$1
+refdir=${1%/}
 filename=$2
 unit=$3
 
