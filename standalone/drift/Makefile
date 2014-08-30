@@ -19,7 +19,7 @@ DRIFT_LAST_COL = 3	# last column (optional, >1)
 DRIFT_REFDIR = $(prefix)/drift
 
 ## default targets
-all += calc
+all += calc #plot_all
 
 ## call macros
 $(call_macros)
