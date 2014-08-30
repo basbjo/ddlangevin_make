@@ -23,10 +23,10 @@ HIST1D_LAST_COL ?= 20# last column (optional)
 HIST1D_PLOT_NCOLS ?= 4# number of columns per plot
 HIST1D_YRANGE ?= # yrange (optional, format: ymin:ymax)
 KTFACTOR ?= 1# factor for temperature rescaling
-HIST1D_REFDIR ?= $(prefix)/histogram# reference data is searched here
+HIST1D_REFDIR ?= $(prefix)/histogram# reference data is searched here (optional)
 # default settings 2D histograms
 HIST2D_LAST_COL ?= 3# last column (optional, >1)
-HIST2D_REFDIR ?= $(prefix)/histogram# reference data is searched here
+HIST2D_REFDIR ?= $(prefix)/histogram# reference data is searched here (optional)
 TIME_UNIT ?=# to find reference data with different time step
 
 # settings/data to be shown by showconf/showdata
@@ -73,8 +73,8 @@ endef
 
 # histogram plotting
 define template_plot1d
-$(eval reffile := $(shell ${SCR}/reffile_search.sh\
-	${HIST1D_REFDIR} $(1) ${TIME_UNIT}))
+$(if ${HIST1D_REFDIR},$(eval reffile := $(shell\
+	${SCR}/reffile_search.sh ${HIST1D_REFDIR} $(1) ${TIME_UNIT})))
 $(1).fel1d_$(2)e.tex : $(1).fel1d_$(2)n.tex
 $(1).fel1d_$(2)e.pdf : $(1).fel1d_$(2)n.pdf
 $(1).fel1d_$(2)e.png : $(1).fel1d_$(2)n.png
@@ -89,8 +89,8 @@ hist2d_%.pdf : $(histdir2d)/%.hist $$(MINMAXFILE)
 	$(heatmap_command)
 
 define heatmap_command
-$(eval reffile := $(shell ${SCR}/reffile_search.sh\
-	${HIST2D_REFDIR} $< ${TIME_UNIT}))
+$(if ${HIST2D_REFDIR},$(eval reffile := $(shell\
+	${SCR}/reffile_search.sh ${HIST2D_REFDIR} $< ${TIME_UNIT})))
 $(HEATMAP) $< -o $@ -t "2D FEL for $*"\
 	$(if ${reffile},--ref ${reffile})
 endef

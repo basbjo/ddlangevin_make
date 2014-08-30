@@ -24,6 +24,9 @@ HIST1D_YRANGE =		# yrange (optional, format: ymin:ymax)
 KTFACTOR = 1		# factor for temperature rescaling
 # settings for 2D histograms
 HIST2D_LAST_COL = 3	# last column (optional, >1)
+# reference data is searched here (optional)
+HIST1D_REFDIR = $(prefix)/histogram
+HIST2D_REFDIR = $(prefix)/histogram
 
 ## default targets
 all += calc #plot_all
