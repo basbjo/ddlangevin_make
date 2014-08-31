@@ -10,6 +10,7 @@ CORR ?= corr -V0
 # TISEAN (see ./patches)
 HIST1D ?= histogram -V0 -b $(HIST_NBINS) -D
 HIST2D ?= histo2d -V0 -b $(HIST_NBINS)
+NEGENT ?= negentropy -V0 -b $(NEGENT_NBINS)
 # Stock group
 FASTCA ?= fastca
 DELAYPCA ?= $(SCR)/delayPCA.py

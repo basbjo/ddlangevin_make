@@ -3,7 +3,7 @@
 negentropy: $$(NEGENTROPIES)
 
 ## default settings
-NEGENT_NBINS ?= 500# number of bins (optional)
+NEGENT_NBINS ?= 500# number of bins
 NEGENT_LAST_COL ?= 20# last column (optional)
 
 # settings/data to be shown by showconf/showdata
@@ -20,8 +20,7 @@ NEGENTROPIES = $(addsuffix .negentropy,${DATA})
 	$(negentropy_command)
 
 define negentropy_command
-$(SCR)/calc_negentropy.py $(if ${NEGENT_NBINS},-b ${NEGENT_NBINS})\
-	-m $(NCOLS_${<}_NEGENT) $< -o $@
+$(NEGENT) -m $(NCOLS_$<_NEGENT) $< -o $@
 endef
 
 ## macros to be called later
