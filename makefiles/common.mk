@@ -211,3 +211,6 @@ plotcols = $(shell i=`python -c 'print ((${2}-1)*${1}+1)'`;\
 	   end=`python -c 'print min(${2}*${1},${3})'`;\
 	   while [ $$i -le $$end ]; do \
 	   printf -- "%02d\n" $$i; i=`expr $$i + 1`; done)
+# list of numbers to denote splitted trajectories
+splitnums = $(patsubst $(notdir ${1})-%,%,$(notdir $(shell find -L\
+	    $(dir ${1}) -regex "[./]*${1}-[0-9]+"|sort -r)))
