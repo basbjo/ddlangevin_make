@@ -133,8 +133,9 @@ INFO_plot_hist2d = plot 2D histograms
 define INFOADD
 
 Reference binning ranges are read from »$(MINMAXFILE)«.
-Reference files are searched in »$(HIST2D_REFDIR)/«. They are
-used for 1D histogram x-range and 2D histogram color bar.
+Reference files for 1D histogram x-range are searched in »$(HIST1D_REFDIR)«.
+Reference files for 2D histogram color bar are searched in »$(HIST2D_REFDIR)«.
+If the strings above are empty, reference files are not used.
 
 endef
 else
