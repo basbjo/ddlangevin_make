@@ -63,11 +63,6 @@ $(histdir1d)/$(1)-V$(2).hist% : $$(MINMAXFILE)\
 	$$(HIST1D) -c $(2) $$(if $${MINMAXFILE},-r )$$+ -o $$@
 endef
 
-define splitnums
-$(patsubst $(notdir ${1})-%,%,$(notdir $(shell find -L\
-	$(dir ${1}) -regex "[./]*${1}-[0-9]+"|sort -r)))
-endef
-
 define template_calc2d
 $(histdir2d)/$(1)-V$(2)-V$(3).hist : $$(MINMAXFILE) $(1) | $$(histdir2d)
 	$$(HIST2D) -c $(2),$(3) $$(if $${MINMAXFILE},-r )$$+ -o $$@
