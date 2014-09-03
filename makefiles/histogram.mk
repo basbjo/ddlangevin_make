@@ -53,10 +53,19 @@ $(histdir1d) $(histdir2d):
 # histogram calculation
 # include also split.mk to split data
 define template_calc1d
-$(histdir1d)/$(1)-V$(2).hist : $$(MINMAXFILE) $(1)\
-	| $$(histdir1d) $$(splitdir)/$(1)$$(SPLIT_SUFFIX)-01
-	$$(SCR)/wrapper_histogram.sh $(1) $(2) "$$(strip $${MINMAXFILE})"\
-		$$(splitdir)/$(1)$$(SPLIT_SUFFIX) $$(@D) $$(HIST1D)
+$(histdir1d)/$(1)-V$(2).hist : $$(MINMAXFILE) $$(if $$(wildcard $${splitdir}),\
+		$$(addprefix $(histdir1d)/$(1)-V$(2).hist,$$(call\
+		splitnums,$${splitdir}/$(1)$$(SPLIT_SUFFIX))))\
+	| $$(splitdir)/$(1)$$(SPLIT_SUFFIX)-01
+	$$(SCR)/av_second_column.py $$(sort $$(filter $${histdir1d}%,$$+)) > $$@
+$(histdir1d)/$(1)-V$(2).hist% : $$(MINMAXFILE)\
+	$$(splitdir)/$(1)$$(SPLIT_SUFFIX)-% | $$(histdir1d)
+	$$(HIST1D) -c $(2) $$(if $${MINMAXFILE},-r )$$+ -o $$@
+endef
+
+define splitnums
+$(patsubst $(notdir ${1})-%,%,$(notdir $(shell find -L\
+	$(dir ${1}) -regex "[./]*${1}-[0-9]+"|sort -r)))
 endef
 
 define template_calc2d
@@ -137,5 +146,6 @@ PRECIOUS +=
 
 ## clean
 PLOTS_LIST += $(HIST1D_PLOT) $(HIST2D_PLOT)
-CLEAN_LIST += */*.tmp[0-9]*[0-9]
-PURGE_LIST += $(HIST1D_DATA) $(HIST2D_DATA) $(FEL1D_DATA)
+CLEAN_LIST +=
+PURGE_LIST += $(HIST1D_DATA) $(HIST2D_DATA) $(FEL1D_DATA)\
+	      $(addsuffix [0-9]*[0-9],${HIST1D_DATA})
