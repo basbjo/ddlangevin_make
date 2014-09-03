@@ -1,5 +1,7 @@
 .PHONY: calc plot calc_estim calc_times plot_times plot_ratios plot_all
-calc: $$(CORR_DATA) calc_estim
+.calc: $$(CORR_DATA)
+calc: calc_estim
+	@$(MAKE) .calc
 
 plot: calc calc_times $$(CORR_PLOT) $$(TIMES_PLOT)
 
@@ -14,6 +16,7 @@ plot_ratios: calc_times $$(RATIOS_PLOT)
 plot_all: plot plot_times plot_ratios
 
 ## default settings
+CORR_NBINS ?= 100# number of bins for binning on logarithmic scale
 SPLIT_SUFFIX ?= $(DROPSUFFIX)# to find split data in remote directory
 ESTIMLENGTH ?= 1000000# max correlation length for first estimate
 RANGEFACTOR ?= 6# times correlation time for final data
@@ -62,9 +65,18 @@ endef
 # include also split.mk to split data
 define template_calc
 $(cordir)/$(1)-V$(2).cor : $$(fitdir)/$(1)-V$(2).fit\
-	| $$(cordir) $$(splitdir)/$(1)$$(SPLIT_SUFFIX)-01
-	$$(SCR)/wrapper_corr.sh $(1) $(2) $$(fitdir)\
-		$$(splitdir)/$(1)$$(SPLIT_SUFFIX) $$(@D) $$(CORR)
+	$$(if $$(wildcard $${splitdir}),\
+		$$(addprefix $(cordir)/$(1)-V$(2).cor,$$(call\
+		splitnums,$${splitdir}/$(1)$$(SPLIT_SUFFIX))))\
+	| $$(splitdir)/$(1)$$(SPLIT_SUFFIX)-01
+	$$(SCR)/av_second_column.py $$(sort $$(filter $${cordir}%,$$+)) > $$@
+$(cordir)/$(1)-V$(2).cor% : $$(fitdir)/$(1)-V$(2).fit\
+	$$(splitdir)/$(1)$$(SPLIT_SUFFIX)-% | $$(cordir)
+	$$(if $$(wildcard $$<),$$(eval corrlength := $$(call getmax,${CORR_NBINS}\
+		$$(shell tail -n1 $$<))),$$(eval corrlength := <corrlength>))
+	$$(CORR) -c$(2) -D$$(corrlength) $$(lastword $$+) \
+		| $$(SCR)/logbinning.awk -vxmin=1 -vxmax=$$(corrlength)\
+		-vbins=$$(CORR_NBINS) > $$@
 endef
 
 # calculate correlation times
@@ -146,8 +158,9 @@ PRECIOUS +=
 
 ## clean
 PLOTS_LIST += $(TIMES_PLOT) $(RATIOS_PLOT) $(TIME_PLOT) $(CORR_PLOT)
-CLEAN_LIST += */*.tmp[0-9]*[0-9]
-PURGE_LIST += $(DEL_FITCOR) $(ESTIM_DATA) $(TIMES) $(CORR_DATA)
+CLEAN_LIST +=
+PURGE_LIST += $(DEL_FITCOR) $(ESTIM_DATA) $(TIMES) $(CORR_DATA)\
+	      $(addsuffix [0-9]*[0-9],${CORR_DATA})
 
 .PHONY: del_estim
 del_estim:
