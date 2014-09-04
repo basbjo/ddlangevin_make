@@ -8,7 +8,7 @@ include $(makedir)/drift.mk
 DATA_HERE =
 ## source data files in datadirs (wildcards allowed)
 DROPSUFFIX = $(PROJDROPSUFFIX)
-DATA_LINK = $(addsuffix ${PROJSUFFIX},${RAWDATA})
+DATA_LINK = *$(PROJSUFFIX)
 
 ## settings
 # see config.mk
