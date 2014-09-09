@@ -97,25 +97,25 @@ calcdrift() {
 # driftfield binning (2d) and integration of one dimension for 1d result
 bindrift() {
     cat $minmax /dev/stdin |
-    awk -v bins=$BINS -v out1d=${outfile1} -v out2d=${outfile2} '
+    awk -v bins=$BINS -v out1d=${outfile1} -v out2d=${outfile2} \
+        -v col1=$col1 -v col2=$col2 '
 {
     # read minima and maxima from minmax file to set ranges
     if(NR==1){
-        for(i=0;i<2;i++){
-            min[i]=$(i+1)
-        }
+        min1=$col1
+        min2=$col2
     }
     if(NR==2){
-        for(i=0;i<2;i++){
-            max[i]=$(i+1)
-            range[i]=max[i]-min[i]
-        }
+        max1=$col1
+        max2=$col2
+        range1=max1-min1
+        range2=max2-min2
     }
 
     # binning
     if(NR>=3){
-        i=int(bins*($1-min[0])/range[0])
-        j=int(bins*($2-min[1])/range[1])
+        i=int(bins*($1-min1)/range1)
+        j=int(bins*($2-min2)/range2)
         hist1[i,j]+=$3
         hist2[i,j]+=$4
         sum[i,j]+=1
@@ -168,8 +168,8 @@ END {
     printf("#x hx(x) hy(x) y hx(y) hy(y)\n") >out1d
     for(i=0;i<bins;i++){
         printf("%.3f %.3f %.3f %.3f %.3f %.3f\n",\
-            (min[0]+i/bins*range[0]),histxofx[i],histyofx[i],\
-            (min[1]+i/bins*range[1]),histxofy[i],histyofy[i]) >out1d
+            (min1+i/bins*range1),histxofx[i],histyofx[i],\
+            (min2+i/bins*range2),histxofy[i],histyofy[i]) >out1d
     }
 
     # print 2d results
@@ -177,7 +177,7 @@ END {
     for(i=0;i<bins;i++){
         for(j=0;j<bins;j++){
             if((hist1[i,j]!=0) || (hist2[i,j]!=0)) {
-                print (min[0]+i/bins*range[0]),(min[1]+j/bins*range[1]),\
+                print (min1+i/bins*range1),(min2+j/bins*range2),\
                     hist1[i,j],hist2[i,j] >out2d
             }
         }
