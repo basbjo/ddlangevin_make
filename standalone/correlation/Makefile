@@ -25,7 +25,7 @@ CORR_MAXRATIO =		# maximum ratio between correlation times (optional)
 TIME_UNIT =		# time unit to be shown in x label
 
 ## default targets
-all += calc #plot_all
+all += split # calc and plot must be called afterwards
 
 ## call macros
 $(call_macros)

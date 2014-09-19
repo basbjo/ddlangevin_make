@@ -29,7 +29,7 @@ HIST1D_REFDIR = $(prefix)/histogram
 HIST2D_REFDIR = $(prefix)/histogram
 
 ## default targets
-all += calc #plot_all
+all += split # calc and plot must be called afterwards
 
 ## call macros
 $(call_macros)
