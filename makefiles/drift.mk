@@ -37,7 +37,7 @@ $(driftdir)/$(1)-V$(2)-V$(3).2ddrifthist : $$(MINMAXFILE) $(1) | $$(driftdir)
 endef
 
 # drift field plotting
-drift2d_%.tex : $(driftdir)/%.2ddrifthist
+drift2d_%.tex : $(driftdir)/%.2ddrifthist $(SCR)/plot_drift2d.gp
 	$(if ${DRIFT_REFDIR},$(eval reffile := $(shell\
 		${SCR}/reffile_search.sh ${DRIFT_REFDIR} $< ${TIME_UNIT})))
 	$(if ${reffile},,$(eval reffile := $(wildcard $<)))
