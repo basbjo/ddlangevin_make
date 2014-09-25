@@ -14,7 +14,7 @@ DATA_LINK = $(addsuffix ${PROJSUFFIX},${RAWDATA})
 # see config.mk
 
 ## default targets
-all += calc #plot_all
+all += estim #calc/plot plot_all
 
 ## call macros
 $(call_macros)

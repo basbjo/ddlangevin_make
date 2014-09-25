@@ -1,11 +1,11 @@
-.PHONY: calc plot calc_estim calc_times plot_times plot_ratios plot_all
-.calc: $$(CORR_DATA)
-calc: calc_estim
+.PHONY: calc plot estim calc_times plot_times plot_ratios plot_all
+.calc: $$(CORR_DATA) $$(TIMES)
+calc: estim
 	@$(MAKE) .calc
 
 plot: calc calc_times $$(CORR_PLOT) $$(TIMES_PLOT)
 
-calc_estim: $$(ESTIM_DATA)
+estim: $$(ESTIM_DATA)
 
 calc_times: $$(TIMES)
 
@@ -138,15 +138,22 @@ endef
 
 ## info
 ifndef INFO
-INFO = calc_estim calc calc_times plot plot_times plot_ratios plot_all del_estim
+INFO = estim calc calc_times plot plot_times plot_ratios plot_all del_estim
 define INFOADD
+
+Do not call targets calc or plot before estim is completed.
+Do not call targets plot_* before calc is completed.
+There are two possibilities to build all targets (-j optional):
+  j=2; make -j$$j estim; make -j$$j calc; make -j$$j plot_all
+  j=2; make -j$$j estim; make -j$$j plot; make -j$$j plot_all
+
 endef
 else
 INFOend +=
 endif
-INFO_calc_estim = estimate correlation times
+INFO_estim = estimate correlation times
 INFO_calc       = calculate time correlation data
-INFO_calc_times = calculate correlation times
+INFO_calc_times = (re)calculate correlation times
 INFO_plot       = plot correlation functions and times
 INFO_plot_times = plot correlation times in »$(cordir)«
 INFO_plot_ratios = plot ratios between correlation times
