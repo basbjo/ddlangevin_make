@@ -84,7 +84,7 @@ Subdirectories besides ``histogram`` and ``correlation`` may be used likewise.
 - To generate histograms, you may first calculate and then plot them::
 
     cd histogram/
-    make
+    make calc
     make plot
 
   If this does not work, you probably have to call the ``split`` or ``minmax``
@@ -94,15 +94,17 @@ Subdirectories besides ``histogram`` and ``correlation`` may be used likewise.
 - To generate correlations, you may first calculate and then plot them::
 
     cd ../correlation/
-    make
+    make estim
+    make calc #alternatively make plot
     make plot_all
 
-  If this does not work, you probably have to call the ``split``
-  target in the main directory.
+  If this does not work, you probably have to call the ``split`` target in
+  the main directory.  Note that the target ``estim`` must be finished before
+  calling ``calc`` and the latter before calling ``plot_all``.
 
 - To recreate plots after changes in ``config.mk`` in main directory, call::
 
-    make del_plots; make plot[_all]
+    make del_plots; make plot_all
 
   For convenience, the ``plot_all`` target should always exist even
   if it is equivalent to the ``plot`` target.
@@ -110,14 +112,17 @@ Subdirectories besides ``histogram`` and ``correlation`` may be used likewise.
 Fast data projection and analysis
 ---------------------------------
 
-- You can project data and calculate results in the subdirectories
+- You can project data and (partially) calculate results in the subdirectories
   ``histogram`` and ``correlation`` with a oneliner::
 
     make; make split; make correlation histogram
 
   where it may be convenient to use ``-j [number]`` for parallelization.
+  The default make target is called in each subdirectory.
   If plots and maybe other targets shall be created with the same call, add
   the wished targets to the variable ``all`` in the subdirectory makefiles.
+  However, in ``correlation`` it is necessary to finish the target ``estim``
+  before calling ``calc`` and to finish the latter before calling ``plot_all``.
 
 Downsampling (optional)
 -----------------------
@@ -168,10 +173,10 @@ Analysis of derived data such as data-driven Langevin equations
 - To generate histograms, you may first calculate and then plot them::
 
     cd histogram/
-    make
+    make calc
     make plot
 
-  If this does not work, you probably have to call the target ``split``
+  If this does not work, you probably have to call the ``split`` target
   in the parent directory or ``minmax`` in the main directory (the ``minmax``
   file is used to define compareable bins).
 
@@ -184,16 +189,18 @@ Analysis of derived data such as data-driven Langevin equations
 - To generate correlations, you may first calculate and then plot them::
 
     cd ../correlation/
-    make
+    make estim
+    make calc #alternatively make plot
     make plot_all
 
-  If this does not work, you probably have to call the target ``split``
-  in the parent directory.
+  If this does not work, you probably have to call the ``split`` target in
+  the parent directory.  Note that the target ``estim`` must be finished before
+  calling ``calc`` and the latter before calling ``plot_all``.
 
 - To recreate plots after changes in ``config.mk`` or when new reference
   data is provided in the main directory, call::
 
-    make del_plots; make plot[_all]
+    make del_plots; make plot_all
 
   For convenience, the ``plot_all`` target should always exist even
   if it is equivalent to the ``plot`` target.
@@ -207,5 +214,8 @@ Analysis of derived data such as data-driven Langevin equations
     make split; make correlation histogram
 
   where it may be convenient to use ``-j [number]`` for parallelization.
+  The default make target is called in each subdirectory.
   If plots and maybe other targets shall be created with the same call, add
   the wished targets to the variable ``all`` in the subdirectory makefiles.
+  However, in ``correlation`` it is necessary to finish the target ``estim``
+  before calling ``calc`` and to finish the latter before calling ``plot_all``.
