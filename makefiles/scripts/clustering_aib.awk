@@ -6,6 +6,11 @@
 # Options:
 # 	-vmin_col=int: first column to be selected from source data
 # 	-vmax_col=int: last column to be selected from source data
+#
+# Output format:
+# 	cluster
+#
+# Cluster numbering starts with 1, points not assigned are denoted by 0.
 
 BEGIN {
 	script="clustering.awk"

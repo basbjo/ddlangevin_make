@@ -43,6 +43,9 @@ splitdir ?= $(or $(firstword ${datadirs}),.)/splitdata
 ## minima and maxima as reference for ranges
 MINMAXFILE = $(prefix)/minmax
 
+## settings for clustering
+CLUSTER_LAST_COL = 5	# last column (optional)
+
 ## settings for 1D histograms
 HIST1D_LAST_COL = 20	# last column (optional)
 HIST1D_PLOT_NCOLS = 4	# number of columns per plot
