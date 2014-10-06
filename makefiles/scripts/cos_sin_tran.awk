@@ -1,5 +1,12 @@
 #!/usr/bin/awk -f
 #Select inner dihedrals and return cos/sin transform
+
+# Usage:
+# 	./cos_sin_tran.awk options file
+# Options:
+# 	-vmin_col=int: first column to be selected from source data
+# 	-vmax_col=int: last column to be selected from source data
+
 BEGIN {
 	script="cos_sin_tran.awk"
 	pi=3.14159265358979

@@ -1,5 +1,12 @@
 #!/usr/bin/awk -f
 #Geometric clustering for AIB in Ramachandran plot
+
+# Usage:
+# 	./cos_sin_tran.awk options file
+# Options:
+# 	-vmin_col=int: first column to be selected from source data
+# 	-vmax_col=int: last column to be selected from source data
+
 BEGIN {
 	script="clustering.awk"
 }
