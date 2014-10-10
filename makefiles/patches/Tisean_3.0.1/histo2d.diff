@@ -1,5 +1,5 @@
 diff --git a/histo2d.c b/histo2d.c
-index b1aa3ae..4025e24 100644
+index b1aa3ae..8dff18e 100644
 --- a/histo2d.c
 +++ b/histo2d.c
 @@ -1,4 +1,8 @@
@@ -32,16 +32,18 @@ index b1aa3ae..4025e24 100644
  
  void show_options(char *progname)
  {
-@@ -32,6 +39,9 @@ void show_options(char *progname)
+@@ -32,7 +39,10 @@ void show_options(char *progname)
    fprintf(stderr,"\t-x # of lines to ignore [default %ld]\n",exclude);
    fprintf(stderr,"\t-c columns to read [default 1,2]\n");
    fprintf(stderr,"\t-b # of intervals per dim [default %u]\n",base);
+-  fprintf(stderr,"\t-o output file [default 'datafile'.dat ;"
 +  fprintf(stderr,"\t-F output relative frequencies not densities"
 +	  " [default not set]\n");
 +  fprintf(stderr,"\t-r reference file for binning range [optional]\n");
-   fprintf(stderr,"\t-o output file [default 'datafile'.dat ;"
++  fprintf(stderr,"\t-o output file [default 'datafile'.his ;"
            " If no -o is given: stdout]\n");
    fprintf(stderr,"\t-V verbosity level [default 1]\n\t\t"
+           "0='only panic messages'\n\t\t"
 @@ -55,6 +65,12 @@ void scan_options(int n,char **argv)
      sscanf(out,"%u",&base);
    if ((out=check_option(argv,n,'V','u')) != NULL)

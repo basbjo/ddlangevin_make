@@ -1,5 +1,5 @@
 diff --git a/source_c/histogram.c b/source_c/histogram.c
-index a45576d..af1aaa9 100644
+index a45576d..4cc211f 100644
 --- a/source_c/histogram.c
 +++ b/source_c/histogram.c
 @@ -18,6 +18,9 @@
@@ -33,14 +33,16 @@ index a45576d..af1aaa9 100644
  
  void show_options(char *progname)
  {
-@@ -52,6 +56,7 @@ void show_options(char *progname)
+@@ -52,7 +56,8 @@ void show_options(char *progname)
    fprintf(stderr,"\t-b # of intervals [default %ld]\n",base);
    fprintf(stderr,"\t-D output densities not relative frequencies"
  	  " [default not set]\n");
+-  fprintf(stderr,"\t-o output file [default 'datafile'.dat ;"
 +  fprintf(stderr,"\t-r reference file for binning range [optional]\n");
-   fprintf(stderr,"\t-o output file [default 'datafile'.dat ;"
++  fprintf(stderr,"\t-o output file [default 'datafile'.his ;"
  	  " If no -o is given: stdout]\n");
    fprintf(stderr,"\t-V verbosity level [default 1]\n\t\t"
+           "0='only panic messages'\n\t\t"
 @@ -77,6 +82,10 @@ void scan_options(int n,char **str)
      sscanf(out,"%u",&verbosity);
    if ((out=check_option(str,n,'D','n')) != NULL)
@@ -198,7 +200,7 @@ index a45576d..af1aaa9 100644
      }
    }
 diff --git a/source_c/routines/tisean_cec.h b/source_c/routines/tisean_cec.h
-index 6719d05..abbce63 100644
+index b7c35be..325c3af 100644
 --- a/source_c/routines/tisean_cec.h
 +++ b/source_c/routines/tisean_cec.h
 @@ -78,6 +78,7 @@
