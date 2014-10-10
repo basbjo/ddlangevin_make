@@ -11,6 +11,8 @@ CORR ?= corr -V0
 HIST1D ?= histogram -V0 -b $(HIST_NBINS) -D
 HIST2D ?= histo2d -V0 -b $(HIST_NBINS)
 NEGENT ?= negentropy -V0 -b $(NEGENT_NBINS)
+BINNING1D ?= binning -V0 -b $(BIN1D_NBINS)
+BINNING2D ?= binning2d -V0 -b $(BIN2D_NBINS)
 # Stock group
 FASTCA ?= fastca
 DELAYPCA ?= $(SCR)/delayPCA.py

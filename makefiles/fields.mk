@@ -1,6 +1,8 @@
 .PHONY: showfields
 
 ## default settings
+BIN1D_NBINS ?= 100# number of bins per dimension (1D binning)
+BIN2D_NBINS ?= 80# number of bins per dimension (2D binning)
 
 # settings/data to be shown by showconf/showdata
 SHOWCONF +=
@@ -29,9 +31,8 @@ $(1).x% : $(1)
 	$$(eval nums := $$(foreach label,$$(subst ., ,x$$*),\
 		$$(shell $$(call getfieldno_macro,${1},$${label}))))
 	$$(if $$(patsubst 2,,$$(words $${nums}))\
-		,,binning)$$(if $$(patsubst 3,,$$(words $${nums}))\
-		,,binning2d) -V0\
-		-c $$(shell echo $${nums} | tr ' ' ',') $$< -o $$@
+		,,${BINNING1D})$$(if $$(patsubst 3,,$$(words $${nums}))\
+		,,${BINNING2D}) -c $$(shell echo $${nums}|tr ' ' ',') $$< -o $$@
 endef
 
 ## macros to be called later
