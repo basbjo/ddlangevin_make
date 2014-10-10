@@ -13,6 +13,7 @@ SHOWDATA +=
 ## variables
 
 ## rules
+# field labels and column numbers
 showfields:
 	@echo; $(foreach file,${DATA},echo "${file}";\
 		echo ${file} | sed 's/./=/g';\
@@ -24,6 +25,7 @@ head $(1) | grep '^#x1' | sed 's/ [01]$$//' \
 	| nl -ba -s\  | sed 's/^  *//'
 endef
 
+# field binning
 getfieldno_macro = $(showfields_macro) | grep $(2) | cut -d\  -f1
 
 define template_field
@@ -34,6 +36,10 @@ $(1).x% : $(1)
 		,,${BINNING1D})$$(if $$(patsubst 3,,$$(words $${nums}))\
 		,,${BINNING2D}) -c $$(shell echo $${nums}|tr ' ' ',') $$< -o $$@
 endef
+
+# plotting
+%.pdf: %
+	$(HEATMAP) -c1,2,3 -t "Binned field for $*" $< -o $@
 
 ## macros to be called later
 MACROS += rule_fields
@@ -49,6 +55,10 @@ define INFOADD
 
 To calculate field binnings of a »file« use the labels that are shown
 by target »showfields«, e.g. »make file.x1.f1« or »make file.x1.x2.f2«.
+
+*After* the file with binned data has been created, plots of fields in two
+dimensions can be plotted first to pdf, e.g. »make file.x1.x2.f2.pdf« and
+*afterwards* be converted to png, e.g. »make file.x1.x2.f2.png«.
 
 endef
 else
