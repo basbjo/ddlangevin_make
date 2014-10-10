@@ -1,4 +1,4 @@
-.PHONY:
+.PHONY: showfields
 
 ## default settings
 
@@ -11,18 +11,29 @@ SHOWDATA +=
 ## variables
 
 ## rules
+showfields:
+	@echo; $(foreach file,${DATA},echo "${file}";\
+		echo ${file} | sed 's/./=/g';\
+		$(call showfields_macro,${file}); echo;)
+
+define showfields_macro
+head $(1) | grep '^#x1' | sed 's/ [01]$$//' \
+	| tr ' ' '\n' | sed 's/^#//' \
+	| nl -ba -s\  | sed 's/^  *//'
+endef
 
 ## macros to be called later
 #MACROS +=
 
 ## info
 ifndef INFO
-INFO =
+INFO = showfields
 define INFOADD
 endef
 else
 INFOend +=
 endif
+INFO_showfields = show column numbers with field labels
 
 ## keep intermediate files
 PRECIOUS +=

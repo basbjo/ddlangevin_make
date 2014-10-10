@@ -16,7 +16,7 @@ DROPSUFFIX = $(SUBDIR_DROPSUFFIX).field
 IF_FUTURE = $(SPLIT_FUTURE)
 
 ## default targets
-all +=
+all += info
 
 ## call macros
 $(call_macros)
