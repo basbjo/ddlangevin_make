@@ -20,7 +20,7 @@ DELAYPCA ?= $(SCR)/delayPCA.py
 MINMAX ?= $(SCR)/minmax.sh -d" " -f "%9.6f"
 NCOLS ?= $(SCR)/shape.sh -c
 NROWS ?= $(SCR)/shape.sh -r
-HEATMAP ?= $(SCR)/heatmap.py
+HEATMAP ?= $(SCR)/heatmap.py $(HEATMAP_FLAGS)
 
 ## default target
 .SECONDEXPANSION:

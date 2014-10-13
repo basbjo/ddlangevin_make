@@ -3,6 +3,7 @@
 ## default settings
 BIN1D_NBINS ?= 100# number of bins per dimension (1D binning)
 BIN2D_NBINS ?= 80# number of bins per dimension (2D binning)
+HEATMAP_FLAGS ?=# additional options to heatmap script
 
 # settings/data to be shown by showconf/showdata
 SHOWCONF +=

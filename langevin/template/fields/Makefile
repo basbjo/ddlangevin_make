@@ -14,6 +14,8 @@ DROPSUFFIX = $(SUBDIR_DROPSUFFIX).field
 ## settings
 # see config.mk and localconf.mk
 IF_FUTURE = $(SPLIT_FUTURE)
+# settings for langevin fields
+HEATMAP_FLAGS =
 
 ## default targets
 all += info
