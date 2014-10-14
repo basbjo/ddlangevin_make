@@ -22,6 +22,7 @@ CVARPLOT = $(addsuffix .eigval.png,${COSSINDATA})
 # minima and maxima as reference for ranges
 MINMAXALL = $(PCADATA)
 
+## rules
 %$(PROJSUFFIX).tmp : %.cs
 	# perform principal component analysis on $<
 	name=$<; $(FASTCA) -f $$name -p $@ -c $$name.cov -v $$name.eigvec -V $$name.eigval
