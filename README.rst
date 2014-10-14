@@ -49,12 +49,20 @@ Configuration
 -------------
 
 - Select a transformation by setting ``projtarget`` in ``config.mk``.
-  Currently, ``dpca`` and ``tica`` are available.
+  Currently, ``pca``, ``dpca`` and ``tica`` are available.
   To select the latter, consider calling::
 
     git merge origin/tica
 
   which adds a few further changes instead of setting ``projtarget`` manually.
+
+  ====== =======================================================================
+  Target Description
+  ====== =======================================================================
+  pca    Select a range of columns and apply principal component analysis (PCA).
+  dpca   Select a range of columns and apply PCA on cos- and sin-transforms.
+  tica   Select a range of columns and apply TICA on cos- and sin-transforms.
+  ====== =======================================================================
 
 - Put source data (dihedral angles) into main directory and define
   ``TIME_UNIT``, the wildcard ``RAWDATA`` for source data and the
