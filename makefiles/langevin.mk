@@ -13,7 +13,7 @@ SHOWDATA +=
 ## rules
 define template_selectcolumns
 $(1).%cols : $(1)
-	$(SCR)/select_columns.awk -vnfirst=$$* -vnlast=$$(IF_FUTURE) $$< > $$@
+	$(SCR)/select_outer_columns.awk -vnfirst=$$* -vnlast=$$(IF_FUTURE) $$< > $$@
 endef
 
 define rule_langevin
