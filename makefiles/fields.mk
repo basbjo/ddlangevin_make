@@ -61,7 +61,7 @@ endef
 MACROS += rule_fields
 
 define rule_fields
-$(foreach file,${DATA},\
+$(foreach file,$(filter %.ltm,${DATA}) $(filter-out %.ltm,${DATA}),\
 	$(eval $(call template_histogram,${file}))\
 	$(eval $(call template_binning,${file})))
 endef
