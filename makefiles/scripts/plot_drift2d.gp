@@ -5,7 +5,7 @@ suffix = '.2ddrifthist'
 # omit arrows longer than range/cutdivisor
 cutdivisor = 10
 # factor to guess appropriate scaling
-scalefactor = 0.5/std
+scalefactor = 1.0/std
 
 # newline after filename unit in title
 set macros
@@ -20,7 +20,7 @@ unset colorbox
 AWKSCR = sprintf("<awk '{%%sprint $0,sqrt(($3*$3)+($4*$4))}' %s/%s%s",\
 							dir, name, suffix)
 
-# temporary plot to get range information
+# temporary plot to get range information GPVAL_{X,Y}_{MIN,MAX}
 set terminal png
 set output sprintf("/dev/null", name)
 scale = 1
@@ -29,7 +29,7 @@ plot sprintf(AWKSCR, '') u 1:2:(-$3*scale):(-$4*scale):5\
 
 # plot with adjusted scaling
 set output sprintf("%s/drift2d_%s.png", dir, name)
-scale = scalefactor/sqrt(GPVAL_X_MAX**2 + GPVAL_Y_MAX**2)
+scale = scalefactor/sqrt((GPVAL_X_MAX-GPVAL_X_MIN)**2 + (GPVAL_Y_MAX-GPVAL_Y_MIN)**2)
 set label 1 at graph 1.05,0.5 center rotate by 90
 set label 1 sprintf("arrow scale = %f", scale)
 replot
