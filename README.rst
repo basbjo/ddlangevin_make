@@ -49,7 +49,7 @@ Configuration
 -------------
 
 - Select a transformation by setting ``projtarget`` in ``config.mk``.
-  Currently, ``pca``, ``dpca`` and ``tica`` are available.
+  Currently, ``id``, ``pca``, ``dpca`` and ``tica`` are available.
   To select the latter, consider calling::
 
     git merge origin/tica
@@ -59,6 +59,7 @@ Configuration
   ====== =======================================================================
   Target Description
   ====== =======================================================================
+  id     Do not apply a projection, use provided data directly.
   pca    Select a range of columns and apply principal component analysis (PCA).
   dpca   Select a range of columns and apply PCA on cos- and sin-transforms.
   tica   Select a range of columns and apply TICA on cos- and sin-transforms.
