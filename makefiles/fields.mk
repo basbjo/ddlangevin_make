@@ -5,9 +5,10 @@ HIST_NBINS ?= 100# number of bins within reference range (histogram)
 BIN1D_NBINS ?= 100# number of bins per dimension (1D binning)
 BIN2D_NBINS ?= 80# number of bins per dimension (2D binning)
 HEATMAP_FLAGS ?=# additional options to heatmap script
+MINMAX_FLAG ?=-R# full output: -r, output only for reference range: -R
 
 # settings/data to be shown by showconf/showdata
-SHOWCONF += HIST_NBINS BIN1D_NBINS BIN2D_NBINS HEATMAP_FLAGS
+SHOWCONF += HIST_NBINS BIN1D_NBINS BIN2D_NBINS MINMAX_FLAG HEATMAP_FLAGS
 SHOWDATA +=
 
 ## default settings that must be changed before including this file
@@ -38,7 +39,7 @@ $(1).%.hist : $(1) $(wildcard ${1}.minmax)
 	$$(if $$(patsubst 1,,$$(words $${cols}))\
 		,,${HIST1D})$$(if $$(patsubst 2,,$$(words $${cols}))\
 		,,${HIST2D}) -c $$(shell echo $${cols}|tr ' ' ',')\
-		$$(if $$(minmaxfile),-r $$(minmaxfile) )$$< -o $$@
+		$$(if $$(minmaxfile),$$(MINMAX_FLAG) $$(minmaxfile) )$$< -o $$@
 endef
 
 define template_binning
