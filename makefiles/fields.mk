@@ -31,6 +31,11 @@ endef
 # field binning
 getfieldno_macro = $(showfields_macro) | grep $(2) | cut -d\  -f1
 
+comma = ,
+define special_binning_ranges
+$(if $(filter xi%,$*),-S-10$(comma)10 )
+endef
+
 define template_histogram
 $(1).%.hist : $(1) $(wildcard ${1}.minmax)
 	$$(eval cols := $$(foreach label,$$(subst ., ,$$*),\
@@ -39,7 +44,8 @@ $(1).%.hist : $(1) $(wildcard ${1}.minmax)
 	$$(if $$(patsubst 1,,$$(words $${cols}))\
 		,,${HIST1D})$$(if $$(patsubst 2,,$$(words $${cols}))\
 		,,${HIST2D}) -c $$(shell echo $${cols}|tr ' ' ',')\
-		$$(if $$(minmaxfile),$$(MINMAX_FLAG) $$(minmaxfile) )$$< -o $$@
+		$$(if $$(minmaxfile),$$(MINMAX_FLAG) $$(minmaxfile)\
+		)$$(special_binning_ranges)$$< -o $$@
 endef
 
 define template_binning
