@@ -37,10 +37,10 @@ unsigned long base=50;
 unsigned long exclude=0;
 unsigned int column=1;
 unsigned int verbosity=0xff;
-char my_stdout=1,gotsize=0,density=0;
+char my_stdout=1,gotsize=0,density=0,cropoutput=0;
 char *outfile=NULL;
 char *infile=NULL;
-char *minmaxfile=NULL;
+char *minmaxfile=NULL,*minmaxstring=NULL;
 
 void show_options(char *progname)
 {
@@ -49,14 +49,19 @@ void show_options(char *progname)
   fprintf(stderr," options:\n");
   fprintf(stderr,"Everything not being a valid option will be interpreted as a"
 	  " possible datafile.\nIf no datafile is given stdin is read. "
-	  " Just - also means stdin\n");
+	  " Just - also means stdin.\n");
+  fprintf(stderr,"A minmax file contains column wise minima and maxima on the"
+          " first and second row.\n");
   fprintf(stderr,"\t-l length of file [default whole file]\n");
   fprintf(stderr,"\t-x # of lines to ignore [default %ld]\n",exclude);
   fprintf(stderr,"\t-c column to read [default %d]\n",column);
   fprintf(stderr,"\t-b # of intervals [default %ld]\n",base);
   fprintf(stderr,"\t-D output densities not relative frequencies"
 	  " [default not set]\n");
-  fprintf(stderr,"\t-r reference file for binning range [optional]\n");
+  fprintf(stderr,"\t-r minmax file to set reference range with # of intervals [optional]\n");
+  fprintf(stderr,"\t-R minmax file to set reference range and resctrict output [optional]\n");
+  fprintf(stderr,"\t-s num,num to set reference range with # of intervals [optional]\n");
+  fprintf(stderr,"\t-S num,num to set reference range and resctrict output [optional]\n");
   fprintf(stderr,"\t-o output file [default 'datafile'.his ;"
 	  " If no -o is given: stdout]\n");
   fprintf(stderr,"\t-V verbosity level [default 1]\n\t\t"
@@ -86,6 +91,22 @@ void scan_options(int n,char **str)
     if (strlen(out) > 0)
       minmaxfile=out;
   }
+  if ((out=check_option(str,n,'R','o')) != NULL) {
+    if (strlen(out) > 0) {
+      minmaxfile=out;
+      cropoutput=1;
+    }
+  }
+  if ((out=check_option(str,n,'s','o')) != NULL) {
+    if (strlen(out) > 0)
+      minmaxstring=out;
+  }
+  if ((out=check_option(str,n,'S','o')) != NULL) {
+    if (strlen(out) > 0) {
+      minmaxstring=out;
+      cropoutput=1;
+    }
+  }
   if ((out=check_option(str,n,'o','o')) != NULL) {
     my_stdout=0;
     if (strlen(out) > 0)
@@ -100,7 +121,7 @@ int main(int argc,char **argv)
   unsigned long offset,negoffset,range;
   double x,norm,size;
   double min,interval,refmin,refinterval;
-  double *series,*minmax;
+  double *series,*minmax=NULL;
   double average,var;
   long *box;
   FILE *fout,*test;
@@ -132,7 +153,7 @@ int main(int argc,char **argv)
   if (!my_stdout)
     test_outfile(outfile);
 
-  /*Get reference range for option '-r'*/
+  /*Get reference range for options '-r' and '-R'*/
   if (minmaxfile != NULL) {
     test=fopen(minmaxfile,"r");
     if (test == NULL) {
@@ -145,11 +166,21 @@ int main(int argc,char **argv)
     }
 
     minmax=(double*)get_series(minmaxfile,&minmaxlength,0,column,verbosity);
-    if(minmaxlength!=2) {
+    if (minmaxlength != 2) {
       fprintf(stderr,"Wrong format in file '%s'. Needs exactly two lines"
           " with minima and maxima for each column.\n",minmaxfile);
       exit(HISTOGRAM__MINMAX_MISSING_OR_WRONG_FORMAT);
     }
+    refmin=minmax[0];
+    refinterval=minmax[1]-refmin;
+  }
+
+  /*Get reference range for options '-s' and '-S'*/
+  if (minmaxstring != NULL) {
+    if (minmax == NULL) {
+      check_alloc(minmax=(double*)malloc(sizeof(double)*2));
+    }
+    sscanf(minmaxstring,"%lf,%lf",&minmax[0],&minmax[1]);
     refmin=minmax[0];
     refinterval=minmax[1]-refmin;
   }
@@ -167,17 +198,25 @@ int main(int argc,char **argv)
   interval -= min;
 
   /*Settings*/
-  if (minmaxfile != NULL) {
+  if (minmaxfile != NULL || minmaxstring != NULL) {
     size=refinterval/base;
     if (refmin > min) {
       offset=(long)((refmin-min)/size);
-      negoffset=0;
+      if (!cropoutput) {
+        negoffset=0;
+      }
+      else {
+        negoffset=(long)((refmin-min)/size);
+      }
     }
     else {
       offset=0;
       negoffset=(long)((min-refmin)/size);
     }
     range=(long)((min+interval-refmin)/size)+offset;
+    if (cropoutput && ((min+interval) > (refmin+refinterval))) {
+      range-=((long)((min+interval-refmin-refinterval)/size));
+    }
   }
   else {
     refmin=min;
@@ -195,8 +234,10 @@ int main(int argc,char **argv)
       box[i]=0;
     for (i=0;i<length;i++) {
       j=(long)((series[i]-refmin)*base/refinterval+offset);
-      if (j >= range) {
-        j=range-1;
+      if ((!cropoutput) || ((long)(min+interval-refmin-refinterval) == 0)) {
+        if (j >= range) {
+          j=range-1;
+        }
       }
       box[j]++;
     }
@@ -211,7 +252,9 @@ int main(int argc,char **argv)
     fout=fopen(outfile,"w");
     if (verbosity&VER_INPUT)
       fprintf(stderr,"Opened %s for writing\n",outfile);
-    fprintf(fout,"#interval of data: [%e:%e]\n",min,min+interval);
+    fprintf(fout,"#interval of data:   [%e:%e]\n",min,min+interval);
+    if (minmaxfile != NULL || minmaxstring != NULL)
+      fprintf(fout,"#reference interval: [%e:%e]\n",refmin,refmin+refinterval);
     fprintf(fout,"#average= %e\n",average);
     fprintf(fout,"#standard deviation= %e\n",var);
     for (i=negoffset;i<range;i++) {
@@ -223,7 +266,9 @@ int main(int argc,char **argv)
   else {
     if (verbosity&VER_INPUT)
       fprintf(stderr,"Writing to stdout\n");
-    fprintf(stdout,"#interval of data: [%e:%e]\n",min,min+interval);
+    fprintf(stdout,"#interval of data:   [%e:%e]\n",min,min+interval);
+    if (minmaxfile != NULL || minmaxstring != NULL)
+      fprintf(stdout,"#reference interval: [%e:%e]\n",refmin,refmin+refinterval);
     fprintf(stdout,"#average= %e\n",average);
     fprintf(stdout,"#standard deviation= %e\n",var);
     for (i=negoffset;i<range;i++) {
