@@ -64,10 +64,21 @@ endef
 %.pdf: %
 	$(HEATMAP) -c1,2,3 -t "Binned field for $*" $< -o $@
 
+define template_plot_noise
+$(1).xi%.hist.tex : $(1).xi%.hist
+	gnuplot -e "set terminal tikz standalone tightboundingbox;\
+	set output '$$@'; set title 'Noise histogram for \\verb|$(1)|';\
+	set key spacing 2; plot exp(-x**2/2)/sqrt(2*pi) \
+		title '\$$$$\\frac{1}{\\sqrt{2\\pi}}e^{-\\frac{x^2}{2}}$$$$',\
+		'$$<' title '$$$$\\xi_$$*$$$$'"
+endef
+
 ## macros to be called later
 MACROS += rule_fields
 
 define rule_fields
+$(foreach file,$(filter %.ltm,${DATA}),\
+       $(eval $(call template_plot_noise,${file})))\
 $(foreach file,$(filter %.ltm,${DATA}) $(filter-out %.ltm,${DATA}),\
 	$(eval $(call template_histogram,${file}))\
 	$(eval $(call template_binning,${file})))
@@ -93,6 +104,9 @@ To calculate field binnings of a »file« use the labels that are shown
 by target »showfields«, e.g. »make file.x1.hist« or »make file.f2.hist«.
 If »file.minmax« exists it is used to set the histogram reference range.
 Plots of 2D histograms are created as described above for binning.
+
+Once created, noise histograms »name.ltm.xi#.hist« are plotted by
+calling »make name.ltm.xi#.hist.tex; make name.ltm.xi#.hist.pdf«.
 
 endef
 else
