@@ -33,7 +33,7 @@ getfieldno_macro = $(showfields_macro) | grep $(2) | cut -d\  -f1
 
 comma = ,
 define special_binning_ranges
-$(if $(filter xi%,$*),-S-10$(comma)10 )
+$(if $(filter xi%,$*),-S-5$(comma)5 )
 endef
 
 define template_histogram
