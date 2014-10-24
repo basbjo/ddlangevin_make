@@ -209,8 +209,8 @@ range = $(shell i=1; while [ "$(1)" != "" ] && [ $$i -le $(1) ]; do \
 rangeto = $(shell i=1; while [ "$(1)" != "" ] && [ $$i -lt $(1) ]; do \
 	  printf -- "%02d\n" $$i; i=`expr $$i + 1`; done)
 # columns for $(2)'th plot with $(1) columns and last column $(3)
-plotcols = $(shell i=`python -c 'print ((${2}-1)*${1}+1)'`;\
-	   end=`python -c 'print min(${2}*${1},${3})'`;\
+plotcols = $(shell i=`python -c 'print ((int("${2}")-1)*int("${1}")+1)'`;\
+	   end=`python -c 'print min(int("${2}")*int("${1}"),int("${3}"))'`;\
 	   while [ $$i -le $$end ]; do \
 	   printf -- "%02d\n" $$i; i=`expr $$i + 1`; done)
 # list of numbers to denote splitted trajectories
