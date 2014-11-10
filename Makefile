@@ -5,6 +5,7 @@ include $(makedir)/readme.mk
 include $(projmakefile)
 include $(makedir)/split.mk
 include $(makedir)/link_downsampling.mk
+include $(makedir)/example.mk
 
 ## source data files in this directory (wildcards allowed)
 DATA_HERE = $(RAWDATA)
