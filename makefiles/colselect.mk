@@ -4,7 +4,7 @@ colselect: $$(COLSELECTDATA)
 ## default settings
 
 # settings/data to be shown by showconf/showdata
-SHOWCONF += DIH_MIN_COL DIH_MAX_COL
+SHOWCONF += MIN_COL MAX_COL
 $(if $(filter colselect,${projtarget}),$(eval\
 	SHOWDATA += COLSELECTDATA))
 
@@ -23,8 +23,8 @@ MINMAXALL = $(COLSELECTDATA)
 %.ic : %
 	# selection of inner columns in $<
 	$(SCR)/select_inner_columns.awk\
-		-v dih_min_col=$(strip ${DIH_MIN_COL})\
-		-v dih_max_col=$(strip ${DIH_MAX_COL}) $< > $@
+		-v min_col=$(strip ${MIN_COL})\
+		-v max_col=$(strip ${MAX_COL}) $< > $@
 
 ## macros to be called later
 #MACROS +=

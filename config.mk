@@ -12,6 +12,7 @@ IF_FUTURE ?= 1# 1 with future column, 0 else
 SHOWDATA += RAWDATA
 
 ## projected data, e.g. from principal component analysis
+# WARNING: recreate all affected data manually after changes
 projtarget = colselect
 projmakefile = $(makedir)/$(projtarget).mk
 # lag times in units of one time frame in data files (tica only)
@@ -25,10 +26,10 @@ SHOWDATA += PROJSUFFIX
 SAMPORIG = $(addsuffix ${PROJSUFFIX},${RAWDATA})
 REDUCTION_FACTORS = 5
 
-## first and last column to be selected from source data for dPCA
+## first and last column to be selected from source data
 # WARNING: recreate all affected data manually after changes
-DIH_MIN_COL = 7
-DIH_MAX_COL = 16
+MIN_COL = 7
+MAX_COL = 16
 
 ## save split pca data here to avoid recalculation
 splitdir ?= $(or $(firstword ${datadirs}),.)/splitdata

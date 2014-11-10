@@ -7,7 +7,7 @@ PROJ_FUTURE ?= $(or ${IF_FUTURE},0)
 # this is only used in other makefiles that include this one
 
 # settings/data to be shown by showconf/showdata
-SHOWCONF += DIH_MIN_COL DIH_MAX_COL PROJ_FUTURE
+SHOWCONF += MIN_COL MAX_COL PROJ_FUTURE
 SHOWDATA +=
 
 ## default settings that must be changed before including this file
@@ -20,8 +20,8 @@ COSSINDATA += $(addsuffix .cs,${DATA})
 %.cs : %
 	# cos-/sin-transform of inner dihedrals in $<
 	$(SCR)/cos_sin_tran.awk\
-		-v dih_min_col=$(strip ${DIH_MIN_COL})\
-		-v dih_max_col=$(strip ${DIH_MAX_COL}) $< > $@
+		-v min_col=$(strip ${MIN_COL})\
+		-v max_col=$(strip ${MAX_COL}) $< > $@
 
 # common command to append follower column to projected data
 # this is only used in other makefiles that include this one

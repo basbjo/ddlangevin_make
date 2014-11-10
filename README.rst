@@ -72,7 +72,7 @@ Configuration
 - For ``tica``, select ``LAG_TIMES`` (unit: time frames) in ``config.mk``.
 
 - Select the first and last column of the source data to be considered as
-  ``DIH_MIN_COL`` and ``DIH_MAX_COL`` in ``config.mk``.
+  ``MIN_COL`` and ``MAX_COL`` in ``config.mk``.
 
 Data projection
 ---------------

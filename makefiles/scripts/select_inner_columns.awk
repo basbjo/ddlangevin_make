@@ -1,20 +1,20 @@
 #!/usr/bin/awk -f
-#Select inner columns from dih_min_col to dih_max_col
+#Select inner columns from min_col to max_col
 #Output format is adapted to cos_sin_tran.awk
 
 # Usage:
 # 	./select_inner_columns.awk options file
 # Options:
-# 	-vdih_min_col=int: first column to be selected
-# 	-vdih_max_col=int: last column to be selected
+# 	-vmin_col=int: first column to be selected
+# 	-vmax_col=int: last column to be selected
 
 BEGIN {
 	script="select_inner_columns.awk"
 }
 !/^#/ {
-	for(i=dih_min_col;i<=dih_max_col;i++)
+	for(i=min_col;i<=max_col;i++)
 	{
-		if (i>dih_min_col)
+		if (i>min_col)
 		{
 			printf("%s",OFS)
 		}

@@ -30,8 +30,8 @@ MINMAXALL = $(PCADATA)
 %.ic : %
 	# selection of inner columns in $<
 	$(SCR)/select_inner_columns.awk\
-		-v dih_min_col=$(strip ${DIH_MIN_COL})\
-		-v dih_max_col=$(strip ${DIH_MAX_COL}) $< > $@
+		-v min_col=$(strip ${MIN_COL})\
+		-v max_col=$(strip ${MAX_COL}) $< > $@
 
 %$(PROJSUFFIX).tmp : %.ic
 	# perform principal component analysis on $<
