@@ -2,19 +2,21 @@
 colselect: $$(COLSELECTDATA)
 
 ## default settings
+IC_MIN_COL ?= $(MIN_COL)
+IC_MAX_COL ?= $(MAX_COL)
 
 # settings/data to be shown by showconf/showdata
-SHOWCONF += MIN_COL MAX_COL
-$(if $(filter colselect,${projtarget}),$(eval\
+SHOWCONF += IC_MIN_COL IC_MAX_COL
+$(if $(filter colselect,${projtargets}),$(eval\
 	SHOWDATA += COLSELECTDATA))
 
 ## default settings that must be changed before including this file
 
 ## variables
-PREVSUFFIX := $(PROJSUFFIX)
-COLSELECTDATA += $(addsuffix .ic,$(addsuffix ${PREVSUFFIX},${DATA}))
+ICPREVSUFFIX := $(PROJSUFFIX)
+COLSELECTDATA += $(addsuffix ${ICPREVSUFFIX}.ic,${DATA})
 # suffix for data that is further analysed
-PROJSUFFIX += .ic
+PROJSUFFIX := $(ICPREVSUFFIX).ic
 PROJDROPSUFFIX =# drop this suffix in subdirs
 # minima and maxima as reference for ranges
 MINMAXALL = $(COLSELECTDATA)
@@ -22,9 +24,13 @@ MINMAXALL = $(COLSELECTDATA)
 ## rules
 %.ic : %
 	# selection of inner columns in $<
-	$(SCR)/select_inner_columns.awk\
-		-v min_col=$(strip ${MIN_COL})\
-		-v max_col=$(strip ${MAX_COL}) $< > $@
+	$(ic_command)
+
+define ic_command
+$(SCR)/select_inner_columns.awk\
+	-v min_col=$(strip ${IC_MIN_COL})\
+	-v max_col=$(strip ${IC_MAX_COL}) $< > $@
+endef
 
 ## macros to be called later
 #MACROS +=
