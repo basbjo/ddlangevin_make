@@ -1,6 +1,4 @@
-.PHONY: select pca plot
-select: $$(INNERCOLSDATA)
-
+.PHONY: pca plot
 pca: $$(PCADATA)
 
 plot: pca $$(CVARPLOT)
@@ -14,26 +12,18 @@ SHOWDATA += PCADATA
 ## default settings that must be changed before including this file
 
 ## variables
-# selected inner columns
-INNERCOLSDATA += $(addsuffix .ic,${DATA})
-# projected data from principal component analysis
-PCADATA += $(addsuffix .pca,${INNERCOLSDATA})
-# suffix for projected data that is further analysed
-PROJSUFFIX = .ic.pca
+PCAPREVSUFFIX := $(PROJSUFFIX)
+PCADATA += $(addsuffix ${PCAPREVSUFFIX}.pca,${DATA})
+# suffix for data that is further analysed
+PROJSUFFIX := $(PCAPREVSUFFIX).pca
 PROJDROPSUFFIX =# drop this suffix in subdirs
 # plot of cumulative variances (eigenvalues)
-CVARPLOT = $(addsuffix .eigval.png,${INNERCOLSDATA})
+CVARPLOT = $(addsuffix ${PCAPREVSUFFIX}.eigval.png,${DATA})
 # minima and maxima as reference for ranges
 MINMAXALL = $(PCADATA)
 
 ## rules
-%.ic : %
-	# selection of inner columns in $<
-	$(SCR)/select_inner_columns.awk\
-		-v min_col=$(strip ${MIN_COL})\
-		-v max_col=$(strip ${MAX_COL}) $< > $@
-
-%$(PROJSUFFIX).tmp : %.ic
+%$(PROJSUFFIX).tmp : %$(PCAPREVSUFFIX)
 	# perform principal component analysis on $<
 	name=$<; $(FASTCA) -f $$name -p $@ -c $$name.cov -v $$name.eigvec -V $$name.eigval
 
@@ -48,25 +38,23 @@ MINMAXALL = $(PCADATA)
 
 ## info
 ifndef INFO
-INFO = select pca plot clean
-INFO_select = select inner columns
-INFO_pca   = dihedral principal component analysis
-INFO_plot   = plot cumulative variances
-INFO_clean  = delete cos-/sin-transformed data
+INFO = pca plot
 define INFOADD
 endef
 else
-INFOend +=
+INFOend += pca
 endif
+INFO_pca    = principal component analysis (suffix .pca)
+INFO_plot   = plot cumulative variances
 
 ## makefile includes (must remain after info)
 include $(makedir)/projfuture.mk
 
 ## keep intermediate files
-PRECIOUS += $(INNERCOLSDATA)
+PRECIOUS +=
 
 ## clean
 PLOTS_LIST += $(CVARPLOT)
-CLEAN_LIST += $(INNERCOLSDATA) $(addsuffix .tmp,${PCADATA})
+CLEAN_LIST += $(addsuffix .tmp,${PCADATA})
 PURGE_LIST += $(foreach suffix,pca cov eigvec eigval,\
-	      $(addsuffix .${suffix},${INNERCOLSDATA}))
+	      $(addsuffix ${PCAPREVSUFFIX}.${suffix},${DATA}))
