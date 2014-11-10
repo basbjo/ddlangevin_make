@@ -60,8 +60,7 @@ INFOend +=
 endif
 
 ## makefile includes (must remain after info)
-include $(makedir)/cossin.mk
-INFOend := $(filter-out cossin,${INFOend})
+include $(makedir)/projfuture.mk
 
 ## keep intermediate files
 PRECIOUS += $(INNERCOLSDATA)

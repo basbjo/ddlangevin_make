@@ -50,6 +50,7 @@ endif
 
 ## makefile includes (must remain after info)
 include $(makedir)/cossin.mk
+include $(makedir)/projfuture.mk
 
 ## keep intermediate files
 PRECIOUS += $(COSSINDATA)
