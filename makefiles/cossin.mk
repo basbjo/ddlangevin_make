@@ -2,29 +2,35 @@
 cossin: $$(COSSINDATA)
 
 ## default settings
+CS_MIN_COL ?= $(MIN_COL)
+CS_MAX_COL ?= $(MAX_COL)
 
 # settings/data to be shown by showconf/showdata
-SHOWCONF += MIN_COL MAX_COL
-$(if $(filter cossin,${projtarget}),$(eval\
+SHOWCONF += CS_MIN_COL CS_MAX_COL
+$(if $(filter cossin,${projtargets}),$(eval\
 	SHOWDATA += COSSINDATA))
 
 ## default settings that must be changed before including this file
 
 ## variables
-PREVSUFFIX := $(PROJSUFFIX)
-COSSINDATA += $(addsuffix .cs,$(addsuffix ${PREVSUFFIX},${DATA}))
+CSPREVSUFFIX := $(PROJSUFFIX)
+COSSINDATA += $(addsuffix ${CSPREVSUFFIX}.cs,${DATA})
 # suffix for data that is further analysed
-PROJSUFFIX += .cs
+PROJSUFFIX := $(CSPREVSUFFIX).cs
 PROJDROPSUFFIX =# drop this suffix in subdirs
 # minima and maxima as reference for ranges
 MINMAXALL = $(COSSINDATA)
 
 ## rules
 %.cs : %
-	# cos-/sin-transform of inner dihedrals in $<
-	$(SCR)/cos_sin_tran.awk\
-		-v min_col=$(strip ${MIN_COL})\
-		-v max_col=$(strip ${MAX_COL}) $< > $@
+	# cos-/sin-transform of inner columns in $<
+	$(cs_command)
+
+define cs_command
+$(SCR)/cos_sin_tran.awk\
+	-v min_col=$(strip ${CS_MIN_COL})\
+	-v max_col=$(strip ${CS_MAX_COL}) $< > $@
+endef
 
 ## macros to be called later
 #MACROS +=
