@@ -79,6 +79,24 @@ $(cordir)/$(1)-V$(2).cor% : $$(fitdir)/$(1)-V$(2).fit\
 		-vbins=$$(CORR_NBINS) > $$@
 endef
 
+# calculate final crosscorrelation data
+define template_calc_xcor
+$(cordir)/$(1)-V$(2)-V$(3).xcor : $$(fitdir)/$(1)-V$(2).fit $$(fitdir)/$(1)-V$(3).fit\
+	$$(if $$(wildcard $${splitdir}),\
+		$$(addprefix $(cordir)/$(1)-V$(2)-V$(3).xcor,$$(call\
+		splitnums,$${splitdir}/$(1)$$(SPLIT_SUFFIX))))\
+	| $$(splitdir)/$(1)$$(SPLIT_SUFFIX)-01
+	$$(SCR)/av_second_column.py $$(sort $$(filter $${cordir}%,$$+)) > $$@
+$(cordir)/$(1)-V$(2)-V$(3).xcor% : $$(fitdir)/$(1)-V$(2).fit $$(fitdir)/$(1)-V$(3).fit\
+	$$(splitdir)/$(1)$$(SPLIT_SUFFIX)-% | $$(cordir)
+	$$(if $$(wildcard $$<),$$(eval corrlength := $$(call getmax,${CORR_NBINS}\
+		$$(shell tail -n1 $$<) $$(shell tail -n1 $$(word 2,$$+)))),\
+		$$(eval corrlength := <corrlength>))
+	$$(XCOR) -c$(2),$(3) -D$$(corrlength) $$(lastword $$+) | grep -v '^-' \
+		| $$(SCR)/logbinning.awk -vxmin=1 -vxmax=$$(corrlength)\
+		-vbins=$$(CORR_NBINS) > $$@
+endef
+
 # calculate correlation times
 define template_timeplot
 $(cordir)/$(1)-V$(2).png : $$(cordir)/$(1)-V$(2).cor $(1).tau\
@@ -133,7 +151,11 @@ $(foreach file,${DATA},\
 		$(eval $(call template_calc,${file},${col}))\
 		$(eval $(call template_timeplot,${file},${col})))\
 	$(foreach N,$(call range,${lastplot}),\
-		$(eval $(call template_plot,${file},${N}))))
+		$(eval $(call template_plot,${file},${N})))\
+	$(foreach col2,$(call range,$(call getmin,${CORR_LAST_COL}\
+		${lastcol})),$(foreach col1,$(call rangeto,${col2}),\
+		$(eval $(call template_calc_xcor,${file},${col1},${col2}))\
+		$(eval $(call template_calc_xcor,${file},${col2},${col1})))))
 endef
 
 ## info
@@ -146,6 +168,11 @@ Do not call targets plot_* before calc is completed.
 There are two possibilities to build all targets (-j optional):
   j=2; make -j$$j estim; make -j$$j calc; make -j$$j plot_all
   j=2; make -j$$j estim; make -j$$j plot; make -j$$j plot_all
+
+Cross correlations:
+There is no phony target to calculate cross correlations, but after target
+»estim« has been called for the components in question, they are calculated
+by calling »make corrdata/filename-V##-V##.xcor« (the order of ## matters).
 
 endef
 else

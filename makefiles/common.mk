@@ -7,6 +7,7 @@ PDF2PNG ?= pdftoppm -png -l 1
 PDF2EPS ?= pdftops -eps -l 1
 # TISEAN
 CORR ?= corr -V0
+XCOR ?= xcor -V0
 # TISEAN (see ./patches)
 HIST1D ?= histogram -V0 -b $(HIST_NBINS) -D
 HIST2D ?= histo2d -V0 -b $(HIST_NBINS)
