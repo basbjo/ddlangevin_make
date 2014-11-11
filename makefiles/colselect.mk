@@ -13,11 +13,10 @@ $(if $(filter colselect,${projtargets}),$(eval\
 ## default settings that must be changed before including this file
 
 ## variables
-ICPREVSUFFIX := $(PROJSUFFIX)
+ICPREVSUFFIX := $(SUFFIX)
 COLSELECTDATA += $(addsuffix ${ICPREVSUFFIX}.ic,${DATA})
 # suffix for data that is further analysed
-PROJSUFFIX := $(ICPREVSUFFIX).ic
-PROJDROPSUFFIX =# drop this suffix in subdirs
+SUFFIX := $(ICPREVSUFFIX).ic
 # minima and maxima as reference for ranges
 MINMAXALL = $(COLSELECTDATA)
 

@@ -13,11 +13,10 @@ $(if $(filter cossin,${projtargets}),$(eval\
 ## default settings that must be changed before including this file
 
 ## variables
-CSPREVSUFFIX := $(PROJSUFFIX)
+CSPREVSUFFIX := $(SUFFIX)
 COSSINDATA += $(addsuffix ${CSPREVSUFFIX}.cs,${DATA})
 # suffix for data that is further analysed
-PROJSUFFIX := $(CSPREVSUFFIX).cs
-PROJDROPSUFFIX =# drop this suffix in subdirs
+SUFFIX := $(CSPREVSUFFIX).cs
 # minima and maxima as reference for ranges
 MINMAXALL = $(COSSINDATA)
 

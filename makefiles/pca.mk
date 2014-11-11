@@ -12,22 +12,21 @@ SHOWDATA += PCADATA
 ## default settings that must be changed before including this file
 
 ## variables
-PCAPREVSUFFIX := $(PROJSUFFIX)
+PCAPREVSUFFIX := $(SUFFIX)
 PCADATA += $(addsuffix ${PCAPREVSUFFIX}.pca,${DATA})
 # suffix for data that is further analysed
-PROJSUFFIX := $(PCAPREVSUFFIX).pca
-PROJDROPSUFFIX =# drop this suffix in subdirs
+SUFFIX := $(PCAPREVSUFFIX).pca
 # plot of cumulative variances (eigenvalues)
 CVARPLOT = $(addsuffix ${PCAPREVSUFFIX}.eigval.png,${DATA})
 # minima and maxima as reference for ranges
 MINMAXALL = $(PCADATA)
 
 ## rules
-%$(PROJSUFFIX).tmp : %$(PCAPREVSUFFIX)
+%$(SUFFIX).tmp : %$(PCAPREVSUFFIX)
 	# perform principal component analysis on $<
 	name=$<; $(FASTCA) -f $$name -p $@ -c $$name.cov -v $$name.eigvec -V $$name.eigval
 
-%$(PROJSUFFIX) : %$(PROJSUFFIX).tmp
+%$(SUFFIX) : %$(SUFFIX).tmp
 	$(appendlastcol_command)
 
 %.eigval.tex : %.pca $(SCR)/plot_cumulative.py
