@@ -1,9 +1,7 @@
-all: make_example
+CC = gcc
 
-CFLAGS += -lm
+make_example: gaussrand.c -lm
 
-make_example: gaussrand.c
-
-.PHONY: all purge
+.PHONY: purge
 purge:
 	$(RM) make_example

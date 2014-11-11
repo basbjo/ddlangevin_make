@@ -6,4 +6,4 @@ makefiles/example/make_example
 drift2d_*
 hist2d_*
 alldih*
-example*
+example_*
