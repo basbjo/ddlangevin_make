@@ -20,7 +20,7 @@ LAG_TIMES = 100
 # suffix for data that is further analysed
 $(foreach makefile,${projmakefiles},$(eval\
 	PROJSUFFIX := ${PROJSUFFIX}$(shell\
-	grep '^SUFFIX :=' ${makefile}|grep -o '\.[a-z.]*')))
+	grep '^SUFFIX :=' ${makefile}|grep -o '\.[a-z.*]*')))
 SHOWDATA += PROJSUFFIX
 
 ## data and factors for downsampling
