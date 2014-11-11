@@ -1,6 +1,6 @@
 /* Model Langevin trajectory as example
  *
- * Two stochastic processes x1, x2 with double well potential with slightly
+ * Two identical stochastic processes x1, x2 with double well potential with
  * different variances and mixed by the following unitary transformation.
  *
  *    / y1 \     / 3/5 -4/5 \    / x1 \
@@ -62,7 +62,7 @@ int main(int argc,char** argv)
     dW1=gaussrand()*sqrt(dt);
     dW2=gaussrand()*sqrt(dt);
     f1n = f(x1);
-    f2n = f(x2*1.1);
+    f2n = f(x2*2);
     gamma1n = gamma(x1);
     gamma2n = gamma(x2);
     K1n = K(x1);
