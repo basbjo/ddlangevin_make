@@ -17,9 +17,10 @@ projtargets = cossin pca
 projmakefiles = $(addprefix ${makedir}/,$(addsuffix .mk,${projtargets}))
 # lag times in units of one time frame in data files (tica only)
 LAG_TIMES = 100
-# suffix for projected data that is further analysed
-#$(eval $(shell grep '^PROJSUFFIX =' ${projmakefile}))
-#$(eval $(shell grep '^PROJDROPSUFFIX =' ${projmakefile}))
+# suffix for data that is further analysed
+$(foreach makefile,${projmakefiles},$(eval\
+	PROJSUFFIX := ${PROJSUFFIX}$(shell\
+	grep '^SUFFIX :=' ${makefile}|grep -o '\.[a-z.]*')))
 SHOWDATA += PROJSUFFIX
 
 ## data and factors for downsampling
@@ -31,7 +32,7 @@ REDUCTION_FACTORS = 5
 MIN_COL = 7
 MAX_COL = 16
 
-## save split pca data here to avoid recalculation
+## save split data here to avoid recalculation
 splitdir ?= $(or $(firstword ${datadirs}),.)/splitdata
 
 ## minima and maxima as reference for ranges
