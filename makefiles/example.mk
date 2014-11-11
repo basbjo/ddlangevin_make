@@ -19,19 +19,17 @@ $(MLE): $(MLE).c
 example_1ps: $(MLE)
 	$< > $@
 	@echo
-	@echo The followig settings in config.mk
+	@echo The following settings in config.mk
 	@echo
-	@grep '^\(TIME_UNIT\|RAWDATA\|IF_FUTURE\|projtarget\|M.._COL\)' config.mk
+	@grep '^\(TIME_UNIT\|RAWDATA\|IF_FUTURE\|projtarget\)' config.mk
 	@sed -i '/^TIME_UNIT/s/=.*/= ps/' config.mk
 	@sed -i '/^RAWDATA/s/=.*/= example_1$$(TIME_UNIT)/' config.mk
 	@sed -i '/^IF_FUTURE/s/= *[01]/= 0/' config.mk
 	@sed -i '/^projtarget/s/=.*/= pca/' config.mk
-	@sed -i '/^MIN_COL/s/=.*/= 1/' config.mk
-	@sed -i '/^MAX_COL/s/=.*/= 2/' config.mk
 	@echo
-	@echo have been changed to the following.
+	@echo have been changed as follows.
 	@echo
-	@grep '^\(TIME_UNIT\|RAWDATA\|IF_FUTURE\|projtarget\|M.._COL\)' config.mk
+	@grep '^\(TIME_UNIT\|RAWDATA\|IF_FUTURE\|projtarget\)' config.mk
 
 ## macros to be called later
 #MACROS +=
