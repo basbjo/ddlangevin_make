@@ -58,6 +58,10 @@ Configuration
 
   which adds a few further changes instead of setting ``projtargets`` manually.
 
+  For better performance, ``tica`` in fact only applies a time-delayed principal
+  component analysis on normalized data thus it requires the principal component
+  analysis results as input data.  To apply TICA, you must select ``pca tica``.
+
   ========== ================================================================ ======
   Target     Description                                                      Suffix
   ========== ================================================================ ======
