@@ -13,7 +13,7 @@ SHOWDATA += RAWDATA
 
 ## projected data, e.g. from principal component analysis
 # WARNING: recreate all affected data manually after changes
-projtargets = cossin tica
+projtargets = cossin pca tica
 projmakefiles = $(addprefix ${makedir}/,$(addsuffix .mk,${projtargets}))
 # lag times in units of one time frame in data files (tica only)
 LAG_TIMES = 100

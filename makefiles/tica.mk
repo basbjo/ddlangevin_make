@@ -20,19 +20,24 @@ SUFFIX := $(TICAPREVSUFFIX).lag*.tica
 MINMAXALL = $(TICADATA)
 
 ## rules
+%$(TICAPREVSUFFIX).rs: %$(TICAPREVSUFFIX)
+	# rescale columns to unit variance
+	$(if $(shell [ ${IF_FUTURE} -eq 0 ] && echo yes),\
+		$(RESCALE) -v -m$(call fcols,$<) $< -o $@,\
+		sed 's/ [01]$$//' $< | $(RESCALE) -v -m$(call fcols,$<) -o $@)
+
 define template_tica
-%$(TICAPREVSUFFIX).lag$(1).tica_dir/time_independent_components.dat :\
-	%$(TICAPREVSUFFIX)
+%$(TICAPREVSUFFIX).lag$(1).tica_dir/delay_principal_components.dat :\
+	%$(TICAPREVSUFFIX).rs
 	# perform time lagged independent component analysis on $$<\
 		(lag time $(1) frames)
 	mkdir -p $$(@D)
 	$$(if $$(shell [ $${IF_FUTURE} -eq 0 ] && echo yes)\
-	  ,cd $$(@D) && $$(DELAYPCA) --trajectory ../$$< --lagtime $(1) --tica\
+	  ,cd $$(@D) && $$(DELAYPCA) --trajectory ../$$< --lagtime $(1) --delayPCA\
 	  ,cd $$(@D) && awk '{print $$$$NF}' ../$$* | paste -d\  ../$$< - \
-		  | $$(DELAYPCA) --break --lagtime $(1) --tica)
-	$(RM) $$(@D)/principal_components.dat
+		  | $$(DELAYPCA) --break --lagtime $(1) --delayPCA)
 %$(TICAPREVSUFFIX).lag$(1).tica :\
-	%$(TICAPREVSUFFIX).lag$(1).tica_dir/time_independent_components.dat
+	%$(TICAPREVSUFFIX).lag$(1).tica_dir/delay_principal_components.dat
 	$$(appendlastcol_command)
 endef
 
@@ -57,7 +62,7 @@ INFO_tica   = time lagged independent component analysis
 include $(makedir)/projfuture.mk
 
 ## keep intermediate files
-PRECIOUS +=
+PRECIOUS += $(addsuffix ${TICAPREVSUFFIX}.rs,${DATA})
 
 ## clean
 PLOTS_LIST +=

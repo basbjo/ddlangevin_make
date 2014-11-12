@@ -48,31 +48,40 @@ Makefile information and configuration
 Configuration
 -------------
 
-- Select a transformation by setting ``projtarget`` in ``config.mk``.
-  Currently, ``id``, ``pca``, ``dpca`` and ``tica`` are available.
-  To select the latter, consider calling::
+- Select a series of transformations by setting ``projtargets`` in
+  ``config.mk``.  Currently, ``colselect``, ``cossin``, ``pca`` and ``tica``
+  are available.  The first two may be considered as preprocessing, the latter
+  as final transformations.  If ``projtargets`` is empty, further analysis is
+  applied directly on the data.  To select ``tica``, consider calling::
 
     git merge origin/tica
 
-  which adds a few further changes instead of setting ``projtarget`` manually.
+  which adds a few further changes instead of setting ``projtargets`` manually.
 
-  ====== =======================================================================
-  Target Description
-  ====== =======================================================================
-  id     Do not apply a projection, use provided data directly.
-  pca    Select a range of columns and apply principal component analysis (PCA).
-  dpca   Select a range of columns and apply PCA on cos- and sin-transforms.
-  tica   Select a range of columns and apply TICA on cos- and sin-transforms.
-  ====== =======================================================================
+  For better performance, ``tica`` in fact only applies a time-delayed principal
+  component analysis on normalized data thus it requires the principal component
+  analysis results as input data.  To apply TICA, you must select ``pca tica``.
+
+  ========== ================================================================ ======
+  Target     Description                                                      Suffix
+  ========== ================================================================ ======
+  colselect  Select a range of columns.                                       .ic
+  cossin     Select a range of columns and write out cos- and sin-transforms. .cs
+  pca        Apply principal component analysis (PCA).                        .pca
+  tica       Apply time-lagged independent component analysis (TICA).         .tica
+  ========== ================================================================ ======
+
+  To apply a dihedral PCA (dPCA), set ``projtargets = cossin pca``.
+  The suffix of the dPCA projected data will then be ``.cs.pca``.
 
 - Put source data (dihedral angles) into main directory and define
   ``TIME_UNIT``, the wildcard ``RAWDATA`` for source data and the
   ``IF_FUTURE`` value in ``config.mk`` as described there.
 
-- For ``tica``, select ``LAG_TIMES`` (unit: time frames) in ``config.mk``.
+- For ``colselect`` and ``cossin``, select the first and last column of the
+  source data to be considered as ``MIN_COL`` and ``MAX_COL`` in ``config.mk``.
 
-- Select the first and last column of the source data to be considered as
-  ``MIN_COL`` and ``MAX_COL`` in ``config.mk``.
+- For ``tica``, select ``LAG_TIMES`` (unit: time frames) in ``config.mk``.
 
 Data projection
 ---------------
