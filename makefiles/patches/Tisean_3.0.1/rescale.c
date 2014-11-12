@@ -27,6 +27,7 @@
 
 #define WID_STR "Rescales the data"
 
+int ddof=0;
 unsigned long length=ULONG_MAX,exclude=0;
 unsigned int dim=1;
 unsigned int verbosity=0xff;
@@ -53,6 +54,7 @@ void show_options(char *progname)
   fprintf(stderr,"\t-Z maximum of the new series [default: 1.0]\n");
   fprintf(stderr,"\t-a create a series with average value equals 0\n");
   fprintf(stderr,"\t-v create a series with variance 1\n");
+  fprintf(stderr,"\t-u use unbiased estimator for variance (divide by N-1)\n");
   fprintf(stderr,"\t-o output file name [default: 'datafile'.res']\n");
   fprintf(stderr,"\t-V verbosity level [default: 1]\n\t\t"
           "0='only panic messages'\n\t\t"
@@ -85,6 +87,8 @@ void scan_options(int n,char **in)
     set_av=1;
   if ((out=check_option(in,n,'v','n')) != NULL)
     set_var=1;
+  if ((out=check_option(in,n,'u','n')) != NULL)
+    ddof=1;
   if ((out=check_option(in,n,'o','o')) != NULL) {
     stdo=0;
     if (strlen(out) > 0)
@@ -142,6 +146,8 @@ int main(int argc,char **argv)
 
   for (n=0;n<dim;n++) {
     variance(series[n],length,&av,&varianz);
+    if (ddof!=0)
+      varianz *= sqrt((double) length/(length-ddof));
     
     if (set_av)
       for (i=0;i<length;i++)
