@@ -1,4 +1,4 @@
-#!/usr/local/bin/gnuplot
+#!/usr/bin/gnuplot
 #Plot ratios between decreasing correlation times from table *.tau
 
 OUTFILE=FILE.".ratios.tex"

@@ -1,6 +1,9 @@
-The patches are applicable to the source files in a zip archive
+The source code files in this directory are supposed to be compiled
+in the source_c directory of Tisean and were developed in an archive
 that has been downloaded from the Tisean web page on May 15 2014.
 http://www.mpipks-dresden.mpg.de/~tisean/Tisean_3.0.1/index.html
+
+Patching with tisean_cec.h.patch is required for histogram.c.
 
 A mostly identical version of histogram is available on github.
 https://github.com/basbjo/tisean_framework/tree/histogram

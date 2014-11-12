@@ -2,9 +2,10 @@ prefix = .
 include $(prefix)/config.mk
 include $(makedir)/common.mk
 include $(makedir)/readme.mk
-include $(projmakefile)
+$(foreach makefile,${projmakefiles},$(eval include ${makefile}))
 include $(makedir)/split.mk
 include $(makedir)/link_downsampling.mk
+include $(makedir)/example.mk
 
 ## source data files in this directory (wildcards allowed)
 DATA_HERE = $(RAWDATA)
@@ -15,10 +16,10 @@ DROPSUFFIX =
 
 ## settings
 #see config.mk
-SPLIT_LIST = *$(PROJSUFFIX)
+SPLIT_LIST = $(addsuffix ${PROJSUFFIX},${RAWDATA})
 
 ## default targets
-all += $(projtarget) minmax
+all += $(projtargets) minmax
 
 ## call macros
 $(call_macros)

@@ -1,9 +1,11 @@
-.PHONY: calc plot calc_estim calc_times plot_times plot_ratios plot_all
-calc: $$(CORR_DATA) calc_estim
+.PHONY: calc plot estim calc_times plot_times plot_ratios plot_all
+.calc: $$(CORR_DATA) $$(TIMES)
+calc: estim
+	@$(MAKE) .calc
 
 plot: calc calc_times $$(CORR_PLOT) $$(TIMES_PLOT)
 
-calc_estim: $$(ESTIM_DATA)
+estim: $$(ESTIM_DATA)
 
 calc_times: $$(TIMES)
 
@@ -14,6 +16,7 @@ plot_ratios: calc_times $$(RATIOS_PLOT)
 plot_all: plot plot_times plot_ratios
 
 ## default settings
+CORR_NBINS ?= 100# number of bins for binning on logarithmic scale
 SPLIT_SUFFIX ?= $(DROPSUFFIX)# to find split data in remote directory
 ESTIMLENGTH ?= 1000000# max correlation length for first estimate
 RANGEFACTOR ?= 6# times correlation time for final data
@@ -25,7 +28,7 @@ TIME_UNIT ?= # time unit to be shown in x label (optional)
 
 # settings/data to be shown by showconf/showdata
 SHOWCONF += CORR_LAST_COL CORR_PLOT_NCOLS CORR_XRANGE TIME_UNIT
-SHOWDATA += fitdir cordir SPLIT_SUFFIX
+SHOWDATA += fitdir cordir splitdir SPLIT_SUFFIX
 
 ## default settings that must be changed before including this file
 fitdir ?= estimation
@@ -62,22 +65,50 @@ endef
 # include also split.mk to split data
 define template_calc
 $(cordir)/$(1)-V$(2).cor : $$(fitdir)/$(1)-V$(2).fit\
-	| $$(cordir) $$(splitdir)/$(1)$$(SPLIT_SUFFIX)-01
-	$$(SCR)/wrapper_corr.sh $(1) $(2) $$(fitdir)\
-		$$(splitdir)/$(1)$$(SPLIT_SUFFIX) $$(@D) $$(CORR)
+	$$(if $$(wildcard $${splitdir}),\
+		$$(addprefix $(cordir)/$(1)-V$(2).cor,$$(call\
+		splitnums,$${splitdir}/$(1)$$(SPLIT_SUFFIX))))\
+	| $$(splitdir)/$(1)$$(SPLIT_SUFFIX)-01
+	$$(SCR)/av_second_column.py $$(sort $$(filter $${cordir}%,$$+)) > $$@
+$(cordir)/$(1)-V$(2).cor% : $$(fitdir)/$(1)-V$(2).fit\
+	$$(splitdir)/$(1)$$(SPLIT_SUFFIX)-% | $$(cordir)
+	$$(if $$(wildcard $$<),$$(eval corrlength := $$(call getmax,${CORR_NBINS}\
+		$$(shell tail -n1 $$<))),$$(eval corrlength := <corrlength>))
+	$$(CORR) -c$(2) -D$$(corrlength) $$(lastword $$+) \
+		| $$(SCR)/logbinning.awk -vxmin=1 -vxmax=$$(corrlength)\
+		-vbins=$$(CORR_NBINS) > $$@
+endef
+
+# calculate final crosscorrelation data
+define template_calc_xcor
+$(cordir)/$(1)-V$(2)-V$(3).xcor : $$(fitdir)/$(1)-V$(2).fit $$(fitdir)/$(1)-V$(3).fit\
+	$$(if $$(wildcard $${splitdir}),\
+		$$(addprefix $(cordir)/$(1)-V$(2)-V$(3).xcor,$$(call\
+		splitnums,$${splitdir}/$(1)$$(SPLIT_SUFFIX))))\
+	| $$(splitdir)/$(1)$$(SPLIT_SUFFIX)-01
+	$$(SCR)/av_second_column.py $$(sort $$(filter $${cordir}%,$$+)) > $$@
+$(cordir)/$(1)-V$(2)-V$(3).xcor% : $$(fitdir)/$(1)-V$(2).fit $$(fitdir)/$(1)-V$(3).fit\
+	$$(splitdir)/$(1)$$(SPLIT_SUFFIX)-% | $$(cordir)
+	$$(if $$(wildcard $$<),$$(eval corrlength := $$(call getmax,${CORR_NBINS}\
+		$$(shell tail -n1 $$<) $$(shell tail -n1 $$(word 2,$$+)))),\
+		$$(eval corrlength := <corrlength>))
+	$$(XCOR) -c$(2),$(3) -D$$(corrlength) $$(lastword $$+) | grep -v '^-' \
+		| $$(SCR)/logbinning.awk -vxmin=1 -vxmax=$$(corrlength)\
+		-vbins=$$(CORR_NBINS) > $$@
 endef
 
 # calculate correlation times
 define template_timeplot
 $(cordir)/$(1)-V$(2).png : $$(cordir)/$(1)-V$(2).cor $(1).tau\
-	$(SCR)/plot_corrtime.gp | $$(cordir)
-	$$(eval tau := $$(shell grep $$+ | cut -d\  -f2))
+	$$(SCR)/plot_corrtime.gp | $$(cordir)
+	$$(eval tau := $$(if $$(wildcard $$(word 2,$$+)),\
+		$$(shell grep $$+ |cut -d\  -f2)))
 	gnuplot -e 'FILE="$$(basename $$<)"; TAU=$$(tau)'\
 		$$(SCR)/plot_corrtime.gp
 endef
 
 define template_tau
-$(1).tau : $$(filter $$(cordir)/${1}%,$${CORR_DATA})
+$(1).tau : $$(filter $$(cordir)/${1}-V%,$${CORR_DATA})
 	$$(info Write estimated correlation times to $$@.)
 	@$$(RM) $$@
 	@for file in $$+; do times=$$$$($(SCR)/get_corrtime.awk $$$${file})\
@@ -120,20 +151,36 @@ $(foreach file,${DATA},\
 		$(eval $(call template_calc,${file},${col}))\
 		$(eval $(call template_timeplot,${file},${col})))\
 	$(foreach N,$(call range,${lastplot}),\
-		$(eval $(call template_plot,${file},${N}))))
+		$(eval $(call template_plot,${file},${N})))\
+	$(foreach col2,$(call range,$(call getmin,${CORR_LAST_COL}\
+		${lastcol})),$(foreach col1,$(call rangeto,${col2}),\
+		$(eval $(call template_calc_xcor,${file},${col1},${col2}))\
+		$(eval $(call template_calc_xcor,${file},${col2},${col1})))))
 endef
 
 ## info
 ifndef INFO
-INFO = calc_estim calc calc_times plot plot_times plot_ratios plot_all del_estim
+INFO = estim calc calc_times plot plot_times plot_ratios plot_all del_estim
 define INFOADD
+
+Do not call targets calc or plot before estim is completed.
+Do not call targets plot_* before calc is completed.
+There are two possibilities to build all targets (-j optional):
+  j=2; make -j$$j estim; make -j$$j calc; make -j$$j plot_all
+  j=2; make -j$$j estim; make -j$$j plot; make -j$$j plot_all
+
+Cross correlations:
+There is no phony target to calculate cross correlations, but after target
+»estim« has been called for the components in question, they are calculated
+by calling »make corrdata/filename-V##-V##.xcor« (the order of ## matters).
+
 endef
 else
 INFOend +=
 endif
-INFO_calc_estim = estimate correlation times
+INFO_estim = estimate correlation times
 INFO_calc       = calculate time correlation data
-INFO_calc_times = calculate correlation times
+INFO_calc_times = (re)calculate correlation times
 INFO_plot       = plot correlation functions and times
 INFO_plot_times = plot correlation times in »$(cordir)«
 INFO_plot_ratios = plot ratios between correlation times
@@ -145,8 +192,9 @@ PRECIOUS +=
 
 ## clean
 PLOTS_LIST += $(TIMES_PLOT) $(RATIOS_PLOT) $(TIME_PLOT) $(CORR_PLOT)
-CLEAN_LIST += */*.tmp[0-9]*[0-9]
-PURGE_LIST += $(DEL_FITCOR) $(ESTIM_DATA) $(TIMES) $(CORR_DATA)
+CLEAN_LIST +=
+PURGE_LIST += $(DEL_FITCOR) $(ESTIM_DATA) $(TIMES) $(CORR_DATA)\
+	      $(addsuffix [0-9]*[0-9],${CORR_DATA})
 
 .PHONY: del_estim
 del_estim:

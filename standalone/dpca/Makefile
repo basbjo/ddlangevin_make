@@ -12,8 +12,8 @@ DROPSUFFIX =
 
 ## settings
 IF_FUTURE = 0		# if 1: append last column of source data to pca data
-DIH_MIN_COL = 7		# first column to be selected from source data
-DIH_MAX_COL = 16	# last column to be selected from source data
+MIN_COL = 7		# first column to be selected from source data
+MAX_COL = 16		# last column to be selected from source data
 # WARNING: recreate all affected data manually after changes
 
 ## default targets

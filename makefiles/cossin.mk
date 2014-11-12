@@ -2,35 +2,33 @@
 cossin: $$(COSSINDATA)
 
 ## default settings
-PROJ_FUTURE ?= $(or ${IF_FUTURE},0)
-# if 1: append last column of source data to projected data
-# this is only used in other makefiles that include this one
+CS_MIN_COL ?= $(MIN_COL)
+CS_MAX_COL ?= $(MAX_COL)
 
 # settings/data to be shown by showconf/showdata
-SHOWCONF += DIH_MIN_COL DIH_MAX_COL PROJ_FUTURE
-SHOWDATA +=
+SHOWCONF += CS_MIN_COL CS_MAX_COL
+$(if $(filter cossin,${projtargets}),$(eval\
+	SHOWDATA += COSSINDATA))
 
 ## default settings that must be changed before including this file
 
 ## variables
-# cos-/sin-transformed dihedral angles
-COSSINDATA += $(addsuffix .cossin,${DATA})
+CSPREVSUFFIX := $(SUFFIX)
+COSSINDATA += $(addsuffix ${CSPREVSUFFIX}.cs,${DATA})
+# suffix for data that is further analysed
+SUFFIX := $(CSPREVSUFFIX).cs
+# minima and maxima as reference for ranges
+MINMAXALL = $(COSSINDATA)
 
 ## rules
-%.cossin : %
-	# cos-/sin-transform of inner dihedrals in $<
-	$(SCR)/cos_sin_tran.awk\
-		-v dih_min_col=$(strip ${DIH_MIN_COL})\
-		-v dih_max_col=$(strip ${DIH_MAX_COL}) $< > $@
+%.cs : %
+	# cos-/sin-transform of inner columns in $<
+	$(cs_command)
 
-# common command to append follower column to projected data
-# this is only used in other makefiles that include this one
-define appendlastcol_command
-  $(if $(shell [ ${PROJ_FUTURE} -eq 1 ] && echo yes),\
-	  $(info # write result with follower column to $@)\
-	  awk '!/^#/{print $$NF}' $* | paste -d\  $< - > $@,\
-	  $(info # move result to $@)\
-	  mv $< $@)
+define cs_command
+$(SCR)/cos_sin_tran.awk\
+	-v min_col=$(strip ${CS_MIN_COL})\
+	-v max_col=$(strip ${CS_MAX_COL}) $< > $@
 endef
 
 ## macros to be called later
@@ -44,7 +42,7 @@ endef
 else
 INFOend += cossin
 endif
-INFO_cossin = create cos-/sin-transformed data
+INFO_cossin = cos-/sin-transform data (suffix .cs)
 
 ## keep intermediate files
 PRECIOUS +=

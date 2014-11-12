@@ -1,4 +1,4 @@
-#!/usr/local/bin/gnuplot
+#!/usr/bin/gnuplot
 #Plots a table of correlation times
 
 set terminal tikz standalone tightboundingbox

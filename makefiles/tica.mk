@@ -10,17 +10,19 @@ SHOWDATA += TICADATA
 ## default settings that must be changed before including this file
 
 ## variables
-# projected data from time lagged independent component analysis
-TICADATA += $(foreach lt,${LAG_TIMES},$(addsuffix .lag${lt}.tica,${COSSINDATA}))
+TICAPREVSUFFIX := $(SUFFIX)
+TICADATA += $(foreach lt,${LAG_TIMES},$(addsuffix\
+	    ${TICAPREVSUFFIX}.lag${lt}.tica,${DATA}))
 DIR_LIST += $(addsuffix _dir,${TICADATA})
-# suffix for projected data that is further analysed
-PROJSUFFIX = .cossin.lag*.tica
+# suffix for data that is further analysed
+SUFFIX := $(TICAPREVSUFFIX).lag*.tica
 # minima and maxima as reference for ranges
 MINMAXALL = $(TICADATA)
 
 ## rules
 define template_tica
-%.cossin.lag$(1).tica_dir/time_independent_components.dat : %.cossin
+%$(TICAPREVSUFFIX).lag$(1).tica_dir/time_independent_components.dat :\
+	%$(TICAPREVSUFFIX)
 	# perform time lagged independent component analysis on $$<\
 		(lag time $(1) frames)
 	mkdir -p $$(@D)
@@ -29,8 +31,8 @@ define template_tica
 	  ,cd $$(@D) && awk '{print $$$$NF}' ../$$* | paste -d\  ../$$< - \
 		  | $$(DELAYPCA) --break --lagtime $(1) --tica)
 	$(RM) $$(@D)/principal_components.dat
-%.cossin.lag$(1).tica :\
-	%.cossin.lag$(1).tica_dir/time_independent_components.dat
+%$(TICAPREVSUFFIX).lag$(1).tica :\
+	%$(TICAPREVSUFFIX).lag$(1).tica_dir/time_independent_components.dat
 	$$(appendlastcol_command)
 endef
 
@@ -43,24 +45,23 @@ MACROS += rule_tica
 
 ## info
 ifndef INFO
-INFO = cossin tica clean
-INFO_tica   = time lagged independent component analysis
-INFO_clean  = delete cos-/sin-transformed data
+INFO = tica
 define INFOADD
 endef
 else
-INFOend +=
+INFOend += tica
 endif
+INFO_tica   = time lagged independent component analysis
 
 ## makefile includes (must remain after info)
-include $(makedir)/cossin.mk
+include $(makedir)/projfuture.mk
 
 ## keep intermediate files
-PRECIOUS += $(COSSINDATA)
+PRECIOUS +=
 
 ## clean
 PLOTS_LIST +=
-CLEAN_LIST += $(COSSINDATA)
+CLEAN_LIST +=
 PURGE_LIST += $(TICADATA) $(foreach name,lagged_covariance_matrix_tica\
 	      pca_eigenvalues pca_eigenvectors tica_eigenvalues\
 	      tica_eigenvectors symmetrized_covariance_matrix_tica,\

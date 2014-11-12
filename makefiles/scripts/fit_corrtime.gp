@@ -1,4 +1,4 @@
-#!/usr/local/bin/gnuplot
+#!/usr/bin/gnuplot
 #Estimates correlation time on [][exp(-1):1] by linear regression
 
 set fit errorvariables

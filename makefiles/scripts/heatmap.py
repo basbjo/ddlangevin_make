@@ -29,6 +29,7 @@ import sys
 import argparse
 import numpy as np
 import matplotlib
+import re
 
 def nbins_ext(x,y):
     """
@@ -127,6 +128,8 @@ def plotHeatmap(col_x,
   else:
       plt.figure()
   if title:
+      # insert newline after units in filenames
+      title = re.sub(r'(_[0-9]+[A-Za-z]+)\.', r'\1\n', title)
       plt.title(title+"\n")
   ax = plt.subplot(111)
   if refext:

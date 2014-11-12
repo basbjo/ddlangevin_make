@@ -1,7 +1,7 @@
-.PHONY: dpca plot
-dpca: $$(PCADATA)
+.PHONY: pca plot
+pca: $$(PCADATA)
 
-plot: dpca $$(CVARPLOT)
+plot: pca $$(CVARPLOT)
 
 ## default settings
 
@@ -12,21 +12,21 @@ SHOWDATA += PCADATA
 ## default settings that must be changed before including this file
 
 ## variables
-# projected data from principal component analysis
-PCADATA += $(addsuffix .pca,${COSSINDATA})
-# suffix for projected data that is further analysed
-PROJSUFFIX = .cossin.pca
-PROJDROPSUFFIX = .cossin.pca# drop this in subdirs
+PCAPREVSUFFIX := $(SUFFIX)
+PCADATA += $(addsuffix ${PCAPREVSUFFIX}.pca,${DATA})
+# suffix for data that is further analysed
+SUFFIX := $(PCAPREVSUFFIX).pca
 # plot of cumulative variances (eigenvalues)
-CVARPLOT = $(addsuffix .eigval.png,${COSSINDATA})
+CVARPLOT = $(addsuffix ${PCAPREVSUFFIX}.eigval.png,${DATA})
 # minima and maxima as reference for ranges
 MINMAXALL = $(PCADATA)
 
-%$(PROJSUFFIX).tmp : %.cossin
+## rules
+%$(SUFFIX).tmp : %$(PCAPREVSUFFIX)
 	# perform principal component analysis on $<
 	name=$<; $(FASTCA) -f $$name -p $@ -c $$name.cov -v $$name.eigvec -V $$name.eigval
 
-%$(PROJSUFFIX) : %$(PROJSUFFIX).tmp
+%$(SUFFIX) : %$(SUFFIX).tmp
 	$(appendlastcol_command)
 
 %.eigval.tex : %.pca $(SCR)/plot_cumulative.py
@@ -37,24 +37,23 @@ MINMAXALL = $(PCADATA)
 
 ## info
 ifndef INFO
-INFO = cossin dpca plot clean
-INFO_dpca   = dihedral principal component analysis
-INFO_plot   = plot cumulative variances
-INFO_clean  = delete cos-/sin-transformed data
+INFO = pca plot
 define INFOADD
 endef
 else
-INFOend +=
+INFOend += pca
 endif
+INFO_pca    = principal component analysis (suffix .pca)
+INFO_plot   = plot cumulative variances
 
 ## makefile includes (must remain after info)
-include $(makedir)/cossin.mk
+include $(makedir)/projfuture.mk
 
 ## keep intermediate files
-PRECIOUS += $(COSSINDATA)
+PRECIOUS +=
 
 ## clean
 PLOTS_LIST += $(CVARPLOT)
-CLEAN_LIST += $(COSSINDATA) $(addsuffix .tmp,${PCADATA})
+CLEAN_LIST += $(addsuffix .tmp,${PCADATA})
 PURGE_LIST += $(foreach suffix,pca cov eigvec eigval,\
-	      $(addsuffix .${suffix},${COSSINDATA}))
+	      $(addsuffix ${PCAPREVSUFFIX}.${suffix},${DATA}))

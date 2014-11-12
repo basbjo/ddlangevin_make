@@ -86,4 +86,4 @@ endef
 
 ## info
 INFOend += showncols
-INFO_showncols = Show numbers of data columns
+INFO_showncols = show numbers of data columns

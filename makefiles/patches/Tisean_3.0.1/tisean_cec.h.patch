@@ -1,0 +1,12 @@
+diff --git a/source_c/routines/tisean_cec.h b/source_c/routines/tisean_cec.h
+index b7c35be..325c3af 100644
+--- a/source_c/routines/tisean_cec.h
++++ b/source_c/routines/tisean_cec.h
+@@ -78,6 +78,7 @@
+ #define DELAY_INCONS_m_M 80
+ #define ONESTEP_TOO_FEW_POINTS 81
+ #define MEM_SPEC_TOO_MANY_POLES 82
++#define HISTOGRAM__MINMAX_MISSING_OR_WRONG_FORMAT 90
+ 
+ /* Global stuff */
+ #define VECTOR_TOO_LARGE_FOR_LENGTH 100

@@ -1,4 +1,4 @@
-#!/usr/local/bin/gnuplot
+#!/usr/bin/gnuplot
 #Plots correlation function from data and monoexponential decay
 
 set output FILE.".png"

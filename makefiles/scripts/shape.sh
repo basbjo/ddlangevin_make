@@ -15,16 +15,15 @@ EXIT_FAILURE=1
 EXIT_ERROR=2
 NARGS=$#
 
-function usage {
-    echo -e "
+usage() {
+    echo "
 $SCRIPTNAME: Determines number of columns and rows
 
 Usage: $SCRIPTNAME [option]... file...
 Options:
 Lines starting with regular expression \"^[$COMMENT_CHARS]\" are ignored.
         -h      show these options
-        -d str  output delimiter [default \"$(
-                           sed -n l <<< $OFS  | head -c-2)\"]
+        -d str  output delimiter [default \"$OFS\"]
         -c      only print number of columns ncols
         -r      only print number of rows nrows
 
@@ -32,7 +31,7 @@ Output format:
         file1 ncols nrows
         ...
 " >&2
-    [[ $NARGS -eq 1 ]] && exit $1 || exit $EXIT_FAILURE
+    [ $NARGS -eq 1 ] && exit $1 || exit $EXIT_FAILURE
 }
 
 # get command line options
@@ -78,11 +77,11 @@ do
         test $PRINT_ALL && echo -en "$i" || true
         test $PRINT_ALL && echo -en "$OFS" || true
         test $PRINT_COLS && echo -en \
-            "$(grep -v "^[$COMMENT_CHARS]" "$i" | head -1 | wc -w)" \
+            "$(egrep -v "^([$COMMENT_CHARS]| *$)" "$i" | head -1 | wc -w)" \
             || true
         test $PRINT_ALL  && echo -en "$OFS" || true
         test $PRINT_ROWS && echo -en \
-            "$(grep -v "^[$COMMENT_CHARS]" "$i" | wc -l)" \
+            "$(egrep -v "^([$COMMENT_CHARS]| *$)" "$i" | wc -l)" \
             || true
         echo -en "\n"
     fi

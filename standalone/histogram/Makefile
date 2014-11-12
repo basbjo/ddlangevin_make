@@ -1,8 +1,9 @@
 prefix = ../..
 datadirs = ..
 makedir = $(prefix)/makefiles
-# include split.mk only in one makefile that uses the following splitdir
-#splitdir = $(firstword ${datadirs})/splitdata
+# include split.mk only in one makefile that uses the splitdir specified on
+# the following line and if not including split.mk here uncomment that line
+#splitdir = $(or $(firstword ${datadirs}),.)/splitdata
 include $(makedir)/common.mk
 include $(makedir)/fileinfo.mk
 include $(makedir)/histogram.mk
@@ -23,9 +24,12 @@ HIST1D_YRANGE =		# yrange (optional, format: ymin:ymax)
 KTFACTOR = 1		# factor for temperature rescaling
 # settings for 2D histograms
 HIST2D_LAST_COL = 3	# last column (optional, >1)
+# reference data is searched here (optional)
+HIST1D_REFDIR = $(prefix)/histogram
+HIST2D_REFDIR = $(prefix)/histogram
 
 ## default targets
-all += calc
+all += split # calc and plot must be called afterwards
 
 ## call macros
 $(call_macros)

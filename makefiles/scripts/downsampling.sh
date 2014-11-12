@@ -8,8 +8,8 @@ EXIT_ERROR=2
 NARGS=$#
 NARGS_NEEDED=5
 
-function usage {
-    echo -e "
+usage() {
+    echo "
 $SCRIPTNAME: Downsampling and concatenation of several trajectories
 
 Usage: $0 splitdir splitname name step iffuture
@@ -27,10 +27,14 @@ If iffuture is 1, the last column should be 0 at the end of files and 1
 else, so a 1 at the end of down sampled trajectories is changed to 0.
 If iffuture is 0, only name is read instead of splitdir/name-##.
 " >&2
-    [[ $NARGS -eq 1 ]] && exit $1 || exit $EXIT_FAILURE
+    [ $NARGS -eq 1 ] && exit $1 || exit $EXIT_FAILURE
 }
 
 # get command line options
+if [ "$1" = "-h" ]
+then
+    usage $EXIT_SUCCESS
+fi
 
 # missing arguments
 if [ $NARGS -ne $NARGS_NEEDED ]

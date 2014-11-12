@@ -1,8 +1,9 @@
 prefix = ../..
 datadirs = ..
 makedir = $(prefix)/makefiles
-# include split.mk only in one makefile that uses the following splitdir
-#splitdir = $(firstword ${datadirs})/splitdata
+# include split.mk only in one makefile that uses the splitdir specified on
+# the following line and if not including split.mk here uncomment that line
+#splitdir = $(or $(firstword ${datadirs}),.)/splitdata
 include $(makedir)/common.mk
 include $(makedir)/fileinfo.mk
 include $(makedir)/correlation.mk
@@ -24,7 +25,7 @@ CORR_MAXRATIO =		# maximum ratio between correlation times (optional)
 TIME_UNIT =		# time unit to be shown in x label
 
 ## default targets
-all += calc
+all += split # estim, calc or plot and plot_all must be called afterwards
 
 ## call macros
 $(call_macros)

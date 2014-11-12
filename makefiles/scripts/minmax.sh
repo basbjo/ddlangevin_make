@@ -13,8 +13,8 @@ EXIT_FAILURE=1
 EXIT_ERROR=2
 NARGS=$#
 
-function usage {
-    echo -e "
+usage() {
+    echo "
 $SCRIPTNAME: Determines column wise minima and maxima
 
 Usage: $SCRIPTNAME [option]... [file]...
@@ -22,15 +22,14 @@ Options:
 If no file is given stdin is read. Just - also means stdin.
 Lines starting with regular expression \"^[$COMMENT_CHARS]\" are ignored.
         -h      show these options
-        -d str  output delimiter [default \"$(
-                           sed -n l <<< $OFS  | head -c-2)\"]
+        -d str  output delimiter [default \"$OFS\"]
         -f str  output format for numbers [default \"$OFMT\"]
 
 Output format:
         min1 min2 ...
         max1 max2 ...
 " >&2
-    [[ $NARGS -eq 1 ]] && exit $1 || exit $EXIT_FAILURE
+    [ $NARGS -eq 1 ] && exit $1 || exit $EXIT_FAILURE
 }
 
 # get command line options
@@ -69,7 +68,7 @@ else
     # read from stdin
     cat /dev/stdin
 fi |
-grep -v "^[$COMMENT_CHARS]" |
+egrep -v "^([$COMMENT_CHARS]| *$)" |
 awk -v OFMT="$OFMT" -v OFS="$OFS" -v isfirstline=1 -v script="$SCRIPTNAME" '
 {
 

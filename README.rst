@@ -36,7 +36,8 @@ are supposed to be used to apply one analysis to data files as they are.
 
     git clone git://github.com/basbjo/ddlangevin_make name_of_working_directory
 
-*Makefile information and configuration*
+Makefile information and configuration
+--------------------------------------
 
 - To verify the configuration and selected data, use the makefile targets
   ``show`` or ``showconf``, ``showdata`` and ``showmacros`` in any directory.
@@ -44,15 +45,25 @@ are supposed to be used to apply one analysis to data files as they are.
 - Get a target description with ``make info`` and use ``make -n [target]``
   to see what make will do when calling a specific target.
 
-*Configuration*
+Configuration
+-------------
 
 - Select a transformation by setting ``projtarget`` in ``config.mk``.
-  Currently, ``dpca`` and ``tica`` are available.
+  Currently, ``id``, ``pca``, ``dpca`` and ``tica`` are available.
   To select the latter, consider calling::
 
     git merge origin/tica
 
   which adds a few further changes instead of setting ``projtarget`` manually.
+
+  ====== =======================================================================
+  Target Description
+  ====== =======================================================================
+  id     Do not apply a projection, use provided data directly.
+  pca    Select a range of columns and apply principal component analysis (PCA).
+  dpca   Select a range of columns and apply PCA on cos- and sin-transforms.
+  tica   Select a range of columns and apply TICA on cos- and sin-transforms.
+  ====== =======================================================================
 
 - Put source data (dihedral angles) into main directory and define
   ``TIME_UNIT``, the wildcard ``RAWDATA`` for source data and the
@@ -61,9 +72,10 @@ are supposed to be used to apply one analysis to data files as they are.
 - For ``tica``, select ``LAG_TIMES`` (unit: time frames) in ``config.mk``.
 
 - Select the first and last column of the source data to be considered as
-  ``DIH_MIN_COL`` and ``DIH_MAX_COL`` in ``config.mk``.
+  ``MIN_COL`` and ``MAX_COL`` in ``config.mk``.
 
-*Data projection*
+Data projection
+---------------
 
 - Perform transformations to obtain projected data to work with::
 
@@ -73,12 +85,15 @@ are supposed to be used to apply one analysis to data files as they are.
 
     make split
 
-*Analysis in the main directory*
+Analysis in the main directory
+------------------------------
+
+Subdirectories besides ``histogram`` and ``correlation`` may be used likewise.
 
 - To generate histograms, you may first calculate and then plot them::
 
     cd histogram/
-    make
+    make calc
     make plot
 
   If this does not work, you probably have to call the ``split`` or ``minmax``
@@ -88,17 +103,38 @@ are supposed to be used to apply one analysis to data files as they are.
 - To generate correlations, you may first calculate and then plot them::
 
     cd ../correlation/
-    make
+    make estim
+    make calc #alternatively make plot
     make plot_all
 
-  If this does not work, you probably have to call the ``split``
-  target in the main directory.
+  If this does not work, you probably have to call the ``split`` target in
+  the main directory.  Note that the target ``estim`` must be finished before
+  calling ``calc`` and the latter before calling ``plot_all``.
 
 - To recreate plots after changes in ``config.mk`` in main directory, call::
 
-    make del_plots; make plot[_all]
+    make del_plots; make plot_all
 
-*Downsampling (optional)*
+  For convenience, the ``plot_all`` target should always exist even
+  if it is equivalent to the ``plot`` target.
+
+Fast data projection and analysis
+---------------------------------
+
+- You can project data and (partially) calculate results in the subdirectories
+  ``histogram`` and ``correlation`` with a oneliner::
+
+    make; make split; make correlation histogram
+
+  where it may be convenient to use ``-j [number]`` for parallelization.
+  The default make target is called in each subdirectory.
+  If plots and maybe other targets shall be created with the same call, add
+  the wished targets to the variable ``all`` in the subdirectory makefiles.
+  However, in ``correlation`` it is necessary to finish the target ``estim``
+  before calling ``calc`` and to finish the latter before calling ``plot_all``.
+
+Downsampling (optional)
+-----------------------
 
 - To obtain a set of down sampled projected trajectories including trajectories
   with all possible starting points, set ``REDUCTION_FACTORS`` in ``config.mk``
@@ -112,7 +148,8 @@ are supposed to be used to apply one analysis to data files as they are.
   but ignored in the subdirectories ``histogram/`` and ``correlation/``, see
   ``DATA_LINK`` in the subdirectory makefiles.
 
-*Analysis of derived data such as data-driven Langevin equations*
+Analysis of derived data such as data-driven Langevin equations
+---------------------------------------------------------------
 
 - Go to directory ``langevin/`` and usually make a copy of ``template/``::
 
@@ -145,14 +182,14 @@ are supposed to be used to apply one analysis to data files as they are.
 - To generate histograms, you may first calculate and then plot them::
 
     cd histogram/
-    make
+    make calc
     make plot
 
-  If this does not work, you probably have to call the target ``split``
+  If this does not work, you probably have to call the ``split`` target
   in the parent directory or ``minmax`` in the main directory (the ``minmax``
   file is used to define compareable bins).
 
-  If a similar histogram files exists in the ``histogram/`` subdirectory of
+  If a similar histogram file exists in the ``histogram/`` subdirectory of
   the main directory, it is used as reference file to set plot ranges.
   In case no exactly matching reference file is found, also filenames with
   different time steps are tried as a reference which is useful when working
@@ -161,13 +198,33 @@ are supposed to be used to apply one analysis to data files as they are.
 - To generate correlations, you may first calculate and then plot them::
 
     cd ../correlation/
-    make
+    make estim
+    make calc #alternatively make plot
     make plot_all
 
-  If this does not work, you probably have to call the target ``split``
-  in the parent directory.
+  If this does not work, you probably have to call the ``split`` target in
+  the parent directory.  Note that the target ``estim`` must be finished before
+  calling ``calc`` and the latter before calling ``plot_all``.
 
 - To recreate plots after changes in ``config.mk`` or when new reference
   data is provided in the main directory, call::
 
-    make del_plots; make plot[_all]
+    make del_plots; make plot_all
+
+  For convenience, the ``plot_all`` target should always exist even
+  if it is equivalent to the ``plot`` target.
+
+- Subdirectories besides ``histogram`` and ``correlation`` may be used
+  likewise.  Use ``make info`` and ``make show`` to see what will happen.
+
+- You can split data into single trajectories and calculate results in the
+  subdirectories ``histogram`` and ``correlation`` with a oneliner::
+
+    make split; make correlation histogram
+
+  where it may be convenient to use ``-j [number]`` for parallelization.
+  The default make target is called in each subdirectory.
+  If plots and maybe other targets shall be created with the same call, add
+  the wished targets to the variable ``all`` in the subdirectory makefiles.
+  However, in ``correlation`` it is necessary to finish the target ``estim``
+  before calling ``calc`` and to finish the latter before calling ``plot_all``.

@@ -11,14 +11,14 @@ splitdir := $(firstword ${datadirs})/$(splitdir)
 DATA_HERE =
 ## source data files in datadirs (wildcards allowed)
 DATA_LINK = $(SPLIT_LIST)
-DROPSUFFIX = .lang
+DROPSUFFIX = $(SUBDIR_DROPSUFFIX)
 
 ## settings
 # see config.mk and localconf.mk
 IF_FUTURE = $(SPLIT_FUTURE)
 
 ## default targets
-all += calc
+all += estim #calc/plot plot_all
 
 ## call macros
 $(call_macros)

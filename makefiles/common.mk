@@ -7,9 +7,13 @@ PDF2PNG ?= pdftoppm -png -l 1
 PDF2EPS ?= pdftops -eps -l 1
 # TISEAN
 CORR ?= corr -V0
+XCOR ?= xcor -V0
 # TISEAN (see ./patches)
 HIST1D ?= histogram -V0 -b $(HIST_NBINS) -D
 HIST2D ?= histo2d -V0 -b $(HIST_NBINS)
+NEGENT ?= negentropy -V0 -b $(NEGENT_NBINS)
+BINNING1D ?= binning -V0 -b $(BIN1D_NBINS)
+BINNING2D ?= binning2d -V0 -b $(BIN2D_NBINS)
 # Stock group
 FASTCA ?= fastca
 DELAYPCA ?= $(SCR)/delayPCA.py
@@ -17,7 +21,7 @@ DELAYPCA ?= $(SCR)/delayPCA.py
 MINMAX ?= $(SCR)/minmax.sh -d" " -f "%9.6f"
 NCOLS ?= $(SCR)/shape.sh -c
 NROWS ?= $(SCR)/shape.sh -r
-HEATMAP ?= $(SCR)/heatmap.py
+HEATMAP ?= $(SCR)/heatmap.py $(HEATMAP_FLAGS)
 
 ## default target
 .SECONDEXPANSION:
@@ -35,19 +39,22 @@ MINMAXALL ?= $(DATA)# all files considered for minima and maxima
 SYMLINKS += $(DATALINKS)
 CLEAN_LIST +=
 PURGE_LIST += $(notdir ${MINMAXFILE} ${MINMAXFILE}.old) $(SPLIT_WILD)
+# subdirectories in which make can be called by a double-colon rule
+COMMON_SUBDIRS = correlation drift information histogram fields
 
 ## macros to be called later
 MACROS += rule_data_links rule_minmax
 
 ## macro to call several macros later
 define call_macros
+$(eval MACROS += rule_common_subdirs)\
 $(foreach macro,${MACROS},$(call ${macro}))
 endef
 
 ## source data files
 DATA += $(sort $(wildcard ${DATA_HERE}) ${DATALINKS})#without repetitions
-REMOTEDATA += $(foreach wildcard,${DATA_LINK},$(foreach dir,${datadirs},\
-	      $(wildcard ${dir}/${wildcard})))
+REMOTEDATA += $(foreach wildcard,${DATA_LINK},$(foreach dir,$(filter-out .,\
+	      ${datadirs}),$(wildcard ${dir}/${wildcard})))
 DATALINKS = $(notdir $(patsubst %$(strip ${DROPSUFFIX}),%,${REMOTEDATA}))
 SHOWDATA += DATA datadirs DROPSUFFIX REMOTEDATA# to be shown by showdata
 
@@ -136,6 +143,20 @@ del_split:
 
 .PRECIOUS: $$(PRECIOUS)
 
+## common double-colon rules to call make in subdirectories
+define template_double_colon
+$(1)::
+	cd $$@ && $$(MAKE)
+endef
+
+define rule_common_subdirs
+$(foreach name,$(patsubst %/Makefile,%,$(wildcard\
+	$(addsuffix /Makefile,${COMMON_SUBDIRS}))),\
+	$(eval $(call template_double_colon,${name}))\
+	$(eval INFOend += ${name})\
+	$(eval INFO_${name} = call make in subdirectory ${name}))
+endef
+
 ## common rules
 %.html : %.rst $(makedir)/readme.css $(makedir)/readme.sed
 	$(RST2HTML) --stylesheet=$(word 2,$+) $< | sed -f $(word 3,$+) > $@
@@ -189,7 +210,10 @@ range = $(shell i=1; while [ "$(1)" != "" ] && [ $$i -le $(1) ]; do \
 rangeto = $(shell i=1; while [ "$(1)" != "" ] && [ $$i -lt $(1) ]; do \
 	  printf -- "%02d\n" $$i; i=`expr $$i + 1`; done)
 # columns for $(2)'th plot with $(1) columns and last column $(3)
-plotcols = $(shell i=`python -c 'print ((${2}-1)*${1}+1)'`;\
-	   end=`python -c 'print min(${2}*${1},${3})'`;\
+plotcols = $(shell i=`python -c 'print ((int("${2}")-1)*int("${1}")+1)'`;\
+	   end=`python -c 'print min(int("${2}")*int("${1}"),int("${3}"))'`;\
 	   while [ $$i -le $$end ]; do \
 	   printf -- "%02d\n" $$i; i=`expr $$i + 1`; done)
+# list of numbers to denote splitted trajectories
+splitnums = $(patsubst $(notdir ${1})-%,%,$(notdir $(shell find -L\
+	    $(dir ${1}) -regex "[./]*${1}-[0-9]+"|sort -r)))
