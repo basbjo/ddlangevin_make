@@ -3,9 +3,9 @@
  * Two identical stochastic processes x1, x2 with double well potential with
  * different variances and mixed by the following unitary transformation.
  *
- *    / y1 \     / 3/5 -4/5 \    / x1 \
- *    |    |  =  |          | =  |    |
- *    \ y2 /     \ 4/5  3/5 /    \ x2 /
+ *    / y1 \     / 3/5  -4/5 \   / x1 \
+ *    |    |  =  |           |   |    |
+ *    \ y2 /     \ 4/5   3/5 /   \ x2 /
  *
  */
 #include <stdio.h>
