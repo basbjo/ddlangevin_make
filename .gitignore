@@ -3,6 +3,7 @@ minmax
 minmax.old
 README.html
 makefiles/example/make_example
+clucenters_*
 drift2d_*
 hist2d_*
 alldih*

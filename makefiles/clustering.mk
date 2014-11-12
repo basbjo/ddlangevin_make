@@ -1,7 +1,11 @@
-.PHONY: clustering centers
+.PHONY: clustering centers plot plot_all
 clustering: $$(CLUSTER_TRAJ)
 
 centers: clustering $$(CLUSTER_CENTERS)
+
+plot: $$(CENTERS_PLOT)
+
+plot_all: plot
 
 ## default settings
 CLUSTER_LAST_COL ?= 5# last column (optional)
@@ -16,6 +20,8 @@ SHOWDATA += CLUSTER_TRAJ CLUSTER_CENTERS
 CLUSTER_SCRIPT ?= $(SCR)/clustering_aib.awk
 CLUSTER_TRAJ = $(addsuffix .clutraj,$(wildcard ${RAWDATA}))
 CLUSTER_CENTERS = $(addsuffix .clucenters,$(wildcard ${RAWDATA}))
+CENTERS_PLOT = $(addprefix clucenters_,$(call add-V01-V02,\
+	       $(wildcard ${RAWDATA}),.png,CLUSTER))
 
 ## rules
 %.clutraj : % $(CLUSTER_SCRIPT)
@@ -34,25 +40,39 @@ define centers_command
 paste -d\  $+ | $(SCR)/cluster_centers.awk -vlast_col=$(NCOLS_$<_CLUSTER) > $@
 endef
 
+define template_plot
+clucenters_$(1)-V$(2)-V$(3).tex : $(1) $$(SCR)/plot_cluster_centers.gp
+	gnuplot -e 'V1=$(patsubst 0%,%,${2}); V2=$(patsubst 0%,%,${3}); \
+		FILEROOT="$$<"' $$(SCR)/plot_cluster_centers.gp
+endef
+
 ## macros to be called later
-#MACROS +=
+MACROS += rule_clustering
+
 FILEINFO_NAMES = CLUSTER
+define rule_clustering
+$(foreach file,$(wildcard ${RAWDATA}),\
+	$(foreach col2,$(call range,$(call getmin,${CLUSTER_LAST_COL}\
+		${lastcol})),$(foreach col1,$(call rangeto,${col2}),\
+		$(eval $(call template_plot,${file},${col1},${col2})))))
+endef
 
 ## info
 ifndef INFO
-INFO = clustering centers
+INFO = clustering centers plot
 define INFOADD
 endef
 else
 INFOend +=
 endif
 INFO_clustering = apply clustering
-INFO_centers = cluster centers and standard deviations
+INFO_centers    = cluster centers and standard deviations
+INFO_plot       = plot cluster centers
 
 ## keep intermediate files
 PRECIOUS +=
 
 ## clean
-PLOTS_LIST +=
+PLOTS_LIST += $(CENTERS_PLOT)
 CLEAN_LIST +=
 PURGE_LIST += $(addsuffix .clutraj,${RAWDATA}) $(addsuffix .clucenters,${RAWDATA})
