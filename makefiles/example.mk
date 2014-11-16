@@ -1,5 +1,15 @@
 .PHONY: example
 example: example_1ps
+	@echo
+	@echo The following settings in config.mk
+	@echo
+	@grep '^\(RAWDATA\|projtarget\)' config.mk
+	@sed -i '/^RAWDATA/s/=.*/= example_1$$(TIME_UNIT)/' config.mk
+	@sed -i '/^projtarget/s/=.*/= colselect pca/' config.mk
+	@echo
+	@echo have been changed as follows.
+	@echo
+	@grep '^\(RAWDATA\|projtarget\)' config.mk
 
 ## default settings
 
@@ -18,16 +28,6 @@ $(MLE): $(MLE).c
 
 example_1ps: $(MLE)
 	$< > $@
-	@echo
-	@echo The following settings in config.mk
-	@echo
-	@grep '^\(RAWDATA\|projtarget\)' config.mk
-	@sed -i '/^RAWDATA/s/=.*/= example_1$$(TIME_UNIT)/' config.mk
-	@sed -i '/^projtarget/s/=.*/= colselect pca/' config.mk
-	@echo
-	@echo have been changed as follows.
-	@echo
-	@grep '^\(RAWDATA\|projtarget\)' config.mk
 
 ## macros to be called later
 #MACROS +=
