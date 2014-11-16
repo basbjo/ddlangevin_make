@@ -30,7 +30,7 @@ REDUCTION_FACTORS = 5
 ## first and last column to be selected from source data
 # WARNING: recreate all affected data manually after changes
 MIN_COL = 1
-MAX_COL = $(call fcols,$<)
+MAX_COL = $(call fcols,$<)#last data column before future column
 
 ## save split data here to avoid recalculation
 splitdir ?= $(or $(firstword ${datadirs}),.)/splitdata

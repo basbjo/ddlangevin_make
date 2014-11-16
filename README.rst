@@ -78,8 +78,13 @@ Configuration
   ``TIME_UNIT``, the wildcard ``RAWDATA`` for source data and the
   ``IF_FUTURE`` value in ``config.mk`` as described there.
 
+- For multi-trajectory data files (``IF_FUTURE = 1``), ``colselect`` or
+  ``cossin`` are required to avoid taking into account the follower column.
+  E.g. to obtain TICA projections, select ``projtargets = colselect pca tica``.
+
 - For ``colselect`` and ``cossin``, select the first and last column of the
   source data to be considered as ``MIN_COL`` and ``MAX_COL`` in ``config.mk``.
+  The default are the first column and the last data column.
 
 - For ``tica``, select ``LAG_TIMES`` (unit: time frames) in ``config.mk``.
 
