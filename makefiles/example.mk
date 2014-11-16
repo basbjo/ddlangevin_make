@@ -21,15 +21,13 @@ example_1ps: $(MLE)
 	@echo
 	@echo The following settings in config.mk
 	@echo
-	@grep '^\(TIME_UNIT\|RAWDATA\|IF_FUTURE\|projtarget\)' config.mk
-	@sed -i '/^TIME_UNIT/s/=.*/= ps/' config.mk
+	@grep '^\(RAWDATA\|projtarget\)' config.mk
 	@sed -i '/^RAWDATA/s/=.*/= example_1$$(TIME_UNIT)/' config.mk
-	@sed -i '/^IF_FUTURE/s/= *[01]/= 1/' config.mk
 	@sed -i '/^projtarget/s/=.*/= colselect pca/' config.mk
 	@echo
 	@echo have been changed as follows.
 	@echo
-	@grep '^\(TIME_UNIT\|RAWDATA\|IF_FUTURE\|projtarget\)' config.mk
+	@grep '^\(RAWDATA\|projtarget\)' config.mk
 
 ## macros to be called later
 #MACROS +=
