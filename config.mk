@@ -29,8 +29,8 @@ REDUCTION_FACTORS = 5
 
 ## first and last column to be selected from source data
 # WARNING: recreate all affected data manually after changes
-MIN_COL = 7
-MAX_COL = 16
+MIN_COL = 1
+MAX_COL = $(call fcols,$<)
 
 ## save split data here to avoid recalculation
 splitdir ?= $(or $(firstword ${datadirs}),.)/splitdata

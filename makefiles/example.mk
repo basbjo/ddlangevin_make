@@ -24,8 +24,8 @@ example_1ps: $(MLE)
 	@grep '^\(TIME_UNIT\|RAWDATA\|IF_FUTURE\|projtarget\)' config.mk
 	@sed -i '/^TIME_UNIT/s/=.*/= ps/' config.mk
 	@sed -i '/^RAWDATA/s/=.*/= example_1$$(TIME_UNIT)/' config.mk
-	@sed -i '/^IF_FUTURE/s/= *[01]/= 0/' config.mk
-	@sed -i '/^projtarget/s/=.*/= pca/' config.mk
+	@sed -i '/^IF_FUTURE/s/= *[01]/= 1/' config.mk
+	@sed -i '/^projtarget/s/=.*/= colselect pca/' config.mk
 	@echo
 	@echo have been changed as follows.
 	@echo
