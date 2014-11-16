@@ -67,7 +67,7 @@ PRECIOUS += $(addsuffix ${TICAPREVSUFFIX}.rs,${DATA})
 ## clean
 PLOTS_LIST +=
 CLEAN_LIST +=
-PURGE_LIST += $(TICADATA) $(foreach name,lagged_covariance_matrix_tica\
-	      pca_eigenvalues pca_eigenvectors tica_eigenvalues\
-	      tica_eigenvectors symmetrized_covariance_matrix_tica,\
-	      $(addsuffix _dir/${name}.dat,${TICADATA}))
+PURGE_LIST += $(TICADATA) $(foreach name, symmetrized_covariance_matrix\
+	      lagged_covariance_matrix lagged_eigenvalues lagged_eigenvectors,\
+	      $(addsuffix _dir/${name}.dat,${TICADATA}))\
+	      $(addsuffix ${TICAPREVSUFFIX}.rs,${DATA})
