@@ -13,6 +13,11 @@ SHOWDATA += RAWDATA
 
 ## projected data, e.g. from principal component analysis
 # WARNING: recreate all affected data manually after changes
+# typical `projtargets`:
+#   `cossin pca` for dPCA (PCA on cos-/sin-transforms)
+#   `cossin pca tica` for TICA on cos-/sin-transforms
+#   `pca` for PCA on single trajectory data file (IF_FUTURE = 0)
+#   `colselect pca` for PCA on multi trajectory data (IF_FUTURE = 1)
 projtargets = cossin pca
 projmakefiles = $(addprefix ${makedir}/,$(addsuffix .mk,${projtargets}))
 # lag times in units of one time frame in data files (tica only)
