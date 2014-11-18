@@ -49,8 +49,8 @@ $(1).%.hist : $(1) $(wildcard ${1}.minmax)
 endef
 
 define template_binning
-$(1).x% : $(1)
-	$$(eval cols := $$(foreach label,$$(subst ., ,x$$*),\
+$(1).%.bins : $(1)
+	$$(eval cols := $$(foreach label,$$(subst ., ,$$*),\
 		$$(shell $$(call getfieldno_macro,${1},$${label}))))
 	$$(if $$(patsubst 2,,$$(words $${cols}))\
 		,,${BINNING1D})$$(if $$(patsubst 3,,$$(words $${cols}))\
@@ -61,7 +61,7 @@ endef
 %.hist.pdf: %.hist
 	$(HEATMAP) -c1,2,3 -t "Histogram for $*" $< -o $@
 
-%.pdf: %
+%.bins.pdf: %.bins
 	$(HEATMAP) -c1,2,3 -t "Binned field for $*" $< -o $@
 
 define template_plot_noise
@@ -91,22 +91,22 @@ define INFOADD
 
 Binning
 =======
-To calculate field binnings of a »file« use the labels that are shown
-by target »showfields«, e.g. »make file.x1.f1« or »make file.x1.x2.f2«.
+To calculate field binnings of a »file« use the labels as shown by target
+»showfields«, e.g. »make file.x1.f1.bins« or »make file.x1.x2.f2.bins«.
 
-*After* the file with binned data has been created, plots of fields in two
-dimensions can be plotted first to pdf, e.g. »make file.x1.x2.f2.pdf« and
-*afterwards* be converted to png, e.g. »make file.x1.x2.f2.png«.
+To create heatmap plots of fields in two dimensions as pdf and png file and
+keep intermediate files, e.g. call »make file.x1.x2.f2.bins{,.{pdf,png}}«.
 
 Histogram
 =========
-To calculate field binnings of a »file« use the labels that are shown
-by target »showfields«, e.g. »make file.x1.hist« or »make file.f2.hist«.
+To calculate field histograms of a »file« use the labels that are shown by
+target »showfields«, e.g. »make file.f2.hist« or »make file.x1.x2.hist«.
 If »file.minmax« exists it is used to set the histogram reference range.
 Plots of 2D histograms are created as described above for binning.
 
-Once created, noise histograms »name.ltm.xi#.hist« are plotted by
-calling »make name.ltm.xi#.hist.tex; make name.ltm.xi#.hist.pdf«.
+Noise histograms »name.ltm.xi#.hist« are treated specially: the range is
+set to [-5:5] and the creation of an intermediate tex file should be forced
+by calling »make name.ltm.xi#.hist{,.{tex,pdf,png}}« for meaningful plots.
 
 endef
 else
