@@ -1,10 +1,10 @@
 .PHONY: example
-example: example_1ps
+example: example_0.001ps
 	@echo
 	@echo The following settings in config.mk
 	@echo
 	@grep '^\(RAWDATA\|projtarget\)' config.mk
-	@sed -i '/^RAWDATA/s/=.*/= example_1$$(TIME_UNIT)/' config.mk
+	@sed -i '/^RAWDATA/s/=.*/= example_0.001$$(TIME_UNIT)/' config.mk
 	@sed -i '/^projtarget/s/=.*/= colselect pca/' config.mk
 	@echo
 	@echo have been changed as follows.
@@ -26,7 +26,7 @@ MLE = $(makedir)/example/make_example
 $(MLE): $(MLE).c
 	cd $(@D) && $(MAKE)
 
-example_1ps: $(MLE)
+example_0.001ps: $(MLE)
 	$< > $@
 
 ## macros to be called later
