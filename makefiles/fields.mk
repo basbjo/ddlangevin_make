@@ -23,7 +23,7 @@ showfields:
 		$(call showfields_macro,${file}); echo;)
 
 define showfields_macro
-head $(1) | grep '^#x1' | sed 's/ [01]$$//' \
+head $(1) | sed '/^#Content: /s//#/' | grep '^#x1' | sed 's/ [01]$$//' \
 	| tr ' ' '\n' | sed 's/^#//' \
 	| nl -ba -s\  | sed 's/^  *//'
 endef
