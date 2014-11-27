@@ -9,7 +9,7 @@ include $(firstword ${datadirs})/localconf.mk
 ## source data files in this directory (wildcards allowed)
 DATA_HERE =
 ## source data files in datadirs (wildcards allowed)
-DATA_LINK = $(SPLIT_LIST)
+DATA_LINK = *$(DLE_SUFFIX)
 DROPSUFFIX = $(SUBDIR_DROPSUFFIX)
 
 ## settings

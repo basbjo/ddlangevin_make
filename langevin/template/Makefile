@@ -16,7 +16,7 @@ DATA_LINK = $(addsuffix ${PROJSUFFIX},${RAWDATA}) $(SAMPDATA)
 # see config.mk and localconf.mk
 
 ## default targets
-all += split
+all += info
 
 ## call macros
 $(call_macros)
