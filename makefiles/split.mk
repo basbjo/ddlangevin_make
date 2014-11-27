@@ -26,12 +26,12 @@ $(splitdir):
 # - end of each series when last column is 0
 # - if SPLIT_FUTURE==0 split trajectory into two
 $(splitdir)/%-01 : % | $(splitdir)
-	@$(split_command)
+	$(split_command)
 
 define split_command
   $(if $(shell [ ${SPLIT_FUTURE} -eq 1 ] && echo yes),\
 	  # split file $< by last column into $(@D)/$*-##
-	  awk 'BEGIN { i=1 } !/^#/ {\
+	  awk 'BEGIN { i=1 } {\
 	      print $$0 >sprintf("$(@D)/$*-%02d", i);\
 	      if ($$NF==0) i++;\
 	      $(awk_status)\
@@ -39,7 +39,7 @@ define split_command
   $(if $(shell [ ${SPLIT_FUTURE} -eq 0 ] && echo yes),\
 	  # split file $< in two parts $(@D)/$*-##
 	  awk -vhalf=$$(($$(${NROWS} $<) / 2))\
-	  'BEGIN { i=1 } !/^#/ {\
+	  'BEGIN { i=1 } {\
 	      count++;\
 	      print $$0 >sprintf("$(@D)/$*-%02d", i);\
 	      if (count==half) i++;\
