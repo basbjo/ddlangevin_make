@@ -123,6 +123,8 @@ purge: rmsymlinks clean del_plots
 	$(if $(wildcard $(filter-out .,${DIR_LIST})),\
 		rmdir --ignore-fail-on-non-empty $(wildcard\
 		$(filter-out .,${DIR_LIST})))
+	$(if $(wildcard makefiles/example/make_example),\
+		cd makefiles/example && $(MAKE) purge)
 	@$(RM) .data
 
 del_latex:

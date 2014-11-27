@@ -1,5 +1,7 @@
-.PHONY: tica
-tica: $$(TICADATA)
+.PHONY: rescale tica
+rescale: $$(UNITVARDATA)
+
+tica: rescale $$(TICADATA)
 
 ## default settings
 
@@ -11,6 +13,7 @@ SHOWDATA += TICADATA
 
 ## variables
 TICAPREVSUFFIX := $(SUFFIX)
+UNITVARDATA += $(addsuffix ${TICAPREVSUFFIX}.rs,${DATA})
 TICADATA += $(foreach lt,${LAG_TIMES},$(addsuffix\
 	    ${TICAPREVSUFFIX}.lag${lt}.tica,${DATA}))
 DIR_LIST += $(addsuffix _dir,${TICADATA})
@@ -50,24 +53,24 @@ MACROS += rule_tica
 
 ## info
 ifndef INFO
-INFO = tica
+INFO = rescale tica
 define INFOADD
 endef
 else
-INFOend += tica
+INFOend += rescale tica
 endif
+INFO_rescale = rescale data to unit variance
 INFO_tica   = time lagged independent component analysis
 
 ## makefile includes (must remain after info)
 include $(makedir)/projfuture.mk
 
 ## keep intermediate files
-PRECIOUS += $(addsuffix ${TICAPREVSUFFIX}.rs,${DATA})
+PRECIOUS += $(UNITVARDATA)
 
 ## clean
 PLOTS_LIST +=
 CLEAN_LIST +=
-PURGE_LIST += $(TICADATA) $(foreach name,lagged_covariance_matrix_tica\
-	      pca_eigenvalues pca_eigenvectors tica_eigenvalues\
-	      tica_eigenvectors symmetrized_covariance_matrix_tica,\
-	      $(addsuffix _dir/${name}.dat,${TICADATA}))
+PURGE_LIST += $(TICADATA) $(foreach name, symmetrized_covariance_matrix\
+	      lagged_covariance_matrix lagged_eigenvalues lagged_eigenvectors,\
+	      $(addsuffix _dir/${name}.dat,${TICADATA})) $(UNITVARDATA)

@@ -13,6 +13,11 @@ SHOWDATA += RAWDATA
 
 ## projected data, e.g. from principal component analysis
 # WARNING: recreate all affected data manually after changes
+# typical `projtargets`:
+#   `cossin pca` for dPCA (PCA on cos-/sin-transforms)
+#   `cossin pca tica` for TICA on cos-/sin-transforms
+#   `pca` for PCA on single trajectory data file (IF_FUTURE = 0)
+#   `colselect pca` for PCA on multi trajectory data (IF_FUTURE = 1)
 projtargets = cossin pca tica
 projmakefiles = $(addprefix ${makedir}/,$(addsuffix .mk,${projtargets}))
 # lag times in units of one time frame in data files (tica only)
@@ -29,8 +34,8 @@ REDUCTION_FACTORS = 5
 
 ## first and last column to be selected from source data
 # WARNING: recreate all affected data manually after changes
-MIN_COL = 7
-MAX_COL = 16
+MIN_COL = 1
+MAX_COL = $(call fcols,$<)#last data column before future column
 
 ## save split data here to avoid recalculation
 splitdir ?= $(or $(firstword ${datadirs}),.)/splitdata
