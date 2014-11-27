@@ -15,7 +15,9 @@ catdir ?= catdata
 
 ## variables
 CAT_DATA = $(sort $(notdir $(shell echo $(wildcard ${catdir}/*-[0-9][0-9]) \
-		| tr ' ' '\n' | sed 's/-[0-9][0-9]$$//')))
+		| tr ' ' '\n' | sed 's/-[0-9][0-9]$$//')))\
+	   $(sort $(notdir $(shell echo $(wildcard ${catdir}/*-[0-9][0-9].field) \
+		| tr ' ' '\n' | sed 's/-[0-9][0-9].field/.field/')))
 DIR_LIST += $(catdir)
 
 ## rules
@@ -48,10 +50,19 @@ $(shell [ ${IF_FUTURE} -eq 1 ] && echo yes),\
 endef
 
 # concatenate data files
-define template_cat
+define template_cat_lang
 $(1) : $$$$(wildcard $$$${catdir}/$(1)-[0-9]*[0-9])
-	$$(RM) $$@
-	for file in $$+; do sed '/^#/!s/ *$$$$/ 1/;$$$$s/ 1/ 0/' $$$${file} >> $$@; done
+	$$(cat_command)
+endef
+
+define template_cat_field
+$(1) : $$$$(wildcard $$$${catdir}/$(patsubst %.field,%,${1})-[0-9]*[0-9].field)
+	$$(cat_command)
+endef
+
+define cat_command
+$(RM) $@
+for file in $+; do sed '/^#/!s/ *$$/ 1/;$$s/ 1/ 0/' $${file} >> $@; done
 endef
 
 ## macros to be called later
@@ -61,8 +72,10 @@ define rule_langevin
 $(foreach file,${DATA},\
 	$(eval $(call template_selectcolumns,${file}))\
 	$(eval $(call template_testmodel,${file})))\
-$(foreach file,${CAT_DATA},\
-	$(eval $(call template_cat,${file})))
+$(foreach file,$(filter-out %.field,${CAT_DATA}),\
+	$(eval $(call template_cat_lang,${file})))\
+$(foreach file,$(filter %.field,${CAT_DATA}),\
+	$(eval $(call template_cat_field,${file})))
 endef
 
 ## info
