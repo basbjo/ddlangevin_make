@@ -27,7 +27,8 @@ CLUSTER_CENTERS = $(addsuffix $(PROJSUFFIX).clucenters,$(wildcard ${RAWDATA}))
 CENTERS_PLOT = $(addprefix clucenters_,$(call add-V01-V02,\
 	       $(addsuffix $(PROJSUFFIX),$(wildcard ${RAWDATA})),.png,CLUSTER))
 PROJS_PLOT = $(addprefix cluprojs_,$(call add-V01-V02,\
-	       $(addsuffix $(PROJSUFFIX),$(wildcard ${RAWDATA})),.eps,CLUSTER))
+	       $(addsuffix $(PROJSUFFIX),$(wildcard ${RAWDATA})),.png,CLUSTER))
+.INTERMEDIATE: $$(patsubst %.png,%.eps,$${PROJS_PLOT})
 
 ## rules
 %.clutraj : % $(CLUSTER_SCRIPT)

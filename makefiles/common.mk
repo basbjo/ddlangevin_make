@@ -5,6 +5,8 @@ RST2HTML = rst2html -t
 # Debian package poppler-utils
 PDF2PNG ?= pdftoppm -png -l 1
 PDF2EPS ?= pdftops -eps -l 1
+# imagemagick utilities
+EPS2PNG ?= convert -density 300 -background white -flatten
 # TISEAN
 CORR ?= corr -V0
 XCOR ?= xcor -V0
@@ -167,6 +169,8 @@ endef
 %.eps : %.pdf ; $(PDF2EPS) $<
 
 %.png : %.pdf ; $(PDF2PNG) $< > $@
+
+%.png : %.eps ; $(EPS2PNG) $< $@
 
 %.pdf : %.tex ; $(PDFLATEX) -halt-on-error $* >/dev/null && $(RM) $*.aux $*.log
 
