@@ -1,10 +1,10 @@
 .PHONY: example
-example: example_0.001ps
+example: $$(EXAMPLE)$$(TIME_UNIT)
 	@echo
 	@echo The following settings in config.mk
 	@echo
 	@grep '^\(RAWDATA\|projtarget\)' config.mk
-	@sed -i '/^RAWDATA/s/=.*/= example_0.001$$(TIME_UNIT)/' config.mk
+	@sed -i '/^RAWDATA/s/=.*/= $(EXAMPLE)$$(TIME_UNIT)/' config.mk
 	@sed -i '/^projtarget/s/=.*/= colselect pca/' config.mk
 	@echo
 	@echo have been changed as follows.
@@ -12,6 +12,8 @@ example: example_0.001ps
 	@grep '^\(RAWDATA\|projtarget\)' config.mk
 
 ## default settings
+TIME_STEP ?= 0.001
+EXAMPLE ?= example_$(TIME_STEP)
 
 # settings/data to be shown by showconf/showdata
 SHOWCONF +=
@@ -26,7 +28,7 @@ MLE = $(makedir)/example/make_example
 $(MLE): $(MLE).c
 	cd $(@D) && $(MAKE)
 
-example_0.001ps: $(MLE)
+$(EXAMPLE)$(TIME_UNIT): $(MLE)
 	$< > $@
 
 ## macros to be called later
@@ -48,4 +50,4 @@ PRECIOUS +=
 ## clean
 PLOTS_LIST +=
 CLEAN_LIST +=
-PURGE_LIST +=
+PURGE_LIST += $(EXAMPLE)$(TIME_UNIT)
