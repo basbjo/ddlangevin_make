@@ -19,9 +19,9 @@ SHOWDATA += CLUSTER_TRAJ CLUSTER_CENTERS
 ## variables
 CLUSTER_SCRIPT ?= $(SCR)/clustering_aib.awk
 CLUSTER_TRAJ = $(addsuffix .clutraj,$(wildcard ${RAWDATA}))
-CLUSTER_CENTERS = $(addsuffix .clucenters,$(wildcard ${RAWDATA}))
+CLUSTER_CENTERS = $(addsuffix $(PROJSUFFIX).clucenters,$(wildcard ${RAWDATA}))
 CENTERS_PLOT = $(addprefix clucenters_,$(call add-V01-V02,\
-	       $(wildcard ${RAWDATA}),.png,CLUSTER))
+	       $(addsuffix $(PROJSUFFIX),$(wildcard ${RAWDATA})),.png,CLUSTER))
 
 ## rules
 %.clutraj : % $(CLUSTER_SCRIPT)
@@ -33,7 +33,7 @@ $(lastword $+)\
 	-v max_col=$(strip ${MAX_COL}) $< > $@
 endef
 
-%.clucenters : %$(PROJSUFFIX) %.clutraj
+%$(PROJSUFFIX).clucenters : %$(PROJSUFFIX) %.clutraj
 	$(centers_command)
 
 define centers_command
@@ -41,9 +41,9 @@ paste -d\  $+ | $(SCR)/cluster_centers.awk -vlast_col=$(NCOLS_$<_CLUSTER) > $@
 endef
 
 define template_plot
-clucenters_$(1)-V$(2)-V$(3).tex : $(1) $$(SCR)/plot_cluster_centers.gp
+clucenters_$(1)-V$(2)-V$(3).tex : $(1).clucenters $$(SCR)/plot_cluster_centers.gp
 	gnuplot -e 'V1=$(patsubst 0%,%,${2}); V2=$(patsubst 0%,%,${3}); \
-		FILEROOT="$$<"' $$(SCR)/plot_cluster_centers.gp
+		FILEROOT="$(1)"' $$(SCR)/plot_cluster_centers.gp
 endef
 
 ## macros to be called later
@@ -54,7 +54,8 @@ define rule_clustering
 $(foreach file,$(wildcard ${RAWDATA}),\
 	$(foreach col2,$(call range,$(call getmin,${CLUSTER_LAST_COL}\
 		${lastcol})),$(foreach col1,$(call rangeto,${col2}),\
-		$(eval $(call template_plot,${file},${col1},${col2})))))
+		$(eval $(call template_plot\
+		,${file}${PROJSUFFIX},${col1},${col2})))))
 endef
 
 ## info
