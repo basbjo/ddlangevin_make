@@ -47,7 +47,7 @@ define INFOADD
 To extract say 3 columns from a data file, call »make file.3cols«.
 If IF_FUTURE is 1, also the last column of the file is appended.
 
-Testmodel trajectories »file.dle<n>[.weights].m<m>.k<k>.ltm« can
+Testmodel trajectories »symlink.dle<n>[.weights].m<m>.k<k>.ltm« can
 be created where <n> is 1 for ol-first-tm and 2 for ol-second-tm.
 The arguments to -m, -k and -F are generated automatically.  With
 ».weights«, ol-first-tm-weights or ol-second-tm-weights is used.
