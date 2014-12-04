@@ -1,4 +1,4 @@
-.PHONY: cat del_cat .del_cat
+.PHONY: cat del_cat .del_cat cat_links
 cat: $$(CAT_DATA)
 
 del_cat: .del_cat .del_splitdir
@@ -8,6 +8,12 @@ del_cat: .del_cat .del_splitdir
 	$(if $(wildcard ${splitdir}),$(foreach file,${CAT_DATA},\
 		find ${splitdir} -type f -or -type l \
 		-name "${file}-[0-9]*[0-9]" -delete;))
+
+cat_links: | $(splitdir)
+	$(foreach filename,$(filter-out %.field,${CAT_DATA}),\
+		find $(splitdir) -type f -or -type l -name "${filename}-[0-9]*[0-9]" -delete;\
+		for name in "${catdir}/${filename}"-[0-9]*[0-9]; \
+			do ln -s ../${catdir}/$${name##*/} $(splitdir)/$${name##*/}; done;)
 
 ## default settings
 
@@ -19,9 +25,9 @@ SHOWDATA += catdir CAT_DATA
 catdir ?= catdata
 
 ## variables
-CAT_DATA = $(sort $(notdir $(shell echo $(wildcard ${catdir}/*-[0-9][0-9]) \
+CAT_DATA = $(sort $(notdir $(shell echo $(wildcard ${catdir}/*-[0-9]*[0-9]) \
 		| tr ' ' '\n' | sed 's/-[0-9][0-9]$$//')))\
-	   $(sort $(notdir $(shell echo $(wildcard ${catdir}/*-[0-9][0-9].field) \
+	   $(sort $(notdir $(shell echo $(wildcard ${catdir}/*-[0-9]*[0-9].field) \
 		| tr ' ' '\n' | sed 's/-[0-9][0-9].field/.field/')))
 DIR_LIST += $(catdir)
 
@@ -69,7 +75,7 @@ endef
 
 ## info
 ifndef INFO
-INFO = cat
+INFO = cat $(if ${splitdir},cat_links)
 define INFOADD
 
 Single trajectories »$(catdir)/filename-##« are concatenated
@@ -79,9 +85,10 @@ Files with suffix ».field« are treated exceptionally: files
 
 endef
 else
-INFOend += cat del_cat
+INFOend += cat $(if ${splitdir},cat_links) del_cat
 endif
 INFO_cat = concatenate data (directory $(patsubst ./%,%,${catdir}))
+INFO_cat_links = create links from $(patsubst ./%,%,${splitdir}) to $(patsubst ./%,%,${catdir})
 INFO_del_cat = delete concatenated data
 
 ## keep intermediate files
