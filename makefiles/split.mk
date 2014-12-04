@@ -33,18 +33,16 @@ define split_command
 	  # split file $< by last column into $(@D)/$*-##
 	  awk 'BEGIN { i=1 } {\
 	      print $$0 >sprintf("$(@D)/$*-%02d", i);\
-	      if ($$NF==0) i++;\
 	      $(awk_status)\
-	  }' $<)
+	  } !/^#/ { if ($$NF==0) i++; }' $<)
   $(if $(shell [ ${SPLIT_FUTURE} -eq 0 ] && echo yes),\
 	  # split file $< in two parts $(@D)/$*-##
 	  awk -vhalf=$$(($$(${NROWS} $<) / 2))\
-	  'BEGIN { i=1 } {\
-	      count++;\
+	  'BEGIN { i=1; count=1 } {\
 	      print $$0 >sprintf("$(@D)/$*-%02d", i);\
 	      if (count==half) i++;\
 	      $(awk_status)\
-	  }' $<)
+	  } !/^#/ { count++; }' $<)
 endef
 
 define awk_status
