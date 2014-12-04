@@ -1,8 +1,13 @@
-.PHONY: cat del_cat
+.PHONY: cat del_cat .del_cat
 cat: $$(CAT_DATA)
 
-del_cat:
+del_cat: .del_cat .del_splitdir
+
+.del_cat:
 	$(if $(wildcard ${CAT_DATA}),$(RM) $(wildcard ${CAT_DATA}))
+	$(if $(wildcard ${splitdir}),$(foreach file,${CAT_DATA},\
+		find ${splitdir} -type f -or -type l \
+		-name "${file}-[0-9]*[0-9]" -delete;))
 
 ## default settings
 
@@ -24,16 +29,26 @@ DIR_LIST += $(catdir)
 $(catdir):
 	mkdir -p $@
 
+# rule for concatenation of filename-## to filename
 define template_cat
 $(1) : $$$$(wildcard $$$${catdir}/$(1)-[0-9]*[0-9])
 	$$(cat_command)
+	$$(if $$(wildcard $${splitdir}),$${link_to_split_command})
 endef
 
+# command for concatenation
 define cat_command
 $(RM) $@
 for file in $+; do sed '/^#/!s/ *$$/ 1/;$$s/ 1/ 0/' $${file} >> $@; done
 endef
 
+# if splitdir exists, create symlinks from splitdir to catdir
+define link_to_split_command
+find $(splitdir) -type f -or -type l -name "$(notdir $@)-[0-9]*[0-9]" -delete
+for name in $(notdir $+); do ln -s ../$(catdir)/$${name} $(splitdir)/$${name}; done
+endef
+
+# rule for concatenation of filename-##.field to filename.field
 define template_cat_field
 $(1) : $$$$(wildcard $$$${catdir}/$(patsubst %.field,%,${1})-[0-9]*[0-9].field)
 	$$(cat_command)
