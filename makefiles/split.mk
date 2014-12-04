@@ -31,10 +31,15 @@ $(splitdir)/%-01 : % | $(splitdir)
 define split_command
   $(if $(shell [ ${SPLIT_FUTURE} -eq 1 ] && echo yes),\
 	  # split file $< by last column into $(@D)/$*-##
-	  awk 'BEGIN { i=1 } {\
+	  awk 'BEGIN { i=1; end=0; }\
+	  !/^#/ {\
+	      if ($$NF==0) end=1;\
+	      sub(" [01]$$","",$$0);\
+	  } {\
 	      print $$0 >sprintf("$(@D)/$*-%02d", i);\
+	      if (end) { i++; end=0; }\
 	      $(awk_status)\
-	  } !/^#/ { if ($$NF==0) i++; }' $<)
+	  }' $<)
   $(if $(shell [ ${SPLIT_FUTURE} -eq 0 ] && echo yes),\
 	  # split file $< in two parts $(@D)/$*-##
 	  awk -vhalf=$$(($$(${NROWS} $<) / 2))\
