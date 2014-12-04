@@ -137,14 +137,19 @@ del_plots: del_latex
 	$(RM) $(wildcard ${PLOTS_LIST} $(foreach suffix,pdf png,\
 		$(addsuffix .${suffix},$(basename ${PLOTS_LIST}))))
 
-del_split:
+del_split: .del_split .del_splitdir
+
+.del_split:
 	$(if $(wildcard ${SPLIT_WILD}),$(RM) $(wildcard ${SPLIT_WILD}))
+
+.del_splitdir:
 	$(if $(wildcard ${splitdir}),$(if $(shell\
 		[ -d ${splitdir} ] && [ . != ${splitdir} ] && echo yes),\
 		rmdir --ignore-fail-on-non-empty ${splitdir}))
 
 .PHONY: all info show showconf showdata showmacros\
-	mksymlinks rmsymlinks clean purge del_latex del_plots del_split
+	mksymlinks rmsymlinks clean purge del_latex del_plots\
+	del_split .del_split .del_splitdir
 
 .PRECIOUS: $$(PRECIOUS)
 
