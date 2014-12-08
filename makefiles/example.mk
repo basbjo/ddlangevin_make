@@ -1,5 +1,7 @@
-.PHONY: example
-example: $$(EXAMPLE)$$(TIME_UNIT)
+.PHONY: example exampleconf
+example: $$(EXAMPLE)$$(TIME_UNIT) exampleconf
+
+exampleconf:
 	@echo
 	@echo The following settings in config.mk
 	@echo
@@ -40,9 +42,10 @@ INFO =
 define INFOADD
 endef
 else
-INFOend += example
+INFOend += example exampleconf
 endif
 INFO_example = create example trajectory
+INFO_exampleconf = set example configuration
 
 ## keep intermediate files
 PRECIOUS +=
