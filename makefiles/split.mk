@@ -3,9 +3,10 @@ split: $$(SPLIT_DATA)
 
 ## default settings
 SPLIT_FUTURE ?= $(or ${IF_FUTURE},1)# 1 if last column for follower, 0 else
+SPLIT_KEEP_FUTURE ?= 0# 1 to keep follower column, else remove follower column
 
 # settings/data to be shown by showconf/showdata
-SHOWCONF += SPLIT_FUTURE
+SHOWCONF += SPLIT_FUTURE SPLIT_KEEP_FUTURE
 SHOWDATA += splitdir SPLIT_LIST
 
 ## default settings that must be changed before including this file
@@ -34,7 +35,7 @@ define split_command
 	  awk 'BEGIN { i=1; end=0; }\
 	  !/^#/ {\
 	      if ($$NF==0) end=1;\
-	      sub(" [01]$$","",$$0);\
+	      $(if $(patsubst 1,,${SPLIT_KEEP_FUTURE}),sub(" [01]$$","",$$0);,)\
 	  } {\
 	      print $$0 >sprintf("$(@D)/$*-%02d", i);\
 	      if (end) { i++; end=0; }\
