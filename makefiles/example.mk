@@ -1,4 +1,4 @@
-.PHONY: example exampleconf
+.PHONY: example exampleconf plot
 example: $$(EXAMPLE)$$(TIME_UNIT) exampleconf
 
 exampleconf:
@@ -12,6 +12,8 @@ exampleconf:
 	@echo have been changed as follows.
 	@echo
 	@grep '^\(RAWDATA\|projtarget\)' config.mk
+
+plot: split trajs.png
 
 ## default settings
 TIME_STEP ?= 0.001
@@ -33,6 +35,9 @@ $(MLE): $(MLE).c
 $(EXAMPLE)$(TIME_UNIT): $(MLE).c | $(MLE)
 	$| > $@
 
+trajs.png: trajs.gp $(wildcard ${splitdir}/*)
+	gnuplot $<
+
 ## macros to be called later
 #MACROS +=
 
@@ -42,10 +47,11 @@ INFO =
 define INFOADD
 endef
 else
-INFOend += example exampleconf
+INFOend += example exampleconf plot
 endif
 INFO_example = create example trajectory
 INFO_exampleconf = set example configuration
+INFO_plot = plot example trajectories
 
 ## keep intermediate files
 PRECIOUS +=
@@ -53,4 +59,4 @@ PRECIOUS +=
 ## clean
 PLOTS_LIST +=
 CLEAN_LIST +=
-PURGE_LIST += $(EXAMPLE)$(TIME_UNIT)
+PURGE_LIST += $(EXAMPLE)$(TIME_UNIT) trajs.png
