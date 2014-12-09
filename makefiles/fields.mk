@@ -49,12 +49,14 @@ $(1).%.hist : $(1) $(wildcard ${1}.minmax)
 endef
 
 define template_binning
-$(1).%.bins : $(1)
+$(1).%.bins : $(1) $(wildcard ${1}.minmax)
 	$$(eval cols := $$(foreach label,$$(subst ., ,$$*),\
 		$$(shell $$(call getfieldno_macro,${1},$${label}))))
 	$$(if $$(patsubst 2,,$$(words $${cols}))\
 		,,${BINNING1D})$$(if $$(patsubst 3,,$$(words $${cols}))\
-		,,${BINNING2D}) -c $$(shell echo $${cols}|tr ' ' ',') $$< -o $$@
+		,,${BINNING2D}) -c $$(shell echo $${cols}|tr ' ' ',')\
+		$$(if $$(minmaxfile),$$(MINMAX_FLAG) $$(minmaxfile)\
+		)$$< -o $$@
 endef
 
 # plotting
