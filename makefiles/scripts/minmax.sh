@@ -108,13 +108,19 @@ END {
 
     # print minima
     for(i=1; i<=ncols; i++) {
-        printf(OFS OFMT, min[i])
+        if(i>1) {
+            printf(OFS)
+        }
+        printf(OFMT, min[i])
     }
     printf("\n")
 
     # print maxima
     for(i=1; i<=ncols; i++) {
-        printf(OFS OFMT, max[i])
+        if(i>1) {
+            printf(OFS)
+        }
+        printf(OFMT, max[i])
     }
     printf("\n")
 }
