@@ -16,7 +16,8 @@ plot_hist1d: calc_fel1d $$(HIST1D_PLOT)
 plot_hist2d: calc_hist2d $$(HIST2D_PLOT)
 
 ## default settings
-HIST_NBINS ?= 100# number of bins within reference range
+HIST1D_NBINS ?= 100# number of bins within reference range (1D histogram)
+HIST2D_NBINS ?= 100# number of bins within reference range (2D histogram)
 SPLIT_SUFFIX ?= $(DROPSUFFIX)# to find split data in remote directory
 # default settings 1D histograms
 HIST1D_LAST_COL ?= 20# last column (optional)
@@ -30,8 +31,9 @@ HIST2D_REFDIR ?= $(prefix)/histogram# reference data is searched here (optional)
 TIME_UNIT ?=# to find reference data with different time step
 
 # settings/data to be shown by showconf/showdata
-SHOWCONF += HIST_NBINS HIST2D_LAST_COL HIST2D_REFDIR HIST1D_REFDIR\
-	    HIST1D_LAST_COL HIST1D_PLOT_NCOLS HIST1D_YRANGE TIME_UNIT
+SHOWCONF += HIST2D_NBINS HIST2D_LAST_COL HIST2D_REFDIR\
+	    HIST1D_NBINS HIST1D_LAST_COL HIST1D_REFDIR\
+	    HIST1D_PLOT_NCOLS HIST1D_YRANGE TIME_UNIT
 SHOWDATA += histdir1d histdir2d splitdir SPLIT_SUFFIX
 
 ## default settings that must be changed before including this file

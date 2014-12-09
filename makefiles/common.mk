@@ -12,8 +12,8 @@ CORR ?= corr -V0
 XCOR ?= xcor -V0
 RESCALE ?= rescale -V0 -u
 # TISEAN (see ./patches)
-HIST1D ?= histogram -V0 -b $(HIST_NBINS) -D
-HIST2D ?= histo2d -V0 -b $(HIST_NBINS)
+HIST1D ?= histogram -V0 -b $(HIST1D_NBINS) -D
+HIST2D ?= histo2d -V0 -b $(HIST2D_NBINS)
 NEGENT ?= negentropy -V0 -b $(NEGENT_NBINS)
 BINNING1D ?= binning -V0 -b $(BIN1D_NBINS)
 BINNING2D ?= binning2d -V0 -b $(BIN2D_NBINS)
