@@ -7,7 +7,7 @@ exampleconf:
 	@echo
 	@grep '^\(RAWDATA\|projtarget\)' config.mk
 	@sed -i '/^RAWDATA/s/=.*/= $(EXAMPLE)$$(TIME_UNIT)/' config.mk
-	@sed -i '/^projtarget/s/=.*/= colselect pca/' config.mk
+	@sed -i '/^projtarget/s/=.*/=/' config.mk
 	@echo
 	@echo have been changed as follows.
 	@echo
@@ -15,7 +15,7 @@ exampleconf:
 
 ## default settings
 TIME_STEP ?= 0.001
-EXAMPLE ?= example_$(TIME_STEP)
+EXAMPLE ?= mle2_$(TIME_STEP)
 
 # settings/data to be shown by showconf/showdata
 SHOWCONF +=

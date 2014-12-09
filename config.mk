@@ -3,7 +3,7 @@ makedir = $(prefix)/makefiles
 
 ## source data
 TIME_UNIT = ps
-RAWDATA = alldih*_1$(TIME_UNIT)
+RAWDATA = mle2_0.001$(TIME_UNIT)
 # name format: <first part>_<num>$(TIME_UNIT)[<second part>]
 #      the occurance of _<num>$(TIME_UNIT) must be unique
 # data format: "[time] dihedral_angles... [future]"
@@ -18,7 +18,7 @@ SHOWDATA += RAWDATA
 #   `cossin pca tica` for TICA on cos-/sin-transforms
 #   `pca` for PCA on single trajectory data file (IF_FUTURE = 0)
 #   `colselect pca` for PCA on multi trajectory data (IF_FUTURE = 1)
-projtargets = cossin pca
+projtargets =
 projmakefiles = $(addprefix ${makedir}/,$(addsuffix .mk,${projtargets}))
 # lag times in units of one time frame in data files (tica only)
 LAG_TIMES = 100
@@ -53,21 +53,21 @@ EIGVEC_TICA_LAST = 10	# last eigenvector and eigenvector entry (optional)
 CLUSTER_LAST_COL = 5	# last column (optional)
 
 ## settings for 1D histograms
-HIST1D_LAST_COL = 20	# last column (optional)
+HIST1D_LAST_COL = 1	# last column (optional)
 HIST1D_PLOT_NCOLS = 4	# number of columns per plot
 HIST1D_YRANGE =		# yrange (optional, format: ymin:ymax)
 
 ## settings for 2D histograms
-HIST2D_LAST_COL = 3	# last column (optional, >1)
+HIST2D_LAST_COL = 1	# last column (optional, >1)
 
 ## settings for autocorrelations
-CORR_LAST_COL = 18	# last column (optional)
+CORR_LAST_COL = 1	# last column (optional)
 CORR_PLOT_NCOLS = 6	# number of columns per plot
 CORR_XRANGE =		# xrange (optional, format: xmin:xmax)
 CORR_MAXRATIO =		# maximum ratio between correlation times (optional)
 
 ## settings for drift fields
-DRIFT_LAST_COL = 3	# last column (optional, >1)
+DRIFT_LAST_COL = 1	# last column (optional, >1)
 
 ## settings for negentropies
-NEGENT_LAST_COL = 20	# last column (optional)
+NEGENT_LAST_COL = 1	# last column (optional)
