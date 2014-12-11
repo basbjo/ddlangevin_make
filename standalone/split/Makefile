@@ -15,9 +15,9 @@ IF_FUTURE = 1
 # if 1: data is split into consecutive trajectories such
 #       that each series ends when the last column is 0
 # if 0: data is split into two parts of equal length
-SPLIT_KEEP_FUTURE ?= 0
-# if 1: remove follower column if IF_FUTURE is 1
-# else: keep follower column in split data
+SPLIT_KEEP_FUTURE = 0
+# if 1: keep follower column if IF_FUTURE is 1
+# else: remove follower column if IF_FUTURE is 1
 
 ## default targets
 all += split
