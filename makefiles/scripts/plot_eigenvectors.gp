@@ -2,7 +2,9 @@
 #Plots entries of eigenvectors
 
 set terminal tikz standalone tightboundingbox
-set output FILE.".tex"
+if(!exists('OUTFILE')) OUTFILE = FILE.".tex"
+set output OUTFILE
+if(!exists('caption')) caption = FILE
 
 set size square
 set macros
@@ -11,7 +13,7 @@ labelcmd = "FILE matrix using (1+$1):(1+$2):(sprintf('%.2f',$3**2)) with labels 
 # labelcmd is used only if not more than 10 eigenvectors are shown
 pl @plotcmd
 
-set title sprintf('Squared eigenvector entries from \verb|%s|', FILE)
+set title sprintf("Squared eigenvector entries from\n\\verb|%s|", caption)
 set xlabel "\\# eigenvector"
 set ylabel "\\# entry of eigenvector"
 if(!exists('xmax')) xmax=GPVAL_DATA_X_MAX-0.5
@@ -22,7 +24,7 @@ if (xmax<5) set xtics 1
 if (ymax<5) set ytics 1
 set cbrange [0:1]
 
-set output FILE.".tex"
+set output OUTFILE
 if (xmax<=10) pl @plotcmd, @labelcmd
 if (xmax>=11) pl @plotcmd
 replot

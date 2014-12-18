@@ -4,6 +4,7 @@ rescale: $$(UNITVARDATA)
 tica: rescale $$(TICADATA)
 
 ## default settings
+EIGVEC_TICA_LAST ?=
 
 # settings/data to be shown by showconf/showdata
 SHOWCONF +=
@@ -21,6 +22,9 @@ DIR_LIST += $(addsuffix _dir,${TICADATA})
 SUFFIX := $(TICAPREVSUFFIX).lag*.tica
 # minima and maxima as reference for ranges
 MINMAXALL = $(TICADATA)
+# plot of eigenvectors entries
+PROJ_PLOT_TARGETS += tica $(EIGVPLOT_TICA)
+EIGVPLOT_TICA = $(patsubst %.tica,%.eigvec.png,${TICADATA})
 
 ## rules
 %$(TICAPREVSUFFIX).rs: %$(TICAPREVSUFFIX)
@@ -44,12 +48,21 @@ define template_tica
 	$$(appendlastcol_command)
 endef
 
-define rule_tica
-$(foreach lag_time,${LAG_TIMES},$(eval $(call template_tica,${lag_time})))
+%.eigvec.tex : $(SCR)/plot_eigenvectors.gp %.tica_dir/lagged_eigenvectors.dat
+	$(eigvec_plot_command_tica)
+
+define eigvec_plot_command_tica
+gnuplot -e 'FILE="$(word 2,$+)"; OUTFILE="$@"; caption="$*.tica"$(if\
+	$(strip ${EIGVEC_TICA_LAST}),; xmax=$(strip ${EIGVEC_TICA_LAST}))$(if\
+	$(strip ${EIGVEC_TICA_LAST}),; ymax=$(strip ${EIGVEC_TICA_LAST}))' $<
 endef
 
 ## macros to be called later
 MACROS += rule_tica
+
+define rule_tica
+$(foreach lag_time,${LAG_TIMES},$(eval $(call template_tica,${lag_time})))
+endef
 
 ## info
 ifndef INFO
@@ -69,7 +82,7 @@ include $(makedir)/projfuture.mk
 PRECIOUS += $(UNITVARDATA)
 
 ## clean
-PLOTS_LIST +=
+PLOTS_LIST += $(EIGVPLOT_TICA)
 CLEAN_LIST +=
 PURGE_LIST += $(TICADATA) $(foreach name, symmetrized_covariance_matrix\
 	      lagged_covariance_matrix lagged_eigenvalues lagged_eigenvectors,\
