@@ -4,7 +4,8 @@ pca: $$(PCADATA)
 plot: pca $$(CVARPLOT) $$(EIGVPLOT)
 
 ## default settings
-EIGVEC_LAST_COL ?=
+EIGVEC_PCA_LASTX ?=
+EIGVEC_PCA_LASTY ?=
 
 # settings/data to be shown by showconf/showdata
 SHOWCONF +=
@@ -35,10 +36,13 @@ MINMAXALL = $(PCADATA)
 	$< $(basename $@)
 
 %.eigvec.tex : $(SCR)/plot_eigenvectors.gp %.pca
-	$(if $(strip ${EIGVEC_LAST_COL}),\
-		gnuplot -e 'FILE="$(basename $@)";\
-		lastcol=$(strip ${EIGVEC_LAST_COL})' $<,\
-		gnuplot -e 'FILE="$(basename $@)"' $<)
+	$(eigvec_plot_command)
+
+define eigvec_plot_command
+gnuplot -e 'FILE="$(basename $@)"$(if\
+	$(strip ${EIGVEC_PCA_LASTX}),; xmax=$(strip ${EIGVEC_PCA_LASTX}))$(if\
+	$(strip ${EIGVEC_PCA_LASTY}),; ymax=$(strip ${EIGVEC_PCA_LASTY}))' $<
+endef
 
 ## macros to be called later
 #MACROS +=

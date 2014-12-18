@@ -44,7 +44,9 @@ splitdir ?= $(or $(firstword ${datadirs}),.)/splitdata
 MINMAXFILE = $(prefix)/minmax
 
 ## settings for pca
-EIGVEC_LAST_COL =	# last column in eigenvector plot (optional)
+# if EIGVEC_PCA_LASTX is less or equal to 10, values are shown
+EIGVEC_PCA_LASTX =	# last eigenvector in plot (optional)
+EIGVEC_PCA_LASTY =	# last eigenvector entry in plot (optional)
 
 ## settings for clustering
 CLUSTER_LAST_COL = 5	# last column (optional)
