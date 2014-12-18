@@ -43,6 +43,9 @@ splitdir ?= $(or $(firstword ${datadirs}),.)/splitdata
 ## minima and maxima as reference for ranges
 MINMAXFILE = $(prefix)/minmax
 
+## settings for pca
+EIGVEC_LAST_COL =	# last column in eigenvector plot (optional)
+
 ## settings for clustering
 CLUSTER_LAST_COL = 5	# last column (optional)
 
