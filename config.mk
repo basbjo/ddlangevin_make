@@ -47,7 +47,7 @@ MINMAXFILE = $(prefix)/minmax
 # if EIGVEC_PCA_LASTX is less or equal to 10, values are shown
 EIGVEC_PCA_LASTX =	# last eigenvector in plot (optional)
 EIGVEC_PCA_LASTY =	# last eigenvector entry in plot (optional)
-EIGVEC_TICA_LAST =	# last eigenvector and eigenvector entry (optional)
+EIGVEC_TICA_LAST = 10	# last eigenvector and eigenvector entry (optional)
 
 ## settings for clustering
 CLUSTER_LAST_COL = 5	# last column (optional)
