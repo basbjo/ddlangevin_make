@@ -1,7 +1,7 @@
 .PHONY: pca plot
 pca: $$(PCADATA)
 
-plot: pca $$(CVARPLOT) $$(EIGVPLOT)
+plot: $$(PROJ_PLOT_TARGETS)
 
 ## default settings
 EIGVEC_PCA_LASTX ?=
@@ -18,7 +18,8 @@ PCAPREVSUFFIX := $(SUFFIX)
 PCADATA += $(addsuffix ${PCAPREVSUFFIX}.pca,${DATA})
 # suffix for data that is further analysed
 SUFFIX := $(PCAPREVSUFFIX).pca
-# plot of cumulative variances (eigenvalues)
+# plot of cumulative variances (eigenvalues) and eigenvector entries
+PROJ_PLOT_TARGETS += pca $(CVARPLOT) $(EIGVPLOT)
 CVARPLOT = $(addsuffix ${PCAPREVSUFFIX}.eigval.png,${DATA})
 EIGVPLOT = $(addsuffix ${PCAPREVSUFFIX}.eigvec.png,${DATA})
 # minima and maxima as reference for ranges
@@ -56,7 +57,7 @@ else
 INFOend += pca plot
 endif
 INFO_pca    = principal component analysis (suffix .pca)
-INFO_plot   = plot cumulative variances and eigenvectors (pca)
+INFO_plot   = plot cumulative variances (pca) and eigenvectors
 
 ## makefile includes (must remain after info)
 include $(makedir)/projfuture.mk
