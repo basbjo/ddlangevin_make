@@ -1,10 +1,11 @@
 #!/usr/bin/gnuplot
 
-set terminal png
+set terminal png size 520,390
 set output DATA.".png"
 load gpmodel
 
-set key top center out
+set xlabel "Coordinate"
+set ylabel "Friction average"
 set yrange [0:2*Gamma]
 set grid
 
