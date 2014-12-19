@@ -72,7 +72,7 @@ define template_plot_noise
 $(1).xi%.hist.tex : $(1).xi%.hist
 	gnuplot -e "set terminal tikz standalone tightboundingbox;\
 	set output '$$@'; set title 'Noise histogram for \\verb|$(1)|';\
-	set key spacing 2; plot exp(-x**2/2)/sqrt(2*pi) \
+	set key spacing 2; set ytics 0,0.1; plot exp(-x**2/2)/sqrt(2*pi) \
 		title '\$$$$\\frac{1}{\\sqrt{2\\pi}}e^{-\\frac{x^2}{2}}$$$$',\
 		'$$<' title '$$$$\\xi_$$*$$$$'"
 endef
