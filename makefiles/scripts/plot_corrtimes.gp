@@ -25,7 +25,7 @@ plot \
     DATA u ($0+1):(SCALE*$2):(SCALE*$3):(SCALE*$4) w e lt 1 notitle, \
     DATA u ($0+1):(SCALE*$2):xticlabels(1) lt 1 notitle, \
     DATA u ($0+1):(SCALE*$2):x2ticlabels(sprintf("%d",$0+1)) lt 1 notitle, \
-    DATA u ($0+1):(SCALE*$2):(sprintf("%d %s",SCALE*$2,UNIT)) \
+    DATA u ($0+1):(SCALE*$2):(sprintf("%.1f %s",SCALE*$2,UNIT)) \
          with labels offset graph -0.04,-0.1 rotate by 60 notitle
 set xrange [-2+GPVAL_X_MIN:GPVAL_X_MAX+1]
 if(!exists("ymax")) ymax = GPVAL_Y_MAX
