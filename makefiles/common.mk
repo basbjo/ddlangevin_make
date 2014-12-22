@@ -3,7 +3,7 @@ PDFLATEX ?= pdflatex
 # Python Docutils
 RST2HTML = rst2html -t
 # Debian package poppler-utils
-PDF2PNG ?= pdftoppm -png -l 1
+PDF2PNG ?= pdftoppm -png -l 1 -scale-to 520
 PDF2EPS ?= pdftops -eps -l 1
 # imagemagick utilities
 EPS2PNG ?= convert -density 300 -background white -flatten
