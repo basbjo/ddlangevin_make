@@ -84,10 +84,10 @@ define template_plot_noisebins
 $(1).$(2).xi%.bins.tex : $(1).$(2).xi%.bins
 	gnuplot -e 'set terminal tikz standalone tightboundingbox;\
 	set output "$$@"; set title "Noise projection for \\verb|$(1)|";\
-	set key Left reverse horizontal top center; set grid; \
-	plot [][-1:2] "$$<" u 1:($$$$3*sqrt($$$$4)) title "Standard deviation",\
-	1 lt -1 title "Expectancy", "$$<" u 1:2:3 w e title "Average" lt 2, \
-	0 lt -1 title "Expectancy"'
+	set key Left reverse horizontal; set ytics -0.5,0.5; set mytics 5;\
+	set grid; set grid mytics; plot [][-0.2:1.5] \
+	"$$<" u 1:($$$$3*sqrt($$$$4)) title "Standard deviation",\
+	"$$<" u 1:2:3 w e title "Average", 0 lt -1 notitle, 1 lt -1 notitle'
 endef
 
 ## macros to be called later
