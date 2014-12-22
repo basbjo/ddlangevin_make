@@ -21,16 +21,19 @@ SHOWDATA +=
 showfields:
 	@echo; $(foreach file,${DATA},echo "${file}";\
 		echo ${file} | sed 's/./=/g';\
-		$(call showfields_macro,${file}); echo;)
+		$(call shownumberedfields_macro,${file}); echo;)
 
 define showfields_macro
 head $(1) | sed '/^#Content: /s//#/' | grep '^#x1' | sed 's/ [01]$$//' \
-	| tr ' ' '\n' | sed 's/^#//' \
-	| nl -ba -s\  | sed 's/^  *//'
+	| tr ' ' '\n' | sed 's/^#//'
 endef
 
+shownumberedfields_macro = $(showfields_macro) | nl -ba -s\  | sed 's/^  *//'
+
+alllabels = $(sort $(foreach file,${DATA},$(shell $(call showfields_macro,${file}))))
+
 # field binning
-getfieldno_macro = $(showfields_macro) | grep $(2) | cut -d\  -f1
+getfieldno_macro = $(shownumberedfields_macro) | grep $(2) | cut -d\  -f1
 
 comma = ,
 define special_binning_ranges
@@ -68,7 +71,7 @@ endef
 %.bins.pdf: %.bins
 	$(HEATMAP) -c1,2,3 -t "Binned field for $*" $< -o $@
 
-define template_plot_noise
+define template_plot_noisehist
 $(1).xi%.hist.tex : $(1).xi%.hist
 	gnuplot -e "set terminal tikz standalone tightboundingbox;\
 	set output '$$@'; set title 'Noise histogram for \\verb|$(1)|';\
@@ -77,12 +80,24 @@ $(1).xi%.hist.tex : $(1).xi%.hist
 		'$$<' title '$$$$\\xi_$$*$$$$'"
 endef
 
+define template_plot_noisebins
+$(1).$(2).xi%.bins.tex : $(1).$(2).xi%.bins
+	gnuplot -e 'set terminal tikz standalone tightboundingbox;\
+	set output "$$@"; set title "Noise projection for \\verb|$(1)|";\
+	set key Left reverse horizontal top center; set grid; \
+	plot [][-1:2] "$$<" u 1:($$$$3*sqrt($$$$4)) title "Standard deviation",\
+	1 lt -1 title "Expectancy", "$$<" u 1:2:3 w e title "Average" lt 2, \
+	0 lt -1 title "Expectancy"'
+endef
+
 ## macros to be called later
 MACROS += rule_fields
 
 define rule_fields
 $(foreach file,$(filter %.ltm,${DATA}),\
-       $(eval $(call template_plot_noise,${file})))\
+	$(eval $(call template_plot_noisehist,${file}))\
+	$(foreach xlabel,$(filter-out xi%,$(filter x%,${alllabels})),\
+		$(eval $(call template_plot_noisebins,${file},${xlabel}))))\
 $(foreach file,$(filter %.ltm,${DATA}) $(filter-out %.ltm,${DATA}),\
 	$(eval $(call template_histogram,${file}))\
 	$(eval $(call template_binning,${file})))
@@ -111,6 +126,9 @@ Plots of 2D histograms are created as described above for binning.
 Noise histograms »name.ltm.xi#.hist« are treated specially: the range is
 set to [-5:5] and the creation of an intermediate tex file should be forced
 by calling »make name.ltm.xi#.hist{,.{tex,pdf,png}}« for meaningful plots.
+
+Average and standard deviation of projected noise components are created
+by calling »make name.ltm.x#.xi#.bins{,.{tex,pdf,png}}«.
 
 endef
 else
