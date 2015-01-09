@@ -69,7 +69,7 @@ endef
 
 # plotting
 %.hist.pdf: %.hist
-	$(HEATMAP) -c1,2,3 -t "Histogram for $*" $< -o $@
+	$(HEATMAP) -c1,2,5 -t "Histogram for $*" $< -o $@
 
 %.bins.pdf: %.bins
 	$(HEATMAP) -c1,2,3 -t "Binned field for $*" $< -o $@
