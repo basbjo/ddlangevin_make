@@ -38,6 +38,15 @@ CALC += $(foreach V,${NOISE_PCS},$(foreach suffix,\
 PLOT += $(foreach suffix,.tex .pdf .png,$(addsuffix ${suffix},\
 	$(wildcard *.ltm.xi*.hist *.ltm.x*.xi*.bins)))
 
+# further suffixes to be considered for /all/ data files
+1DFIELD_SUFFIXES = #e.g. .x1.hist .x1.f1.bins
+2DFIELD_SUFFIXES = #e.g. .x1.x2.hist .x1.x2.f1.bins
+CALC += $(foreach suffix,${1DFIELD_SUFFIXES} ${2DFIELD_SUFFIXES},\
+	$(addsuffix ${suffix},${DATA}))
+# further targets for plotting (heatmap for 2D histograms or binnings)
+PLOT += $(foreach psuffix,.pdf .png,$(addsuffix ${psuffix},\
+	$(foreach suffix,${2DFIELD_SUFFIXES},$(addsuffix ${suffix},${DATA}))))
+
 # further calc and plot targets
 CALC +=
 PLOT +=
