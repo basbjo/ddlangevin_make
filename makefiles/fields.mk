@@ -76,17 +76,17 @@ endef
 
 define template_plot_noisehist
 $(1).xi%.hist.tex : $(1).xi%.hist
-	gnuplot -e "set terminal tikz standalone tightboundingbox;\
-	set output '$$@'; set title 'Noise histogram for \\verb|$(1)|';\
+	gnuplot -e 'set terminal tikz standalone tightboundingbox;\
+	set output "$$@"; set title "Noise histogram for\n\\verb|$(1)|";\
 	set key spacing 2; set ytics 0,0.1; plot exp(-x**2/2)/sqrt(2*pi) \
-		title '\$$$$\\frac{1}{\\sqrt{2\\pi}}e^{-\\frac{x^2}{2}}$$$$',\
-		'$$<' title '$$$$\\xi_$$*$$$$'"
+		title "\$$$$\\frac{1}{\\sqrt{2\\pi}}e^{-\\frac{x^2}{2}}$$$$",\
+		"$$<" title "$$$$\\xi_$$*$$$$"'
 endef
 
 define template_plot_noisebins
 $(1).$(2).xi%.bins.tex : $(1).$(2).xi%.bins
 	gnuplot -e 'set terminal tikz standalone tightboundingbox;\
-	set output "$$@"; set title "Noise projection for \\verb|$(1)|";\
+	set output "$$@"; set title "Noise projection for\n\\verb|$(1).$(2).xi$$*|";\
 	set key Left reverse horizontal; set ytics -0.5,0.5; set mytics 5;\
 	set grid; set grid mytics; plot [][-0.2:1.5] \
 	"$$<" u 1:($$$$3*sqrt($$$$4)) title "Standard deviation",\
