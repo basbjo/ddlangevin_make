@@ -1,4 +1,7 @@
-.PHONY: showfields
+.PHONY: showfields calc plot
+calc: $$(CALC)
+
+plot: calc $$(PLOT)
 
 ## default settings
 HIST1D_NBINS ?= 100# number of bins within reference range (1D histogram)
@@ -10,7 +13,7 @@ MINMAX_FLAG ?=-R# full output: -r, output only for reference range: -R
 
 # settings/data to be shown by showconf/showdata
 SHOWCONF += HIST1D_NBINS HIST2D_NBINS BIN1D_NBINS BIN2D_NBINS MINMAX_FLAG HEATMAP_FLAGS
-SHOWDATA +=
+SHOWDATA += CALC PLOT
 
 ## default settings that must be changed before including this file
 
@@ -105,7 +108,7 @@ endef
 
 ## info
 ifndef INFO
-INFO = showfields
+INFO = showfields calc plot
 define INFOADD
 
 Binning
@@ -135,11 +138,13 @@ else
 INFOend +=
 endif
 INFO_showfields = show column numbers with field labels
+INFO_calc = create targets in CALC list (see Makefile)
+INFO_plot = create targets in PLOT list (see Makefile)
 
 ## keep intermediate files
 PRECIOUS +=
 
 ## clean
-PLOTS_LIST +=
+PLOTS_LIST += $(PLOT)
 CLEAN_LIST +=
-PURGE_LIST +=
+PURGE_LIST += $(CALC)

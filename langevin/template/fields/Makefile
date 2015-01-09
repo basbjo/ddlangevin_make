@@ -18,7 +18,11 @@ IF_FUTURE = $(SPLIT_FUTURE)
 HEATMAP_FLAGS =
 
 ## default targets
-all += info
+all += calc
 
 ## call macros
 $(call_macros)
+
+## calc and plot targets to be created
+CALC +=
+PLOT +=
