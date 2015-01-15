@@ -83,7 +83,7 @@ then
 fi
 if [ -n "${reffile}" ] && [ "${path}" != "${refpath}" ]
 then
-    echo ${reffile}
+    echo ${reffile} | cut -d\  -f1
 fi
 
 exit $EXIT_SUCCESS
