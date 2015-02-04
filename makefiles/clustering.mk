@@ -39,9 +39,9 @@ PROJS_PLOT = $(addprefix coreprojs_,$(call add-V01-V02,\
 	$(clustering_command)
 
 %.coretraj : % $(CORE_SCRIPT)
-	$(coring_command)
+	$(clustering_command)
 
-define coring_command
+define clustering_command
 $(lastword $+)\
 	-v min_col=$(strip ${MIN_COL})\
 	-v max_col=$(strip ${MAX_COL}) $< > $@
