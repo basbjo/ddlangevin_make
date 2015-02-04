@@ -14,7 +14,7 @@ DATA_LINK = $(RAWDATA) $(if ${PROJSUFFIX},$(addsuffix ${PROJSUFFIX},${RAWDATA}))
 # see config.mk
 
 ## default targets
-all += centers
+all += coring centers
 
 ## call macros
 $(call_macros)
