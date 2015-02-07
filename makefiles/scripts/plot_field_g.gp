@@ -1,7 +1,8 @@
 #!/usr/bin/gnuplot
 
-set terminal png size 520,390
-set output DATA.".png"
+#set terminal png size 520,390
+set terminal tikz standalone tightboundingbox
+set output DATA.".tex"
 load gpmodel
 
 set xlabel "Coordinate"
@@ -11,5 +12,5 @@ set grid
 
 pl \
 DATA using 1:(($2+1)/dt) notitle,\
-DATA using 1:(($2+1)/dt):($3/dt) w e lt 1 title DATA,\
+DATA using 1:(($2+1)/dt):($3/dt) w e lt 1 title sprintf("\\verb|%s|",DATA),\
 Gamma lt 2

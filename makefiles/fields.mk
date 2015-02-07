@@ -94,13 +94,13 @@ $(1).$(2).xi%.bins.tex : $(1).$(2).xi%.bins
 	"$$<" u 1:2:3 w e title "Average", 0 lt -1 notitle, 1 lt -1 notitle'
 endef
 
-%.x1.f1.bins.png: %.x1.f1.bins $(prefix)/model.gp $(SCR)/plot_field_f.gp
+%.x1.f1.bins.tex: %.x1.f1.bins $(prefix)/model.gp $(SCR)/plot_field_f.gp
 	gnuplot -e 'DATA="$<"; gpmodel="$(word 2,$+)"' $(lastword $+)
 
-%.x1.g_1_1.bins.png: %.x1.g_1_1.bins $(prefix)/model.gp $(SCR)/plot_field_g.gp
+%.x1.g_1_1.bins.tex: %.x1.g_1_1.bins $(prefix)/model.gp $(SCR)/plot_field_g.gp
 	gnuplot -e 'DATA="$<"; gpmodel="$(word 2,$+)"' $(lastword $+)
 
-%.x1.K_1_1.bins.png: %.x1.K_1_1.bins $(prefix)/model.gp $(SCR)/plot_field_k.gp
+%.x1.K_1_1.bins.tex: %.x1.K_1_1.bins $(prefix)/model.gp $(SCR)/plot_field_k.gp
 	gnuplot -e 'DATA="$<"; gpmodel="$(word 2,$+)"' $(lastword $+)
 
 ## macros to be called later
