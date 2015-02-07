@@ -42,10 +42,12 @@ PLOT += $(foreach suffix,.tex .pdf .png,$(addsuffix ${suffix},\
 1DFIELD_SUFFIXES = .x1.f1.bins .x1.g_1_1.bins .x1.K_1_1.bins#e.g. .x1.hist .x1.f1.bins
 2DFIELD_SUFFIXES = #e.g. .x1.x2.hist .x1.x2.f1.bins
 CALC += $(foreach suffix,${1DFIELD_SUFFIXES} ${2DFIELD_SUFFIXES},\
-	$(addsuffix ${suffix},${DATA}))
+	$(addsuffix ${suffix},${DATA}))\
+	$(addsuffix .x1.sweights.bins,$(wildcard *.weights.*.ltm))
 # further targets for plotting (heatmap for 2D histograms or binnings)
 PLOT += $(foreach psuffix,.tex .pdf .png,$(addsuffix ${psuffix},\
-	$(foreach suffix,${1DFIELD_SUFFIXES},$(addsuffix ${suffix},${DATA}))))
+	$(foreach suffix,${1DFIELD_SUFFIXES},$(addsuffix ${suffix},${DATA})\
+	$(addsuffix .x1.sweights.bins,$(wildcard *.weights.*.ltm)))))
 PLOT += $(foreach psuffix,.pdf .png,$(addsuffix ${psuffix},\
 	$(foreach suffix,${2DFIELD_SUFFIXES},$(addsuffix ${suffix},${DATA}))))
 

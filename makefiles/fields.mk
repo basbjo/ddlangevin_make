@@ -103,6 +103,9 @@ endef
 %.x1.K_1_1.bins.tex: %.x1.K_1_1.bins $(prefix)/model.gp $(SCR)/plot_field_k.gp
 	gnuplot -e 'DATA="$<"; gpmodel="$(word 2,$+)"' $(lastword $+)
 
+%.x1.sweights.bins.tex: %.x1.sweights.bins $(prefix)/model.gp $(SCR)/plot_field_sweights.gp
+	gnuplot -e 'DATA="$<"; gpmodel="$(word 2,$+)"' $(lastword $+)
+
 ## macros to be called later
 MACROS += rule_fields
 
