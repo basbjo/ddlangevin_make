@@ -15,6 +15,7 @@ DATA_LINK = $(addsuffix ${PROJSUFFIX},${RAWDATA}) $(SAMPDATA)
 
 ## settings
 # see config.mk and localconf.mk
+OL_SUFFIX =# extra suffix for olangevin programs
 
 ## default targets
 all += info

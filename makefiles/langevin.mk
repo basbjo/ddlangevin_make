@@ -9,6 +9,7 @@ SHOWDATA +=
 ## default settings that must be changed before including this file
 
 ## variables
+OL_SUFFIX ?=# extra suffix for olangevin programs
 
 ## rules
 # select columns from data files
@@ -19,16 +20,16 @@ endef
 
 # create testmodel trajectories
 define template_testmodel
-$(1).dle1.%.ltm: $(1)
+$(1).dle1$(OL_SUFFIX).%.ltm: $(1)
 	ol-first$$(testmodel_command)
-$(1).dle2.%.ltm: $(1)
+$(1).dle2$(OL_SUFFIX).%.ltm: $(1)
 	ol-second$$(testmodel_command)
 endef
 
 extract_argument = $(shell echo $@|egrep -o '\.$(1)[0-9]+\.'|grep -o '[0-9]*')
 
 define testmodel_command
--tm$(if $(filter weights%,$*),-weights)\
+-tm$(if $(filter weights%,$*),-weights)$(OL_SUFFIX)\
  -m$(call extract_argument,m) \
  -k$(call extract_argument,k)$(if\
 $(shell [ ${IF_FUTURE} -eq 1 ] && echo yes),\
@@ -47,8 +48,8 @@ define INFOADD
 To extract say 3 columns from a data file, call »make file.3cols«.
 If IF_FUTURE is 1, also the last column of the file is appended.
 
-Testmodel trajectories »symlink.dle<n>[.weights].m<m>.k<k>.ltm« can
-be created where <n> is 1 for ol-first-tm and 2 for ol-second-tm.
+Testmodel trajectories »symlink.dle<n>$(OL_SUFFIX)[.weights].m<m>.k<k>.ltm« can
+be created where <n> is 1 for ol-first-tm$(OL_SUFFIX) and 2 for ol-second-tm$(OL_SUFFIX).
 The arguments to -m, -k and -F are generated automatically.  With
 ».weights«, ol-first-tm-weights or ol-second-tm-weights is used.
 Testmodel trajectories can be splitted with the »split« target.
