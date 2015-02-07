@@ -18,7 +18,12 @@ DATA_LINK = $(addsuffix ${PROJSUFFIX},${RAWDATA}) $(SAMPDATA)
 OL_SUFFIX =# extra suffix for olangevin programs
 
 ## default targets
-all += info
+all += $(TESTMODEL_DATA)
+
+TESTMODEL_DATA =\
+	$(RAWDATA).dle2$(OL_SUFFIX).m1.k25.ltm\
+	$(RAWDATA).dle2$(OL_SUFFIX).m1.k200.ltm\
+	$(RAWDATA).dle2$(OL_SUFFIX).m1.k500.ltm
 
 ## call macros
 $(call_macros)
