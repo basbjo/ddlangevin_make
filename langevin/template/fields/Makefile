@@ -39,7 +39,8 @@ PLOT += $(foreach suffix,.tex .pdf .png,$(addsuffix ${suffix},\
 	$(wildcard *.ltm.xi*.hist *.ltm.x*.xi*.bins)))
 
 # further suffixes to be considered for /all/ data files
-1DFIELD_SUFFIXES = .x1.f1.bins .x1.g_1_1.bins .x1.K_1_1.bins#e.g. .x1.hist .x1.f1.bins
+1DFIELD_SUFFIXES = .x1.f1.bins .x1.g_1_1.bins .x1.K_1_1.bins\
+	.x1.distance.bins#e.g. .x1.hist .x1.f1.bins
 2DFIELD_SUFFIXES = #e.g. .x1.x2.hist .x1.x2.f1.bins
 CALC += $(foreach suffix,${1DFIELD_SUFFIXES} ${2DFIELD_SUFFIXES},\
 	$(addsuffix ${suffix},${DATA}))\
