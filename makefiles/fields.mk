@@ -94,31 +94,35 @@ $(1).$(2).xi%.bins.tex : $(1).$(2).xi%.bins
 	"$$<" u 1:2:3 w e title "Average", 0 lt -1 notitle, 1 lt -1 notitle'
 endef
 
+define plot_command_one_file
+gnuplot -e 'DATA="$<"; gpmodel="$(word 2,$+)"' $(lastword $+)
+endef
+
 define plot_command_two_files
 gnuplot -e 'DATA1="$<"; DATA2="$(word 2,$+)"; LABEL="$*"; OUTFILE="$@";\
 	gpmodel="$(word 3,$+)"' $(lastword $+)
 endef
 
 %.x1.f1.bins.tex: %.x1.f1.bins $(prefix)/model.gp $(SCR)/plot_field_f.gp
-	gnuplot -e 'DATA="$<"; gpmodel="$(word 2,$+)"' $(lastword $+)
+	$(plot_command_one_file)
 
 %.x1.g_1_1.bins.tex: %.x1.g_1_1.bins $(prefix)/model.gp $(SCR)/plot_field_g.gp
-	gnuplot -e 'DATA="$<"; gpmodel="$(word 2,$+)"' $(lastword $+)
+	$(plot_command_one_file)
 
 %.x1.g_1_1xxi1.tex: %.x1.g_1_1.bins %.x1.xi1.bins $(prefix)/model.gp $(SCR)/plot_field_gxxi.gp
 	$(plot_command_two_files)
 
 %.x1.K_1_1.bins.tex: %.x1.K_1_1.bins $(prefix)/model.gp $(SCR)/plot_field_k.gp
-	gnuplot -e 'DATA="$<"; gpmodel="$(word 2,$+)"' $(lastword $+)
+	$(plot_command_one_file)
 
 %.x1.K_1_1xxi1.tex: %.x1.K_1_1.bins %.x1.xi1.bins $(prefix)/model.gp $(SCR)/plot_field_kxxi.gp
 	$(plot_command_two_files)
 
 %.x1.distance.bins.tex: %.x1.distance.bins $(prefix)/model.gp $(SCR)/plot_field_distance.gp
-	gnuplot -e 'DATA="$<"; gpmodel="$(word 2,$+)"' $(lastword $+)
+	$(plot_command_one_file)
 
 %.x1.sweights.bins.tex: %.x1.sweights.bins $(prefix)/model.gp $(SCR)/plot_field_sweights.gp
-	gnuplot -e 'DATA="$<"; gpmodel="$(word 2,$+)"' $(lastword $+)
+	$(plot_command_one_file)
 
 ## macros to be called later
 MACROS += rule_fields
