@@ -49,6 +49,9 @@ EIGVEC_PCA_LASTX =	# last eigenvector in plot (optional)
 EIGVEC_PCA_LASTY =	# last eigenvector entry in plot (optional)
 EIGVEC_TICA_LAST = 10	# last eigenvector and eigenvector entry (optional)
 
+## settings for binned fields
+CROP_1DBINNING_RANGE = -S-3.4,3.3
+
 ## settings for clustering
 CLUSTER_LAST_COL = 5	# last column (optional)
 

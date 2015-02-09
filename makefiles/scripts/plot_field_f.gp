@@ -8,7 +8,7 @@ load gpmodel
 
 set xlabel "Coordinate"
 set ylabel "Drift average"
-set yrange [-600:600]
+set yrange [-300:300]
 set grid
 
 pl \
