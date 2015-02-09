@@ -49,6 +49,8 @@ CALC += $(foreach suffix,${1DFIELD_SUFFIXES} ${2DFIELD_SUFFIXES},\
 PLOT += $(foreach psuffix,.tex .pdf .png,$(addsuffix ${psuffix},\
 	$(foreach suffix,${1DFIELD_SUFFIXES},$(addsuffix ${suffix},${DATA})\
 	$(addsuffix .x1.sweights.bins,$(wildcard *.weights.*.ltm)))))
+PLOT += $(foreach psuffix,.tex .pdf .png,$(addsuffix ${psuffix},$(foreach \
+	suffix, .x1.K_1_1xxi1 .x1.g_1_1xxi1,$(addsuffix ${suffix},${DATA}))))
 PLOT += $(foreach psuffix,.pdf .png,$(addsuffix ${psuffix},\
 	$(foreach suffix,${2DFIELD_SUFFIXES},$(addsuffix ${suffix},${DATA}))))
 
