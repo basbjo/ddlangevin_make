@@ -95,7 +95,7 @@ $(1).$(2).xi%.bins.tex : $(1).$(2).xi%.bins
 endef
 
 define plot_command_one_file
-gnuplot -e 'DATA="$<"; gpmodel="$(word 2,$+)"' $(lastword $+)
+gnuplot -e 'DATA="$<"; LABEL="$*"; gpmodel="$(word 2,$+)"' $(lastword $+)
 endef
 
 define plot_command_two_files
