@@ -12,14 +12,16 @@ dt = 0.001
 # macros
 define macro_bin_average
 for file in $+; do\
-	echo $${file} `$(${1}) $${file}` \
+	echo $${file} `cat $${file} | $(${1})` \
 	| sed 's/.*m1.k//;s/.ltm[^ ]* / /';\
-	done | sort -n | awk 'BEGIN{print "#k ${2}"}{print $$0}' > $@
+	done | sort -n | awk 'BEGIN{print "#k ${2} ${2}_std"}{print $$0}' > $@
 endef
 
 # commands
-bin_average_friction = awk '!/^\#/ {count++; sum += $$2}END{print (sum/count+1)/$(dt)}'
-bin_average_noise = awk '!/^\#/ {count++; sum += $$3**2*$$4}END{print sum/count}'
+meanstd = awk '!/^\#/ {count ++; sum += $$2; sumsq += $$2**2}\
+	  END{print sum/count, sqrt((sumsq - sum**2/count)/(count-1))}'
+bin_average_friction = $(meanstd) | awk '{print ($$1+1)/$(dt), $$2/$(dt)}'
+bin_average_noise = awk '!/^\#/ {print $$1, $$3**2*$$4}' | $(meanstd)
 
 # targets
 .PHONY: all purge

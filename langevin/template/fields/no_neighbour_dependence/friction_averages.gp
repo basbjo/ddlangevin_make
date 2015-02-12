@@ -18,5 +18,6 @@ set yrange [0:60]
 set ytics format "%3.0f"
 
 pl \
-DATA title "No weights",\
+DATA notitle,\
+DATA with yerror lt 1 title "No weights",\
 30 lt -1 title "True value"

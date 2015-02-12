@@ -20,5 +20,6 @@ set mytics 2
 set grid mytics
 
 pl \
-DATA using 1:(sqrt($2)) ps 2 title "No weights",\
+DATA using 1:(sqrt($2)) ps 2 notitle,\
+DATA using 1:(sqrt($2)):($3/sqrt($2)) with yerror lt 1 ps 2 title "No weights",\
 1 lt -1 title "True value"
