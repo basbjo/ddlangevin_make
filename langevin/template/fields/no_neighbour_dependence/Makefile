@@ -1,7 +1,7 @@
 # variables
 OL_SUFFIX = $(shell grep ^OL_SUFFIX ../../Makefile | sed 's/^[^=]*= *//;s/ *\#.*//')
 
-ALL = noise_variances.eps friction_averages.eps
+ALL = noise_variances.eps friction_averages.eps diffusion_averages.eps
 
 ALL := $(ALL) $(sort $(patsubst %.eps,%.pdf,${ALL} $(wildcard *.eps))\
        $(patsubst %.eps,%.png,${ALL} $(wildcard *.eps)))\
@@ -21,6 +21,7 @@ endef
 meanstd = awk '!/^\#/ {count ++; sum += $$2; sumsq += $$2**2}\
 	  END{print sum/count, sqrt((sumsq - sum**2/count)/(count-1))}'
 bin_average_friction = $(meanstd) | awk '{print ($$1+1)/$(dt), $$2/$(dt)}'
+bin_average_diffusion = $(meanstd) | awk '{print $$1/$(dt)**1.5, $$2/$(dt)}'
 bin_average_noise = awk '!/^\#/ {print $$1, $$3**2*$$4}' | $(meanstd)
 
 # targets
@@ -45,6 +46,12 @@ friction_averages.eps: friction_averages.gp friction_averages_noweights
 
 command_friction_averages = $(call macro_bin_average,bin_average_friction,friction_mean)
 
+diffusion_averages.eps: diffusion_averages.gp diffusion_averages_noweights
+	#diffusion_averages_weights
+	gnuplot $<
+
+command_diffusion_averages = $(call macro_bin_average,bin_average_diffusion,diffusion_mean)
+
 noise_variances.eps: noise_variances.gp noise_variances_noweights
 	#noise_variances_weights
 	gnuplot $<
@@ -53,6 +60,9 @@ command_noise_variances = $(call macro_bin_average,bin_average_noise,noise_var)
 
 friction_averages_noweights: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.g_1_1.bins)
 	$(command_friction_averages)
+
+diffusion_averages_noweights: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.K_1_1.bins)
+	$(command_diffusion_averages)
 
 noise_variances_noweights: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.xi1.bins)
 	$(command_noise_variances)
