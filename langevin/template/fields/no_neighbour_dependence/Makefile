@@ -10,11 +10,14 @@ ALL := $(ALL) $(sort $(patsubst %.eps,%.pdf,${ALL} $(wildcard *.eps))\
 dt = 0.001
 
 # macros
+rule_make_eps = $(1).eps: $(1).gp $(1)_noweights; gnuplot $$<
+
 define macro_bin_average
 for file in $+; do\
-	echo $${file} `cat $${file} | $(${1})` \
+	echo $${file} `cat $${file} | $(bin_average_${1})` \
 	| sed 's/.*m1.k//;s/.ltm[^ ]* / /';\
-	done | sort -n | awk 'BEGIN{print "#k ${2} ${2}_std"}{print $$0}' > $@
+	done | sort -n \
+	| awk 'BEGIN{print "#k ${1}_${2} ${1}_${2}_std"}{print $$0}' > $@
 endef
 
 # commands
@@ -28,45 +31,24 @@ bin_average_noise = awk '!/^\#/ {print $$1, $$3**2*$$4}' | $(meanstd)
 .PHONY: all purge
 all: $(ALL)
 
-purge:
-	$(if $(wildcard ${ALL}),$(RM) $(wildcard ${ALL}))
+purge: ; $(if $(wildcard ${ALL}),$(RM) $(wildcard ${ALL}))
 
-%.eps: %.gp
-	gnuplot $<
+%.eps: %.gp; gnuplot $<
 
-%.pdf: %.eps
-	epstopdf $<
+%.pdf: %.eps; epstopdf $<
 
-%.png: %.pdf
-	pdftoppm -png -l 1 $< > $@
+%.png: %.pdf; pdftoppm -png -l 1 $< > $@
 
-friction_averages.eps: friction_averages.gp friction_averages_noweights
-	#friction_averages_weights
-	gnuplot $<
+# rules to create eps files
+$(foreach name,friction_averages diffusion_averages noise_variances,\
+	$(eval $(call rule_make_eps,${name})))
 
-command_friction_averages = $(call macro_bin_average,bin_average_friction,friction_mean)
-
-diffusion_averages.eps: diffusion_averages.gp diffusion_averages_noweights
-	#diffusion_averages_weights
-	gnuplot $<
-
-command_diffusion_averages = $(call macro_bin_average,bin_average_diffusion,diffusion_mean)
-
-noise_variances.eps: noise_variances.gp noise_variances_noweights
-	#noise_variances_weights
-	gnuplot $<
-
-command_noise_variances = $(call macro_bin_average,bin_average_noise,noise_var)
-
+# rules to create data files
 friction_averages_noweights: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.g_1_1.bins)
-	$(command_friction_averages)
+	$(call macro_bin_average,friction,mean)
 
 diffusion_averages_noweights: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.K_1_1.bins)
-	$(command_diffusion_averages)
+	$(call macro_bin_average,diffusion,mean)
 
 noise_variances_noweights: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.xi1.bins)
-	$(command_noise_variances)
-
-noise_variances_weights: $(wildcard ../*.dle2$(OL_SUFFIX).weights.*.x1.xi1.bins)
-	$(command_noise_variances)
-
+	$(call macro_bin_average,noise,var)
