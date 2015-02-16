@@ -1,7 +1,8 @@
 #!/usr/bin/gnuplot
 
 set terminal postscript eps color enhanced solid size 7cm,5cm
-set output "friction_averages.eps"
+OUTFILE="friction_averages.eps"
+set output OUTFILE
 #replot
 
 gpmodel="../../../../model.gp"
@@ -21,3 +22,7 @@ pl \
 DATA notitle,\
 DATA with yerror lt 1 title "No weights",\
 30 lt -1 title "True value"
+
+set output OUTFILE
+set xrange [:1.05*GPVAL_X_MAX]
+replot
