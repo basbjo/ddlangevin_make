@@ -45,7 +45,7 @@ endef
 # command for concatenation
 define cat_command
 $(RM) $@
-for file in $+; do sed '/^#/!s/ *$$/ 1/;$$s/ 1/ 0/' $${file} >> $@; done
+for file in $+; do sed '/^#/!s/ *$$/ 1/;$$s/ 1$$/ 0/' $${file} >> $@; done
 endef
 
 # if splitdir exists, create symlinks from splitdir to catdir
