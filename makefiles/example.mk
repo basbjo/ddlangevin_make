@@ -30,8 +30,8 @@ MLE = $(makedir)/example/make_example
 $(MLE): $(MLE).c
 	cd $(@D) && $(MAKE)
 
-$(EXAMPLE)$(TIME_UNIT): $(MLE)
-	$< > $@
+$(EXAMPLE)$(TIME_UNIT): $(MLE).c | $(MLE)
+	$| > $@
 
 ## macros to be called later
 #MACROS +=
