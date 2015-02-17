@@ -1,9 +1,13 @@
 # do not add any targets in this file
 makedir = $(prefix)/makefiles
 
+## example selection
+# default: none, variants: _var1
+example_suffix =
+
 ## source data
 TIME_UNIT = ps
-RAWDATA = mle2_0.001$(TIME_UNIT)
+RAWDATA = mle2$(example_suffix)_0.001$(TIME_UNIT)
 # name format: <first part>_<num>$(TIME_UNIT)[<second part>]
 #      the occurance of _<num>$(TIME_UNIT) must be unique
 # data format: "[time] dihedral_angles... [future]"

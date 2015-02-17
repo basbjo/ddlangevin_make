@@ -17,26 +17,26 @@ plot: split trajs.png
 
 ## default settings
 TIME_STEP ?= 0.001
-EXAMPLE ?= mle2_$(TIME_STEP)
+EXAMPLE ?= mle2$(example_suffix)_$(TIME_STEP)
 
 # settings/data to be shown by showconf/showdata
 SHOWCONF +=
 SHOWDATA +=
 
 ## default settings that must be changed before including this file
-MLE = $(makedir)/example/make_example
+MLE = $(makedir)/example/make_example$(example_suffix)
 
 ## variables
 
 ## rules
 $(MLE): $(MLE).c
-	cd $(@D) && $(MAKE)
+	cd $(@D) && $(MAKE) $(@F)
 
 $(EXAMPLE)$(TIME_UNIT): $(MLE).c | $(MLE)
 	$| > $@
 
 trajs.png: trajs.gp $(wildcard ${splitdir}/*)
-	gnuplot $<
+	gnuplot -e 'EXAMPLE="$(EXAMPLE)$(TIME_UNIT)"' $<
 
 ## macros to be called later
 #MACROS +=
@@ -59,4 +59,4 @@ PRECIOUS +=
 ## clean
 PLOTS_LIST +=
 CLEAN_LIST +=
-PURGE_LIST += $(EXAMPLE)$(TIME_UNIT) trajs.png
+PURGE_LIST += $(EXAMPLE)$(TIME_UNIT) trajs.png $(MLE)
