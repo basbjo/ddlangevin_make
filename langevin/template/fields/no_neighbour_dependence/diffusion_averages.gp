@@ -3,9 +3,6 @@
 set terminal postscript eps color enhanced solid size 7cm,5cm
 OUTFILE="diffusion_averages.eps"
 set output OUTFILE
-#replot
-
-gpmodel="../../../../model.gp"
 
 DATA="diffusion_averages_noweights"
 

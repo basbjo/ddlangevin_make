@@ -3,9 +3,6 @@
 set terminal postscript eps color enhanced solid size 7cm,5cm
 OUTFILE="noise_variances.eps"
 set output OUTFILE
-#replot
-
-gpmodel="../../../../model.gp"
 
 DATA="noise_variances_noweights"
 

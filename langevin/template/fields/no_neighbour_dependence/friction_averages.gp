@@ -3,9 +3,6 @@
 set terminal postscript eps color enhanced solid size 7cm,5cm
 OUTFILE="friction_averages.eps"
 set output OUTFILE
-#replot
-
-gpmodel="../../../../model.gp"
 
 DATA="friction_averages_noweights"
 

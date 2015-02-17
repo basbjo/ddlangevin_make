@@ -1,3 +1,12 @@
+prefix = ../../../..
+include $(prefix)/config.mk
+include $(makedir)/common.mk
+include $(makedir)/fields.mk
+
+all = no_neighbour_dependence
+INFO =
+INFOADD =
+
 # variables
 OL_SUFFIX = $(shell grep ^OL_SUFFIX ../../Makefile | sed 's/^[^=]*= *//;s/ *\#.*//')
 
@@ -10,7 +19,12 @@ ALL := $(ALL) $(sort $(patsubst %.eps,%.pdf,${ALL} $(wildcard *.eps))\
 dt = 0.001
 
 # macros
-rule_make_eps = $(1).eps: $(1).gp $(1)_noweights; gnuplot $$<
+define rule_make_eps
+$(1).pdf: $(1).eps
+	epstopdf $$<
+$(1).eps: $(1).gp $(1)_noweights
+	gnuplot -e 'gpmodel="$$(GPMODEL)"' $$<
+endef
 
 define macro_bin_average
 for file in $+; do\
@@ -28,16 +42,12 @@ bin_average_diffusion = $(meanstd) | awk '{print $$1/$(dt)**1.5, $$2/$(dt)}'
 bin_average_noise = awk '!/^\#/ {print $$1, $$3**2*$$4}' | $(meanstd)
 
 # targets
-.PHONY: all purge
-all: $(ALL)
+.PHONY: no_neighbour_dependence
+no_neighbour_dependence: $$(ALL)
 
-purge: ; $(if $(wildcard ${ALL}),$(RM) $(wildcard ${ALL}))
-
-%.eps: %.gp; gnuplot $<
+%.eps: %.gp; gnuplot -e 'gpmodel="$(GPMODEL)"' $<
 
 %.pdf: %.eps; epstopdf $<
-
-%.png: %.pdf; pdftoppm -png -l 1 $< > $@
 
 # rules to create eps files
 $(foreach name,friction_averages diffusion_averages noise_variances,\
