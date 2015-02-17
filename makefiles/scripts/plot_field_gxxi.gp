@@ -7,7 +7,7 @@ load gpmodel
 
 set xlabel "Coordinate"
 set ylabel "Friction average times noise variance"
-set yrange [0:2*Gamma]
+set yrange [0:2*Gamma0]
 set grid
 
 pl \
@@ -16,4 +16,4 @@ sprintf('<paste %s %s',DATA1,DATA2)\
 sprintf('<paste %s %s',DATA1,DATA2)\
  using 1:(($2+1)/dt*$7**2*$8):($3/dt*$7**2*$8)\
  with yerror lt 1 title sprintf("\\verb|%s|",LABEL),\
-Gamma lt 2
+Gamma(x) lt 2

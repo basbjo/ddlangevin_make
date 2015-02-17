@@ -21,6 +21,7 @@ SHOWDATA += CALC PLOT
 
 ## variables
 BINNING1D += $(CROP_1DBINNING_RANGE)
+GPMODEL = $(prefix)/model$(example_suffix).gp
 
 ## rules
 # field labels and column numbers
@@ -106,25 +107,25 @@ gnuplot -e 'DATA1="$<"; DATA2="$(word 2,$+)"; LABEL="$*"; OUTFILE="$@";\
 	gpmodel="$(word 3,$+)"' $(lastword $+)
 endef
 
-%.x1.f1.bins.tex: %.x1.f1.bins $(prefix)/model.gp $(SCR)/plot_field_f.gp
+%.x1.f1.bins.tex: %.x1.f1.bins $(GPMODEL) $(SCR)/plot_field_f.gp
 	$(plot_command_one_file)
 
-%.x1.g_1_1.bins.tex: %.x1.g_1_1.bins $(prefix)/model.gp $(SCR)/plot_field_g.gp
+%.x1.g_1_1.bins.tex: %.x1.g_1_1.bins $(GPMODEL) $(SCR)/plot_field_g.gp
 	$(plot_command_one_file)
 
-%.x1.g_1_1xxi1.tex: %.x1.g_1_1.bins %.x1.xi1.bins $(prefix)/model.gp $(SCR)/plot_field_gxxi.gp
+%.x1.g_1_1xxi1.tex: %.x1.g_1_1.bins %.x1.xi1.bins $(GPMODEL) $(SCR)/plot_field_gxxi.gp
 	$(plot_command_two_files)
 
-%.x1.K_1_1.bins.tex: %.x1.K_1_1.bins $(prefix)/model.gp $(SCR)/plot_field_k.gp
+%.x1.K_1_1.bins.tex: %.x1.K_1_1.bins $(GPMODEL) $(SCR)/plot_field_k.gp
 	$(plot_command_one_file)
 
-%.x1.K_1_1xxi1.tex: %.x1.K_1_1.bins %.x1.xi1.bins $(prefix)/model.gp $(SCR)/plot_field_kxxi.gp
+%.x1.K_1_1xxi1.tex: %.x1.K_1_1.bins %.x1.xi1.bins $(GPMODEL) $(SCR)/plot_field_kxxi.gp
 	$(plot_command_two_files)
 
-%.x1.distance.bins.tex: %.x1.distance.bins $(prefix)/model.gp $(SCR)/plot_field_distance.gp
+%.x1.distance.bins.tex: %.x1.distance.bins $(GPMODEL) $(SCR)/plot_field_distance.gp
 	$(plot_command_one_file)
 
-%.x1.sweights.bins.tex: %.x1.sweights.bins $(prefix)/model.gp $(SCR)/plot_field_sweights.gp
+%.x1.sweights.bins.tex: %.x1.sweights.bins $(GPMODEL) $(SCR)/plot_field_sweights.gp
 	$(plot_command_one_file)
 
 ## macros to be called later
