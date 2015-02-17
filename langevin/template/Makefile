@@ -19,7 +19,14 @@ OL_SUFFIX =# extra suffix for olangevin programs
 include ol-second.mk# set OL_SUFFIX first
 
 ## default targets
-all += $(TESTMODEL_DATA) $(OLANGEVIN_DATA)
+all += testmodel# dle
+
+.PHONY: testmodel dle
+testmodel: $$(TESTMODEL_DATA)
+dle: $$(OLANGEVIN_DATA)
+INFO += testmodel dle
+INFO_testmodel = create testmodel trajectories and fields
+INFO_dle = create new dLE trajectories and fields
 
 TESTMODEL_DATA =\
 	$(RAWDATA).dle2$(OL_SUFFIX).m1.k25.ltm\

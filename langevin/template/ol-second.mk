@@ -1,4 +1,4 @@
-#OLANGEVIN_DATA += $(addprefix catdata/,$(foreach suffix,-01 -02,\
+OLANGEVIN_DATA += $(addprefix catdata/,$(foreach suffix,-01 -02,\
 	$(addsuffix ${suffix},\
 	$(foreach k,25 200 500,\
 	$(RAWDATA).dle2$(OL_SUFFIX).m1.k${k}.lang))))

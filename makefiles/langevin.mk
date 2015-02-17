@@ -3,7 +3,7 @@
 ## default settings
 
 # settings/data to be shown by showconf/showdata
-SHOWCONF += IF_FUTURE
+SHOWCONF += IF_FUTURE OL_SUFFIX
 SHOWDATA +=
 
 ## default settings that must be changed before including this file
