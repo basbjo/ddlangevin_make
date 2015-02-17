@@ -1,5 +1,10 @@
 /* Model Langevin trajectory for dLE2 field checks
  *
+ * Variant 1 with position dependent friction
+ *
+ * Maximum friction 2*g0 at maximum potential (x=0) with Gaussian decay to
+ * minimum friction g0.  It decays to 1/e^2 around the potential minima.
+ *
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,7 +13,7 @@
 double gaussrand();
 
 unsigned long ntraj=2,length=800001,exclude=0,every=1;
-double m=1.0,dt=1e-3,g=30.0;
+double m=1.0,dt=1e-3,g0=20.0,gsigma=1.3;
 
 double f(double x)
 {
@@ -19,7 +24,7 @@ double f(double x)
 double gamma(double x)
 {
   /* constant friction */
-  return g;
+  return g0*(1+exp(-pow(x,2)/(2*pow(gsigma,2))));
 }
 
 double K(double x)

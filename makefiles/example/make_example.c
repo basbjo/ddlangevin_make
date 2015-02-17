@@ -1,5 +1,7 @@
 /* Model Langevin trajectory for dLE2 field checks
  *
+ * Default model with constant friction
+ *
  */
 #include <stdio.h>
 #include <stdlib.h>
