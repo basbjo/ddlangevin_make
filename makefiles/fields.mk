@@ -33,7 +33,8 @@ endef
 
 shownumberedfields_macro = $(showfields_macro) | nl -ba -s\  | sed 's/^  *//'
 
-alllabels = $(sort $(foreach file,${DATA},$(shell $(call showfields_macro,${file}))))
+alllabels = $(sort $(foreach file,$(wildcard ${DATA}),\
+	    $(shell $(call showfields_macro,${file}))))
 
 # field binning
 getfieldno_macro = $(shownumberedfields_macro) | grep $(2) | cut -d\  -f1
