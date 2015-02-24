@@ -3,13 +3,14 @@
 ## default settings
 
 # settings/data to be shown by showconf/showdata
-SHOWCONF += IF_FUTURE
+SHOWCONF += IF_FUTURE OL_SUFFIX OL_TM_FLAGS
 SHOWDATA +=
 
 ## default settings that must be changed before including this file
 
 ## variables
 OL_SUFFIX ?=# extra suffix for olangevin programs
+OL_TM_FLAGS ?=# additional options to olangevin tm programs
 
 ## rules
 # select columns from data files
@@ -29,7 +30,7 @@ endef
 extract_argument = $(shell echo $@|egrep -o '\.$(1)[0-9]+\.'|grep -o '[0-9]*')
 
 define testmodel_command
--tm$(if $(filter weights%,$*),-weights)$(OL_SUFFIX)\
+-tm$(if $(filter weights%,$*),-weights)$(OL_SUFFIX) $(OL_TM_FLAGS)\
  -m$(call extract_argument,m) \
  -k$(call extract_argument,k)$(if\
 $(shell [ ${IF_FUTURE} -eq 1 ] && echo yes),\
@@ -52,6 +53,7 @@ Testmodel trajectories »symlink.dle<n>$(OL_SUFFIX)[.weights].m<m>.k<k>.ltm« ca
 be created where <n> is 1 for ol-first-tm$(OL_SUFFIX) and 2 for ol-second-tm$(OL_SUFFIX).
 The arguments to -m, -k and -F are generated automatically.  With
 ».weights«, ol-first-tm-weights or ol-second-tm-weights is used.
+Additional options can be passed to the »OL_TM_FLAGS« variable.
 Testmodel trajectories can be splitted with the »split« target.
 
 Save Langevin trajectories of a data file to »file.detail.lang«
