@@ -113,6 +113,7 @@ showmacros: ;@true
 mksymlinks: $$(SYMLINKS)
 
 rmsymlinks:
+	$(eval PURGE_LIST := ${PURGE_LIST})
 	$(RM) $(foreach file,${SYMLINKS} ${SAMPDATA},$(if $(shell\
 		[ -h ${file} ] && echo yes),${file}))
 	@$(RM) .data
