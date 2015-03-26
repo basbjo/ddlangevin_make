@@ -39,7 +39,12 @@ $(shell [ ${IF_FUTURE} -eq 1 ] && echo yes),\
 endef
 
 ## macros to be called later
-#MACROS +=
+MACROS += rule_langevin
+define rule_langevin
+$(foreach file,${DATA},\
+	$(eval $(call template_selectcolumns,${file}))\
+	$(eval $(call template_testmodel,${file})))
+endef
 
 ## info
 ifndef INFO
