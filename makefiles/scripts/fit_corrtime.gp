@@ -14,7 +14,7 @@ fit [][log(ymin):0] f(x) POINTSELECT u 1:(log($2)) via tau,c
 # plotting
 ymin = 0.35
 xmax = -tau*(c + log(ymin))
-set term png
+set terminal png
 set output PNG
 set xrange [:xmax]
 set yrange [ymin:1]
