@@ -13,9 +13,10 @@ DROPSUFFIX = .osn
 
 ## settings
 # see config.mk and localconf.mk
+SELECT_ROWS = 1 2
 
 ## default targets
-all +=
+all += calc
 
 ## call macros
 $(call_macros)
