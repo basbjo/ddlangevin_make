@@ -26,24 +26,23 @@ $(1).dle1$(OL_SUFFIX).%.ltm: $(1)
 $(1).dle2$(OL_SUFFIX).%.ltm: $(1)
 	ol-second$$(testmodel_command)
 $(1).%.osn: $(1)
-	$$(search_neighbor_command)
+	ol-search-neighbors $$(m_k_opt_arg)$$(if\
+		$$(wildcard ${1}.m$$(call extract_argument,m).osnp),\
+	-R) $$< $$(wildcard ${1}.m$$(call extract_argument,m).osnp) -o $$@
 endef
 
 extract_argument = $(shell echo $@|egrep -o '\.$(1)[0-9]+\.'|grep -o '[0-9]*')
 
-define testmodel_command
--tm$(OL_SUFFIX) $(OL_TM_FLAGS)\
- -m$(call extract_argument,m) \
- -k$(call extract_argument,k)$(if\
-$(shell [ ${IF_FUTURE} -eq 1 ] && echo yes),\
- -F$(shell echo `expr $(call fcols,$<) + 1`))\
- $< -o $@
+define m_k_opt_arg
+-m$(call extract_argument,m) \
+-k$(call extract_argument,k)
 endef
 
-define search_neighbor_command
-ol-search-neighbors \
- -m$(call extract_argument,m) \
- -k$(call extract_argument,k) \
+define testmodel_command
+-tm$(OL_SUFFIX) $(OL_TM_FLAGS)\
+$(m_k_opt_arg)$(if\
+$(shell [ ${IF_FUTURE} -eq 1 ] && echo yes),\
+ -F$(shell echo `expr $(call fcols,$<) + 1`))\
  $< -o $@
 endef
 
@@ -76,7 +75,8 @@ Testmodel:
 
 Neighbors:
   Neighbor indices in »symlink.m<m>.k<k>.osn« can be created.
-  The arguments to -m and -k are extracted from the filename.
+  If »symlink.m<m>.osnp« is provided, neighbors are searched for
+  points in this file and not for all points in input data.
   Use variable OL_SN_FLAGS to provide additional options.
 
 Langevin:
