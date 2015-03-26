@@ -18,14 +18,16 @@ SHOWDATA +=
 
 ## variables
 SDATA = $(shell echo ${DATA}|tr ' ' '\n'|grep '\.m2')# only 2D is supported
-NEIGHBORHOODS = $(foreach row,${SELECT_ROWS},$(addsuffix .row${row}.nh,${SDATA}))
+NEIGHBORHOODS = $(foreach row,${SELECT_ROWS},$(addsuffix .row${row}.nh,${DATA}))
 NH_PLOTS = $(patsubst %.nh,%.png,${NEIGHBORHOODS})
 HIST2D = $(addsuffix .png,${SDATA})
 
 ## rules
+extract_argument = $(shell echo $@|egrep -o '\.$(1)[0-9]+\.'|grep -o '[0-9]*')
+
 define template_calc
 $(1).row%.nh: $(firstword ${datadirs})/$(2) $(1)
-	$$(SCR)/get_neighborhood.sh $$+ $$* > $$@
+	$$(SCR)/get_neighborhood.sh $$+ $$* $$(call extract_argument,m) > $$@
 endef
 
 %.tex: %.nh $(SCR)/plot_neighborhood.gp
@@ -39,7 +41,7 @@ endef
 ## macros to be called later
 MACROS += rule_neighbors
 define rule_neighbors
-$(foreach file,${SDATA},\
+$(foreach file,${DATA},\
 	$(eval $(call template_calc,${file},$(shell\
 		echo ${file} | sed 's/\.m[0-9]*.k[0-9]*$$//'))))
 endef
@@ -49,7 +51,7 @@ ifndef INFO
 INFO = calc plot plot2d
 define INFOADD
 
-Currently only neighborhoods in two dimensions are supported.
+Currently only plots in two dimensions are supported.
 
 endef
 else
