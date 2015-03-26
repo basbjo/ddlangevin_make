@@ -62,7 +62,11 @@ define INFOADD
 To extract say 3 columns from a data file, call »make file.3cols«.
 If IF_FUTURE is 1, also the last column of the file is appended.
 
-Set variable OL_SUFFIX in Makefile for alternative olangevin binaries.
+Set variable OL_SUFFIX in Makefile for alternative olangevin programs.
+In olangevin programs, the number of components is selected by option
+»-m« and the number of neighbors by »-k«.  Here, this is reflected
+by an extension ».m<num>.k<num>« in the output filenames.
+Let »symlink« an input trajectory in the following.
 
 Testmodel:
   Testmodel trajectories »symlink.dle<n>$(OL_SUFFIX).m<m>.k<k>.ltm«
@@ -85,7 +89,7 @@ Langevin:
   »-m5« and »-k50« the results may be saved to »file.m5.k50.lang«.
   Edit »localconf.mk« to specify whether a follower column exists.
   Single trajectories »$(catdir)/file.detail.lang-##« are concatenated
-  to »file.detail.lang« with follower column by the »cat« target.
+  to »file.detail.lang« with a follower column by the »cat« target.
   Files »$(catdir)/name-##.field« are concatenated to »name.field«.
 
 endef
