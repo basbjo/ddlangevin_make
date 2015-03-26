@@ -43,7 +43,7 @@ SYMLINKS += $(DATALINKS)
 CLEAN_LIST +=
 PURGE_LIST += $(notdir ${MINMAXFILE} ${MINMAXFILE}.old) $(SPLIT_WILD)
 # subdirectories in which make can be called by a double-colon rule
-COMMON_SUBDIRS = clustering correlation drift fields histogram information
+COMMON_SUBDIRS = clustering correlation drift fields histogram information neighbors
 
 ## macros to be called later
 MACROS += rule_data_links rule_minmax
