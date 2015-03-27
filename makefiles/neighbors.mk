@@ -17,10 +17,11 @@ SHOWDATA +=
 ## default settings that must be changed before including this file
 
 ## variables
-SDATA = $(shell echo ${DATA}|tr ' ' '\n'|grep '\.m2')# only 2D is supported
 NEIGHBORHOODS = $(foreach row,${SELECT_ROWS},$(addsuffix .row${row}.nh,${DATA}))
-NH_PLOTS = $(patsubst %.nh,%.png,${NEIGHBORHOODS})
-HIST2D = $(addsuffix .png,${SDATA})
+PDATA = $(shell echo ${DATA}|tr ' ' '\n'|grep -v '\.m1')
+NH_PLOTS = $(patsubst %.nh,%.png,$(foreach row,${SELECT_ROWS},\
+	   $(addsuffix .row${row}.nh,${PDATA})))
+HIST2D = $(addsuffix .png,${PDATA})
 
 ## rules
 extract_argument = $(shell echo $@|egrep -o '\.$(1)[0-9]+\.'|grep -o '[0-9]*')
@@ -50,9 +51,6 @@ endef
 ifndef INFO
 INFO = calc plot plot2d
 define INFOADD
-
-Currently only plots in two dimensions are supported.
-
 endef
 else
 INFOend +=

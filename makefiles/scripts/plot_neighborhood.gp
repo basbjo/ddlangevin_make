@@ -16,9 +16,9 @@ neigbors=sprintf("'<%s'",neighborhood)
 ncenter=sprintf("'<%s | bmdmean'",neighborhood)
 current_point=sprintf("'<%s | grep \"Current point:\" | sed \"s/.*: //\"'",neighborhood)
 
-current_x=sprintf("system('%s | grep \"Current point:\" | sed \"s/.*: //;s/ .*//\"')",neighborhood)
-current_y=sprintf("system('%s | grep \"Current point:\" | sed \"s/.*: //;s/.* //\"')",neighborhood)
-double_epsilon=sprintf("system('%s | awk \"/Current point:/{x=\\$3; y=\\$4}; !/^#/{print 2*sqrt((x-\\$1)**2 + (y-\\$2)**2)}\" | bmdmax')",neighborhood)
+current_x=sprintf("system('%s | grep \"Current point:\" | cut -d\\  -f3')",neighborhood)
+current_y=sprintf("system('%s | grep \"Current point:\" | cut -d\\  -f4')",neighborhood)
+double_epsilon=sprintf("system('%s | awk \"/Current point:/{x=\\$3; y=\\$4}; !/^#/{print 2*sqrt((x-\\$1)**2 + (y-\\$3)**2)}\" | bmdmax')",neighborhood)
 
 # settings
 set title titlestring
@@ -34,10 +34,10 @@ set object 1 ellipse at @current_x,@current_y size @double_epsilon,@double_epsil
 # plot
 plot\
 @current_point title "Current point",\
-@neigbors using 1:2:($3-$1):($4-$2) w vector lc rgb "dark-green" notitle,\
-@neigbors using 1:2 title "Neighbors",\
-@neigbors using 3:4 title "Followers",\
-@ncenter using 1:2 lt 6 lc 3 ps 2.5 title "Center",\
+@neigbors using 1:3:($2-$1):($4-$3) w vector lc rgb "dark-green" notitle,\
+@neigbors using 1:3 title "Neighbors",\
+@neigbors using 2:4 title "Followers",\
+@ncenter using 1:3 lt 6 lc 3 ps 2.5 title "Center",\
 @current_point lt 1 ps 3 notitle
 
 set print FILE.".box"

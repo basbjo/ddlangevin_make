@@ -84,8 +84,6 @@ BEGIN{
     printf("#Content:");
     for(i=1;i<=ndim;i++) {
         printf(" x%d_{n}",i);
-    }
-    for(i=1;i<=ndim;i++) {
         printf(" x%d_{n+1}",i);
     }
     printf(" n\n");
@@ -108,8 +106,6 @@ BEGIN{
         if(ind[nind]+1 == row) {
             for(i=1;i<=ndim;i++) {
                 printf(OFMT " ",lastx[i]);
-            }
-            for(i=1;i<=ndim;i++) {
                 printf(OFMT " ",$i);
             }
             printf("%d\n",ind[nind]);
