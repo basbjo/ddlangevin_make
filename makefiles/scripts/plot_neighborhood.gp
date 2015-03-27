@@ -18,7 +18,12 @@ current_point=sprintf("'<%s | grep \"Current point:\" | sed \"s/.*: //\"'",neigh
 
 current_x=sprintf("system('%s | grep \"Current point:\" | cut -d\\  -f3')",neighborhood)
 current_y=sprintf("system('%s | grep \"Current point:\" | cut -d\\  -f4')",neighborhood)
-double_epsilon=sprintf("system('%s | awk \"/Current point:/{x=\\$3; y=\\$4}; !/^#/{print 2*sqrt((x-\\$1)**2 + (y-\\$3)**2)}\" | bmdmax')",neighborhood)
+double_epsilon=sprintf("system('%s | awk \" \
+/Current point:/ { ndim=NF-2; for(i=3;i<=NF;i++) { x[i-2] = \\$i; } }; \
+!/^#/ { cur_distance = 0; \
+        for(i=1;i<=ndim;i++) { cur_distance += (x[i]-\\$(2*i-1))**2 }; \
+        if(cur_distance > max_distance) { max_distance = cur_distance }; }; \
+END { print 2*sqrt(max_distance) }\"')",neighborhood)
 
 # settings
 set title titlestring
