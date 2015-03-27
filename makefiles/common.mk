@@ -59,7 +59,8 @@ DATA += $(sort $(wildcard ${DATA_HERE}) ${DATALINKS})#without repetitions
 REMOTEDATA += $(foreach wildcard,${DATA_LINK},$(foreach dir,$(filter-out .,\
 	      ${datadirs}),$(wildcard ${dir}/${wildcard})))
 DATALINKS = $(notdir $(patsubst %$(strip ${DROPSUFFIX}),%,${REMOTEDATA}))
-SHOWDATA += DATA datadirs DROPSUFFIX REMOTEDATA# to be shown by showdata
+# to be shown by showdata
+SHOWDATA += DATA_HERE DATA_LINK datadirs DATA DROPSUFFIX REMOTEDATA
 
 # symbolic links to source data files
 define template_data_links
