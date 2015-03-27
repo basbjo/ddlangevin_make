@@ -12,11 +12,11 @@ titlestring = sprintf("Neighborhood positions for %s", @titlemacro)
 
 maxvalue = system(sprintf("bmdmax %s 2>/dev/null|cut -f5",HIST2D))
 hist2dcrop = sprintf("<awk '{if ($5<%s) print $0}' %s",maxvalue,HIST2D)
-inlay_positions = sprintf("<cat %s.row*.box",FILE)
+inlay_positions = sprintf("<grep . %s.row*.box | sed 's/.*.row//;s/\.box:/ /'",FILE)
 
 set title titlestring
 set size square
 
 pl hist2dcrop u 1:2:5 w points pt 5 palette notitle, \
-inlay_positions using 1:2:1:2:3:4 with boxxyerrorbars lc rgb "lightgray" notitle,\
-inlay_positions using (0.5*($1+$2)):(0.5*($3+$4)):($0+1) with labels notitle
+inlay_positions using 2:3:2:3:4:5 with boxxyerrorbars lc rgb "lightgray" notitle,\
+inlay_positions using (0.5*($2+$3)):(0.5*($4+$5)):1 with labels notitle
