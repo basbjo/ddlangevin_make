@@ -27,7 +27,7 @@ CORR_MAXRATIO ?= # maximum ratio between correlation times (optional)
 TIME_UNIT ?= # time unit to be shown in x label (optional)
 
 # settings/data to be shown by showconf/showdata
-SHOWCONF += CORR_LAST_COL CORR_PLOT_NCOLS CORR_XRANGE TIME_UNIT
+SHOWCONF += CORR_NBINS CORR_LAST_COL CORR_PLOT_NCOLS CORR_XRANGE TIME_UNIT
 SHOWDATA += fitdir cordir splitdir SPLIT_SUFFIX
 
 ## default settings that must be changed before including this file

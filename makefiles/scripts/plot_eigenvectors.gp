@@ -27,4 +27,3 @@ set cbrange [0:1]
 set output OUTFILE
 if (xmax<=10) pl @plotcmd, @labelcmd
 if (xmax>=11) pl @plotcmd
-replot

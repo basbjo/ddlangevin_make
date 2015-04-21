@@ -9,7 +9,7 @@ scalefactor = 1.0/std
 
 # newline after filename unit in title
 set macros
-sedscr = "'s/(_[0-9]+[A-Za-z]+)\.?/\\1|\\\\n\\\\\\\\verb|/'"
+sedscr = "'s/(_[0-9.]+[A-Za-z]+)\.?/\\1|\\\\n\\\\\\\\verb|/'"
 titlemacro = sprintf('"`echo %s | sed -r %s`"', name, sedscr)
 titlestring = sprintf("Drift field for \\verb|%s|", @titlemacro)
 

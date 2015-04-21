@@ -79,6 +79,7 @@ def plotHeatmap(col_x,
     if not z_ref_file:
         z_ref_file = ref_file
     zref = np.loadtxt(z_ref_file).T[col_value-1]
+    zref = zref[np.isnan(zref)==False]
     zref = zref[zref!=max(zref)]
     z_min = min(zref)
     z_max = max(zref)
@@ -103,7 +104,7 @@ def plotHeatmap(col_x,
     val = []
     for line in sys.stdin:
       line = line.strip().split()
-      if len(line) >= 3:
+      if len(line) >= 3 and line[0][0] != "#":
         x.append(float(line[col_x-1]))
         y.append(float(line[col_y-1]))
         val.append(float(line[col_value-1]))

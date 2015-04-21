@@ -15,8 +15,11 @@ DATA_LINK = $(addsuffix ${PROJSUFFIX},${RAWDATA}) $(SAMPDATA)
 
 ## settings
 # see config.mk and localconf.mk
-OL_SUFFIX =# extra suffix for olangevin programs
+# extra suffix for olangevin programs
+OL_SUFFIX =
 include ol-second.mk# set OL_SUFFIX first
+# extra settings for testmodel programs
+OL_TM_FLAGS =
 
 ## default targets
 all += testmodel# dle

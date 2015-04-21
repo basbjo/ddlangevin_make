@@ -64,9 +64,6 @@ endef
 MACROS += rule_cat
 
 define rule_cat
-$(foreach file,${DATA},\
-	$(eval $(call template_selectcolumns,${file}))\
-	$(eval $(call template_testmodel,${file})))\
 $(foreach file,$(filter-out %.field,${CAT_DATA}),\
 	$(eval $(call template_cat,${file})))\
 $(foreach file,$(filter %.field,${CAT_DATA}),\

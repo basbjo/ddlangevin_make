@@ -14,7 +14,7 @@ if(!exists("ymin")) ymin=1
 SEDSCR = "'s/.*-V0*//;s/\.cor://'"
 AWKSCR = sprintf("'{if (%g*$NF>%g) print $0}'", SCALE, ymin) # ignore values below ymin
 DATA = sprintf("<sed -r %s %s | awk %s", SEDSCR, FILE, AWKSCR)
-set xlabel "Principal component"
+set xlabel "Component"
 set ylabel "Time of decay to $e^{-1}$".in_units
 set x2tics
 set log y

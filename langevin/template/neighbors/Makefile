@@ -1,20 +1,22 @@
-prefix = ..
+prefix = ../../..
+datadirs = ..
 include $(prefix)/config.mk
 include $(makedir)/common.mk
-include $(makedir)/fileinfo.mk
-include $(makedir)/clustering.mk
+include $(makedir)/neighbors.mk
+include $(firstword ${datadirs})/localconf.mk
 
 ## source data files in this directory (wildcards allowed)
 DATA_HERE =
 ## source data files in datadirs (wildcards allowed)
-DROPSUFFIX =
-DATA_LINK = $(RAWDATA) $(if ${PROJSUFFIX},$(addsuffix ${PROJSUFFIX},${RAWDATA}))
+DATA_LINK = *.osn
+DROPSUFFIX = .osn
 
 ## settings
-# see config.mk
+# see config.mk and localconf.mk
+SELECT_ROWS = 1 2
 
 ## default targets
-all += coring centers
+all += calc
 
 ## call macros
 $(call_macros)

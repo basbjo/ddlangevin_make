@@ -43,7 +43,7 @@ SYMLINKS += $(DATALINKS)
 CLEAN_LIST +=
 PURGE_LIST += $(notdir ${MINMAXFILE} ${MINMAXFILE}.old) $(SPLIT_WILD)
 # subdirectories in which make can be called by a double-colon rule
-COMMON_SUBDIRS = clustering correlation drift fields histogram information
+COMMON_SUBDIRS = clustering correlation drift fields histogram information neighbors
 
 ## macros to be called later
 MACROS += rule_data_links rule_minmax
@@ -59,7 +59,8 @@ DATA += $(sort $(wildcard ${DATA_HERE}) ${DATALINKS})#without repetitions
 REMOTEDATA += $(foreach wildcard,${DATA_LINK},$(foreach dir,$(filter-out .,\
 	      ${datadirs}),$(wildcard ${dir}/${wildcard})))
 DATALINKS = $(notdir $(patsubst %$(strip ${DROPSUFFIX}),%,${REMOTEDATA}))
-SHOWDATA += DATA datadirs DROPSUFFIX REMOTEDATA# to be shown by showdata
+# to be shown by showdata
+SHOWDATA += DATA_HERE DATA_LINK datadirs DATA DROPSUFFIX REMOTEDATA
 
 # symbolic links to source data files
 define template_data_links
@@ -113,6 +114,7 @@ showmacros: ;@true
 mksymlinks: $$(SYMLINKS)
 
 rmsymlinks:
+	$(eval PURGE_LIST := ${PURGE_LIST})
 	$(RM) $(foreach file,${SYMLINKS} ${SAMPDATA},$(if $(shell\
 		[ -h ${file} ] && echo yes),${file}))
 	@$(RM) .data

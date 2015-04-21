@@ -22,17 +22,17 @@ BEGIN {
 	{
 		if(($i+50)*($i+50)+($(i+1)+45)*($(i+1)+45)<2500)
 		{
-			color[i]=1
+			color=1
 		}
 		else if(($i-50)*($i-50)+($(i+1)-45)*($(i+1)-45)<2500)
 		{
-			color[i]=2
+			color=2
 		}
-    if(color[i]==0)
-    {
-      unknown=1
-    }
-		sum += (color[i]-1)*2**int((i-min_col)/2)
+		else
+		{
+			unknown = 1
+		}
+		sum += (color-1)*2**int((i-min_col)/2)
 	}
 	if (unknown == 0)
 	{
