@@ -55,7 +55,7 @@ startpattern=${pattern}
 timewildsearch=
 while [ -z "${reffile}" ] && [ -n "${pattern}" ]
 do
-    reffile=$(find -L ${refdir} -type f -regex ${refdir}/${pattern}${suffix})
+    reffile=$(find -L "${refdir}" -type f -regex "${refdir}/${pattern}${suffix}")
     if [ "${pattern%.*}" = "${pattern}" ]
     then
         if [ -n "${unit}" ]

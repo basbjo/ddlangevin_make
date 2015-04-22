@@ -43,17 +43,17 @@ then
 fi
 
 # get command line arguments
-dir=$1
+splitdir=$1
 splitname=$2
 name=$3
 n=$4
 iffuture=$5
 
 # down sampling
-find -type f -regex "./${name}_ds${n}\(-[0-9]*\)?" -delete
+find -type f -regex "./${name}_ds${n}\(-[0-9]+\)?" -delete
 if [ ${iffuture} -eq 1 ]
 then
-    find -L ${dir} -type f -regex ${dir}/${splitname}-[0-9]\* | sort
+    find -L "${splitdir}" -type f -regex "${splitdir}/${splitname}-[0-9]+" | sort
 else
     echo ${name}
 fi \
