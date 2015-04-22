@@ -2,7 +2,7 @@ prefix = ../..
 datadirs = ..
 makedir = $(prefix)/makefiles
 include $(makedir)/common.mk
-include $(makedir)/cossin.mk
+#include $(makedir)/colselect.mk# optional if IF_FUTURE=0
 include $(makedir)/pca.mk
 
 ## source data files in this directory (wildcards allowed)

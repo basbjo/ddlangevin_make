@@ -4,6 +4,7 @@ makedir = $(prefix)/makefiles
 include $(makedir)/common.mk
 include $(makedir)/cossin.mk
 include $(makedir)/pca.mk
+include $(makedir)/tica.mk
 
 ## source data files in this directory (wildcards allowed)
 DATA_HERE =
@@ -19,8 +20,11 @@ MIN_COL = 1
 MAX_COL = $(call fcols,$<)#last data column before future column
 # WARNING: recreate all affected data manually after changes
 
+# lag times in units of one time frame in data files
+LAG_TIMES = 100
+
 ## default targets
-all += pca
+all += tica
 
 ## call macros
 $(call_macros)
