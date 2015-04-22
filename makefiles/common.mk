@@ -233,4 +233,4 @@ plotcols = $(shell i=`python -c 'print ((int("${2}")-1)*int("${1}")+1)'`;\
 	   printf -- "%02d\n" $$i; i=`expr $$i + 1`; done)
 # list of numbers to denote splitted trajectories
 splitnums = $(patsubst $(notdir ${1})-%,%,$(notdir $(shell find -L\
-	    $(dir ${1}) -regex "[./]*${1}-[0-9]+"|sort -r)))
+	    $(dir ${1}) -regex '[./]*${1}-[0-9]+'|sort -r)))
