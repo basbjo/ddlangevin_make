@@ -7,12 +7,12 @@ del_cat: .del_cat .del_splitdir
 	$(if $(wildcard ${CAT_DATA}),$(RM) $(wildcard ${CAT_DATA}))
 	$(if $(wildcard ${splitdir}),$(foreach file,${CAT_DATA},\
 		find -L '${splitdir}' -type f -or -type l \
-		-regex '${splitdir}/${file}-[0-9]+' -delete;))
+		-regex '${splitdir}/${file}-[0-9][0-9]+' -delete;))
 
 cat_links: | $(splitdir)
 	$(foreach filename,$(filter-out %.field,${CAT_DATA}),\
 		find -L '${splitdir}' -type f -or -type l \
-		-regex '${splitdir}/${filename}-[0-9]+' -delete;\
+		-regex '${splitdir}/${filename}-[0-9][0-9]+' -delete;\
 		for name in "${catdir}/${filename}"-[0-9]*[0-9]; \
 			do ln -s ../${catdir}/$${name##*/} $(splitdir)/$${name##*/}; done;)
 
@@ -26,10 +26,12 @@ SHOWDATA += catdir CAT_DATA
 catdir ?= catdata
 
 ## variables
-CAT_DATA = $(sort $(notdir $(shell echo $(wildcard ${catdir}/*-[0-9]*[0-9]) \
-		| tr ' ' '\n' | sed 's/-[0-9][0-9]$$//')))\
-	   $(sort $(notdir $(shell echo $(wildcard ${catdir}/*-[0-9]*[0-9].field) \
-		| tr ' ' '\n' | sed 's/-[0-9][0-9].field/.field/')))
+CAT_DATA = $(sort $(notdir $(shell echo $(shell find -L '${catdir}' \
+		-regex '${catdir}/.*-[0-9][0-9]+' | sort -g) \
+		| tr ' ' '\n' | sed -r 's/-[0-9][0-9]+$$//')))\
+	 $(sort $(notdir $(shell echo $(shell find -L '${catdir}' \
+		-regex '${catdir}/.*-[0-9][0-9]+.field' | sort -g) \
+		| tr ' ' '\n' | sed -r 's/-[0-9][0-9]+.field/.field/')))
 DIR_LIST += $(catdir)
 
 ## rules
@@ -38,7 +40,8 @@ $(catdir):
 
 # rule for concatenation of filename-## to filename
 define template_cat
-$(1) : $$$$(wildcard $$$${catdir}/$(1)-[0-9]*[0-9])
+$(1) : $$$$(shell find -L '$$$${catdir}' \
+		-regex '$$$${catdir}/$(1)-[0-9][0-9]+' | sort -g)
 	$$(cat_command)
 	$$(if $$(wildcard $${splitdir}),$${link_to_split_command})
 endef
@@ -51,13 +54,15 @@ endef
 
 # if splitdir exists, create symlinks from splitdir to catdir
 define link_to_split_command
-find -L '$(splitdir)' -type f -or -type l -regex '$(splitdir)/$(notdir $@)-[0-9]+' -delete
+find -L '$(splitdir)' -type f -or -type l \
+	-regex '$(splitdir)/$(notdir $@)-[0-9][0-9]+' -delete
 for name in $(notdir $+); do ln -s ../$(catdir)/$${name} $(splitdir)/$${name}; done
 endef
 
 # rule for concatenation of filename-##.field to filename.field
 define template_cat_field
-$(1) : $$$$(wildcard $$$${catdir}/$(patsubst %.field,%,${1})-[0-9]*[0-9].field)
+$(1) : $$$$(shell find -L '$$$${catdir}' \
+	-regex '$$$${catdir}/$(patsubst %.field,%,${1})-[0-9][0-9]+.field')
 	$$(cat_command)
 endef
 
