@@ -26,11 +26,11 @@ SHOWDATA += catdir CAT_DATA
 catdir ?= catdata
 
 ## variables
-CAT_DATA = $(sort $(notdir $(shell echo $(shell find -L '${catdir}' \
-		-regex '${catdir}/.*-[0-9][0-9]+' | sort -g) \
+CAT_DATA = $(sort $(notdir $(shell find -L '${catdir}' \
+		-regex '${catdir}/.*-[0-9][0-9]+' \
 		| tr ' ' '\n' | sed -r 's/-[0-9][0-9]+$$//')))\
-	 $(sort $(notdir $(shell echo $(shell find -L '${catdir}' \
-		-regex '${catdir}/.*-[0-9][0-9]+.field' | sort -g) \
+	 $(sort $(notdir $(shell find -L '${catdir}' \
+		-regex '${catdir}/.*-[0-9][0-9]+.field' \
 		| tr ' ' '\n' | sed -r 's/-[0-9][0-9]+.field/.field/')))
 DIR_LIST += $(catdir)
 
