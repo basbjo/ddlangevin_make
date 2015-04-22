@@ -16,6 +16,7 @@ inlay_positions = sprintf("<grep . %s.row*.box | sed 's/.*.row//;s/\.box:/ /'",F
 
 set title titlestring
 set size square
+set pointsize 0.3
 
 pl hist2dcrop u 1:2:5 w points pt 5 palette notitle, \
 inlay_positions using 2:3:2:3:4:5 with boxxyerrorbars lc rgb "lightgray" notitle,\
