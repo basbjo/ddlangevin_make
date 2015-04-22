@@ -43,6 +43,7 @@ define template_cat
 $(1) : $$$$(shell find -L '$$$${catdir}' \
 		-regex '$$$${catdir}/$(1)-[0-9][0-9]+' | sort -g)
 	$$(cat_command)
+	touch -cmr $$(shell ls -t $$+ | head -n1) $$@
 	$$(if $$(wildcard $${splitdir}),$${link_to_split_command})
 endef
 
@@ -64,6 +65,7 @@ define template_cat_field
 $(1) : $$$$(shell find -L '$$$${catdir}' \
 	-regex '$$$${catdir}/$(patsubst %.field,%,${1})-[0-9][0-9]+.field')
 	$$(cat_command)
+	touch -cmr $$(shell ls -t $$+ | head -n1) $$@
 endef
 
 ## macros to be called later
