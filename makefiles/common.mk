@@ -7,11 +7,11 @@ PDF2PNG ?= pdftoppm -png -l 1
 PDF2EPS ?= pdftops -eps -l 1
 # imagemagick utilities
 EPS2PNG ?= convert -density 300 -background white -flatten
-# TISEAN
+# TISEAN 3.0.1
 CORR ?= corr -V0
 XCOR ?= xcor -V0
 RESCALE ?= rescale -V0 -u
-# TISEAN (see ./patches)
+# TISEAN 3.0.1 (see ./related/Tisean_3.0.1_extensions)
 HIST1D ?= histogram -V0 -b $(HIST1D_NBINS) -D
 HIST2D ?= histo2d -V0 -b $(HIST2D_NBINS)
 NEGENT ?= negentropy -V0 -b $(NEGENT_NBINS)
