@@ -18,7 +18,7 @@ NEGENT ?= negentropy -V0 -b $(NEGENT_NBINS)
 BINNING1D ?= binning -V0 -b $(BIN1D_NBINS)
 BINNING2D ?= binning2d -V0 -b $(BIN2D_NBINS)
 # Stock group
-FASTCA ?= fastca
+FASTCA ?= fastca# (see ./related/FastCA.tgz)
 DELAYPCA ?= $(SCR)/delayPCA.py
 # scripts
 MINMAX ?= $(SCR)/minmax.sh -d" " -f "%9.6f"
