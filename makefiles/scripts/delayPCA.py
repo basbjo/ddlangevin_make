@@ -91,7 +91,12 @@ def PCA_delayPCA_tica(X, delay, tica=False, delayPCA=False, PCA=True, high_memor
         # symmetrize lagged covariance matrix
         symm_cov = (lagged_covmat + lagged_covmat.T)/2
         # diagonalize symm cov mat
-        u1,d1,v1 = np.linalg.svd(symm_cov)
+        d1,u1 = np.linalg.eigh(symm_cov)
+        # sort eigenvalues and eigenvectors
+        idx = np.argsort(np.abs(d1))[::-1]
+        u1 = u1[:,idx]
+        d1 = d1[idx]
+        # project on lagged eigenvectors to get delayPCA components
         delay_proj = np.dot(Y,u1)
         # append to output
         output['lagged_covariance_matrix'] = lagged_covmat
