@@ -1,19 +1,19 @@
 #!/usr/bin/gawk -f
-#Calculates cluster centers and standard deviation
+#Calculates core centers and standard deviation
 
 # Usage:
-# 	./cluster_centers.awk [options] file
+# 	./core_centers.awk [options] file
 # Options:
 # 	-vlast_col=int: last data column to be considered
 #
-# The file must contain integers to denote clusters as last column.
-# Points denoted by 0 are ignored (cluster numbering starts with 1).
+# The file must contain integers to denote cores as last column.
+# Points denoted by 0 are ignored (core numbering starts with 1).
 #
 # Output format:
-# 	cluster mean1 stddev1 mean2 stddev2 ...
+# 	core mean1 stddev1 mean2 stddev2 ...
 
 BEGIN {
-	script="cluster_centers.awk"
+	script="core_centers.awk"
 }
 !/^#/ {
 	if ($NF>lastcluster)

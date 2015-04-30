@@ -1,5 +1,5 @@
 #!/usr/bin/awk -f
-#Geometric clustering for AIB in Ramachandran plot
+#Geometric coring for AIB in Ramachandran plot
 
 # Usage:
 # 	./cos_sin_tran.awk options file
@@ -8,12 +8,12 @@
 # 	-vmax_col=int: last column to be selected from source data
 #
 # Output format:
-# 	cluster
+# 	core
 #
 # Cluster numbering starts with 1, points not assigned are denoted by 0.
 
 BEGIN {
-	script="clustering.awk"
+	script="coring_aib.awk"
 }
 !/^#/ {
 	sum = 1
