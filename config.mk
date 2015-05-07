@@ -36,6 +36,8 @@ REDUCTION_FACTORS = 5
 # WARNING: recreate all affected data manually after changes
 MIN_COL = 1
 MAX_COL = $(call fcols,$<)#last data column before future column
+# first column containing dihedral angles (needed for .angles.pdf plot)
+FIRST_DIH_COL = $(call getmin,3 ${MIN_COL})
 
 ## save split data here to avoid recalculation
 splitdir ?= $(or $(firstword ${datadirs}),.)/splitdata
