@@ -40,7 +40,7 @@ BEGIN {
 		}
 		nrow++;
 		for (pc=1;pc<=ncols;pc++) {
-			eigvec[pc][nrow] = $pc;
+			eigvec[pc,nrow] = $pc;
 		}
 	}
 	else {
@@ -54,8 +54,8 @@ BEGIN {
 				angle = ii/2;
 				cosine = $(ii-1);
 				sine = $(ii);
-				sum[pc][angle] += (-eigvec[pc][ii-1]*sine + eigvec[pc][ii]*cosine)**2;
-				sumsq[pc][angle] += (-eigvec[pc][ii-1]*sine + eigvec[pc][ii]*cosine)**4;
+				sum[pc,angle] += (-eigvec[pc,ii-1]*sine + eigvec[pc,ii]*cosine)**2;
+				sumsq[pc,angle] += (-eigvec[pc,ii-1]*sine + eigvec[pc,ii]*cosine)**4;
 			}
 		}
 	}
@@ -79,8 +79,8 @@ END {
 			}
 			for (angle=1;2*angle<=ncols;angle++) {
 				printf("%d %d", pc, angle);
-				printf(" " OFMT, sum[pc][angle]/FNR);
-				printf(" " OFMT, sqrt((sumsq[pc][angle] - sum[pc][angle]**2/FNR)/(FNR-ddof)));
+				printf(" " OFMT, sum[pc,angle]/FNR);
+				printf(" " OFMT, sqrt((sumsq[pc,angle] - sum[pc,angle]**2/FNR)/(FNR-ddof)));
 				printf("\n");
 			}
 			printf("\n");

@@ -25,8 +25,8 @@ BEGIN {
 	{
 		for (i=1;i<=last_col;i++)
 		{
-			sum[$NF][i] += $i
-			sumsq[$NF][i] += $i**2
+			sum[$NF,i] += $i
+			sumsq[$NF,i] += $i**2
 		}
 		count[$NF] += 1
 	}
@@ -46,10 +46,10 @@ END {
 		printf("%i",cluster)
 		for (i=1;i<=last_col;i++)
 		{
-			average = sum[cluster][i]/count[cluster]
+			average = sum[cluster,i]/count[cluster]
 			if(count[cluster]>1)
 			{
-				stddev = sqrt((sumsq[cluster][i]-count[cluster]*average**2)\
+				stddev = sqrt((sumsq[cluster,i]-count[cluster]*average**2)\
 				       /(count[cluster]-1))
 				printf(" %e %e",average,stddev)
 			}
