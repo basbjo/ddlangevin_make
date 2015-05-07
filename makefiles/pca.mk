@@ -47,7 +47,7 @@ MINMAXALL = $(PCADATA)
 
 define dpca_angle_plot_command
 gnuplot -e 'FILE="$(word 2,$+)"; EIGVEC="$(word 3,$+)"; OUTFILE="$@";\
-	DIH_ANGLE_OFFSET="$(DIH_ANGLE_OFFSET)"' $<
+	DIH_ANGLE_OFFSET=$(strip ${DIH_ANGLE_OFFSET})' $<
 endef
 
 %.eigval.tex : $(SCR)/plot_cumulative.py %.pca
