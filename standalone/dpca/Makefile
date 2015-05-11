@@ -18,6 +18,7 @@ IF_FUTURE = 0# if 1: append last column of source data to pca data
 MIN_COL = 1
 MAX_COL = $(call fcols,$<)#last data column before future column
 # WARNING: recreate all affected data manually after changes
+ANGLE_DPCA_LASTX = 20	# number of angles per plot (dpca only)
 
 ## default targets
 all += pca

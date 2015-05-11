@@ -4,12 +4,13 @@ pca: $$(PCADATA)
 plot: $$(PROJ_PLOT_TARGETS)
 
 ## default settings
-EIGVEC_PCA_LASTX ?=
-EIGVEC_PCA_LASTY ?=
+EIGVEC_PCA_LASTX ?=# last eigenvector in plot (optional)
+EIGVEC_PCA_LASTY ?=# last eigenvector entry in plot (optional)
+ANGLE_DPCA_LASTX ?= 20# number of angles per plot (dpca only)
 DIH_ANGLE_OFFSET ?= $(shell echo $$((${MIN_COL} - ${FIRST_DIH_COL})))
 
 # settings/data to be shown by showconf/showdata
-SHOWCONF +=
+SHOWCONF += EIGVEC_PCA_LASTX EIGVEC_PCA_LASTY ANGLE_DPCA_LASTX
 $(if $(shell echo ${projtargets}|grep -q "cossin *pca"&&echo TRUE),$(eval\
 	SHOWCONF += FIRST_DIH_COL))
 SHOWDATA += PCADATA
@@ -47,6 +48,7 @@ MINMAXALL = $(PCADATA)
 
 define dpca_angle_plot_command
 gnuplot -e 'FILE="$(word 2,$+)"; EIGVEC="$(word 3,$+)"; OUTFILE="$@";\
+	ANGLES_PER_PLOT=$(strip ${ANGLE_DPCA_LASTX});\
 	DIH_ANGLE_OFFSET=$(strip ${DIH_ANGLE_OFFSET})' $<
 endef
 
