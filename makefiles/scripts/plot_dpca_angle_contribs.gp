@@ -30,9 +30,10 @@ do for [pc=1:NPCS] {
 	# sum to normalize average contributions
 	sum = system(DATA_AVERAGE(pc,0)."| awk '{sum += $3}END{print sum}'")
 	# ymax to set yrange for all plots that correspond to one pc
-	ymax = system(DATA_AVERAGE(pc,0).'|gawk "{if(\$3>max) max=\$3}END{print max}"')/sum
+	ymax = system(DATA_AVERAGE(pc,0).'|gawk "{if(\$3+\$4>max) max=\$3+\$4}END{print max}"')/sum
 	ymax2 = system(DATA_MAXIMUM(pc,0).'|gawk "{if(\$2>max) max=\$2}END{print max}"')
 	if (ymax<ymax2) {ymax=ymax2}
+	if (ymax>1) {ymax=1}
 	set yrange [0:ymax<*<1]
 	# create plots for one pc
 	do for [pcplot=0:PLOTS_PER_PC-1] {
