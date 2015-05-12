@@ -14,4 +14,4 @@ set grid
 
 pl \
 DATA using 1:2 notitle,\
-DATA using 1:2:3 w e lt 1 title sprintf("\\verb|%s|",LABEL)
+DATA using 1:2:($3*sqrt($4)) w e lt 1 title sprintf("\\verb|%s|",LABEL)

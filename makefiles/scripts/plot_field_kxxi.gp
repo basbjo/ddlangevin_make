@@ -14,6 +14,6 @@ pl \
 sprintf('<paste %s %s',DATA1,DATA2)\
  using 1:($2/dt**1.5*sqrt($7**2*$8)) notitle,\
 sprintf('<paste %s %s',DATA1,DATA2)\
- using 1:($2/dt**1.5*sqrt($7**2*$8)):($3/dt**1.5*sqrt($7**2*$8))\
+ using 1:($2/dt**1.5*sqrt($7**2*$8)):($3*sqrt($4)/dt**1.5*sqrt($7**2*$8))\
  with yerror lt 1 title sprintf("\\verb|%s|",LABEL),\
 sqrt(2*kT*Gamma(x)) lt 2

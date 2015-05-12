@@ -13,5 +13,5 @@ set grid
 
 pl \
 DATA using 1:($2/dt**2) notitle,\
-DATA using 1:($2/dt**2):($3/dt**2) w e lt 1 title sprintf("\\verb|%s|",LABEL),\
+DATA using 1:($2/dt**2):($3*sqrt($4)/dt**2) w e lt 1 title sprintf("\\verb|%s|",LABEL),\
 f(x) lt 2
