@@ -7,7 +7,8 @@ example_suffix =
 
 ## source data
 TIME_UNIT = ps
-RAWDATA = mle2$(example_suffix)_0.001$(TIME_UNIT)
+TIME_STEP = 0.005# WARNING: also adjust dt in model*.gp
+RAWDATA = mle2$(example_suffix)_$(TIME_STEP)$(TIME_UNIT)
 # name format: <first part>_<num>$(TIME_UNIT)[<second part>]
 #      the occurance of _<num>$(TIME_UNIT) must be unique
 # data format: "[time] dihedral_angles... [future]"

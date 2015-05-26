@@ -5,18 +5,17 @@ exampleconf:
 	@echo
 	@echo The following settings in config.mk
 	@echo
-	@grep '^\(RAWDATA\|projtarget\)' config.mk
-	@sed -i '/^RAWDATA/s/=.*/= $(EXAMPLE)$$(TIME_UNIT)/' config.mk
+	@grep '^projtarget' config.mk
 	@sed -i '/^projtarget/s/=.*/=/' config.mk
 	@echo
 	@echo have been changed as follows.
 	@echo
-	@grep '^\(RAWDATA\|projtarget\)' config.mk
+	@grep '^projtarget' config.mk
 
 plot: split trajs.png
 
 ## default settings
-TIME_STEP ?= 0.001
+TIME_STEP ?= 0.005
 EXAMPLE ?= mle2$(example_suffix)_$(TIME_STEP)
 
 # settings/data to be shown by showconf/showdata
@@ -33,7 +32,7 @@ $(MLE): $(MLE).c
 	cd $(@D) && $(MAKE) $(@F)
 
 $(EXAMPLE)$(TIME_UNIT): $(MLE).c | $(MLE)
-	$| > $@
+	$| $(TIME_STEP) > $@
 
 trajs.png: trajs.gp $(wildcard ${splitdir}/*)
 	gnuplot -e 'EXAMPLE="$(EXAMPLE)$(TIME_UNIT)"' $<

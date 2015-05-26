@@ -13,7 +13,7 @@
 double gaussrand();
 
 unsigned long ntraj=2,length=800001,exclude=0,every=1;
-double m=1.0,dt=1e-3,g0=20.0,gsigma=1.3;
+double m=1.0,g0=20.0,gsigma=1.3;
 
 double f(double x)
 {
@@ -37,9 +37,18 @@ int main(int argc,char** argv)
 {
   unsigned long i,j;
   double x1,v1,x1n,v1n,f1n,gamma1n,K1n;
-  double dW1;
+  double dt,dW1;
 
-  printf("#x1 v1 f1 g_1_1 K_1_1 xi1\n");
+  /* read command line options */
+  if(argc<=1) {
+    fprintf(stderr,"Usage: %s dt\n"
+        "\nArguments:\n\tdt: integration timestep\n",argv[0]);
+    return 1;
+  }
+  sscanf(argv[1],"%lf",&dt);
+
+  printf("#Time step: %lf\n",dt);
+  printf("#Content: x1 v1 f1 g_1_1 K_1_1 xi1\n");
 
   /* iterate over trajectories */
   for (j=1;j<=ntraj;j++) {

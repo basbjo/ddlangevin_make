@@ -19,7 +19,7 @@ DROPSUFFIX =
 SPLIT_LIST = $(addsuffix ${PROJSUFFIX},${RAWDATA})
 
 ## default targets
-all += $(projtargets) $(RAWDATA) minmax
+all += $(projtargets) $(RAWDATA)
 
 ## call macros
 $(call_macros)
