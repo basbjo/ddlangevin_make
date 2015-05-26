@@ -91,6 +91,8 @@ Langevin:
   Single trajectories »$(catdir)/file.detail.lang-##« are concatenated
   to »file.detail.lang« with a follower column by the »cat« target.
   Files »$(catdir)/name-##.field« are concatenated to »name.field«.
+  Target »cat_links« creates symbolic links in »splitdata« that are
+  needed for subdirectories that require split data.
 
 endef
 else

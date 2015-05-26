@@ -13,7 +13,7 @@
 # Cluster numbering starts with 1, points not assigned are denoted by 0.
 
 BEGIN {
-	script="clustering.awk"
+	script="clustering_aib.awk"
 }
 !/^#/ {
 	sum = 1

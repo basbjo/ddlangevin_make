@@ -17,10 +17,6 @@ usage() {
 $SCRIPTNAME: Prints out coordinates of a single neighborhood
 
 Usage: $0 pointfile osnfile [osnfilerow] [ndim]
-Options:
-    -h          display these options
-    -o str      option with string argument
-    -n          option without argument
 Arguments:
     - pointfile:    Input file of ol-search-neighbors
     - osnfile:      Output file of ol-search-neighbors
@@ -83,6 +79,7 @@ BEGIN{
     OFMT="%.6e";
     printf("#Content:");
     for(i=1;i<=ndim;i++) {
+        printf(" x%d_{n-1}",i);
         printf(" x%d_{n}",i);
         printf(" x%d_{n+1}",i);
     }
@@ -105,6 +102,12 @@ BEGIN{
     } else {
         if(ind[nind]+1 == row) {
             for(i=1;i<=ndim;i++) {
+                if(ind[nind] == 1) {
+                    # if predeccessor is missing
+                    printf("nan ");
+                } else {
+                    printf(OFMT " ",lastpred[i]);
+                }
                 printf(OFMT " ",lastx[i]);
                 printf(OFMT " ",$i);
             }
@@ -112,9 +115,21 @@ BEGIN{
             nind++;
         };
         for(i=1;i<=ndim;i++) {
+            lastpred[i] = lastx[i]
             lastx[i]=$i;
         }
         row++;
+    }
+}
+END {
+    if(ind[nind]+1 == row) {
+        # print point if successor is missing
+        for(i=1;i<=ndim;i++) {
+            printf(OFMT " ",lastpred[i]);
+            printf(OFMT " ",lastx[i]);
+            printf("nan ");
+        }
+        printf("%d\n",ind[nind]);
     }
 }' - ${pointfile}
 

@@ -7,18 +7,18 @@ PDF2PNG ?= pdftoppm -png -l 1 -scale-to 520
 PDF2EPS ?= pdftops -eps -l 1
 # imagemagick utilities
 EPS2PNG ?= convert -density 300 -background white -flatten
-# TISEAN
+# TISEAN 3.0.1
 CORR ?= corr -V0
 XCOR ?= xcor -V0
 RESCALE ?= rescale -V0 -u
-# TISEAN (see ./patches)
+# TISEAN 3.0.1 (see ./related/Tisean_3.0.1_extensions)
 HIST1D ?= histogram -V0 -b $(HIST1D_NBINS) -D
 HIST2D ?= histo2d -V0 -b $(HIST2D_NBINS)
 NEGENT ?= negentropy -V0 -b $(NEGENT_NBINS)
 BINNING1D ?= binning -V0 -b $(BIN1D_NBINS)
 BINNING2D ?= binning2d -V0 -b $(BIN2D_NBINS)
 # Stock group
-FASTCA ?= fastca
+FASTCA ?= fastca# (see ./related/FastCA.tgz)
 DELAYPCA ?= $(SCR)/delayPCA.py
 # scripts
 MINMAX ?= $(SCR)/minmax.sh -d" " -f "%9.6f"
@@ -231,4 +231,4 @@ plotcols = $(shell i=`python -c 'print ((int("${2}")-1)*int("${1}")+1)'`;\
 	   printf -- "%02d\n" $$i; i=`expr $$i + 1`; done)
 # list of numbers to denote splitted trajectories
 splitnums = $(patsubst $(notdir ${1})-%,%,$(notdir $(shell find -L\
-	    $(dir ${1}) -regex "[./]*${1}-[0-9]+"|sort -r)))
+	    $(dir ${1}) -regex '[./]*${1}-[0-9]+'|sort -r)))

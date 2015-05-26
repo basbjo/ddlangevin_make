@@ -40,6 +40,8 @@ REDUCTION_FACTORS = 5
 # WARNING: recreate all affected data manually after changes
 MIN_COL = 1
 MAX_COL = $(call fcols,$<)#last data column before future column
+# first column containing dihedral angles (needed for .angles.pdf plot)
+FIRST_DIH_COL = $(call getmin,3 ${MIN_COL})
 
 ## save split data here to avoid recalculation
 splitdir ?= $(or $(firstword ${datadirs}),.)/splitdata
@@ -51,6 +53,7 @@ MINMAXFILE = $(prefix)/minmax
 # if EIGVEC_PCA_LASTX is less or equal to 10, values are shown
 EIGVEC_PCA_LASTX =	# last eigenvector in plot (optional)
 EIGVEC_PCA_LASTY =	# last eigenvector entry in plot (optional)
+ANGLE_DPCA_LASTX = 20	# number of angles per plot (dpca only)
 EIGVEC_TICA_LAST = 10	# last eigenvector and eigenvector entry (optional)
 
 ## settings for binned fields

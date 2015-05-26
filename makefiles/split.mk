@@ -28,6 +28,7 @@ $(splitdir):
 # - if SPLIT_FUTURE==0 split trajectory into two
 $(splitdir)/%-01 : % | $(splitdir)
 	$(split_command)
+	touch -cmr $< $$(find -L $(@D) -type f -regex '$(@D)/$*-[0-9]+')
 
 define split_command
   $(if $(shell [ ${SPLIT_FUTURE} -eq 1 ] && echo yes),\

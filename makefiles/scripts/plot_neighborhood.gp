@@ -21,7 +21,7 @@ current_y=sprintf("system('%s | grep \"Current point:\" | cut -d\\  -f4')",neigh
 double_epsilon=sprintf("system('%s | awk \" \
 /Current point:/ { ndim=NF-2; for(i=3;i<=NF;i++) { x[i-2] = \\$i; } }; \
 !/^#/ { cur_distance = 0; \
-        for(i=1;i<=ndim;i++) { cur_distance += (x[i]-\\$(2*i-1))**2 }; \
+        for(i=1;i<=ndim;i++) { cur_distance += (x[i]-\\$(3*i-1))**2 }; \
         if(cur_distance > max_distance) { max_distance = cur_distance }; }; \
 END { print 2*sqrt(max_distance) }\"')",neighborhood)
 
@@ -39,10 +39,10 @@ set object 1 ellipse at @current_x,@current_y size @double_epsilon,@double_epsil
 # plot
 plot\
 @current_point title "Current point",\
-@neigbors using 1:3:($2-$1):($4-$3) w vector lc rgb "dark-green" notitle,\
-@neigbors using 1:3 title "Neighbors",\
-@neigbors using 2:4 title "Followers",\
-@ncenter using 1:3 lt 6 lc 3 ps 2.5 title "Center",\
+@neigbors using 2:5:($3-$2):($6-$5) w vector lc rgb "dark-green" notitle,\
+@neigbors using 2:5 title "Neighbors",\
+@neigbors using 3:6 title "Followers",\
+@ncenter using 2:5 lt 6 lc 3 ps 2.5 title "Center",\
 @current_point lt 1 ps 3 notitle
 
 set print FILE.".box"

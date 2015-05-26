@@ -242,3 +242,94 @@ Analysis of derived data such as data-driven Langevin equations
   the wished targets to the variable ``all`` in the subdirectory makefiles.
   However, in ``correlation`` it is necessary to finish the target ``estim``
   before calling ``calc`` and to finish the latter before calling ``plot_all``.
+
+
+Documentation for specific topics: Topic directories
+====================================================
+
+You should generally first read the section `Workflow for the main directory`_
+although this may not be necessary to work with the subdirectories of the
+`standalone`_ directory.
+
+standalone
+----------
+Subdirectories of ``standalone/`` are supposed to be used to apply one analysis
+to given data files without using the main directory infrasctructure.  Most of
+these directories are described in this section, while some ``standalone``
+specific topics are described in
+`Documentation for specific topics: Standalone directories`_.
+Here only the general configuration of the subdirectory makefiles is described.
+
+.. todo:
+
+    describe general configuration
+
+TODO
+----
+* langevin
+* langevin/template
+
+* downsampling
+* correlation
+* histogram
+* clustering
+* drift
+* information
+* fields (langevin only)
+* neighbors (langevin only)
+
+
+Documentation for specific topics: Standalone directories
+=========================================================
+
+Here only topic directories that are specific to the ``standalone/`` directory
+are described.  See `Documentation for specific topics: Topic directories`_ for
+further topic directory descriptions.
+
+Data selection and projection
+  for the main directory is described in `Configuration`_.
+  The projections described below can also be applied by using the respective
+  subdirectories of the ``standalone/`` directory.  See `standalone`_ for the
+  general configuration when using the standalone makefiles.
+
+Data splitting and concatenation
+  The files `split.mk`_ and `cat.mk`_ are typically included in other makefiles
+  to split multi trajectory data to single trajectories or to concatenate
+  single trajectories to multi trajectory data.
+
+TODO
+----
+* pca
+* tica
+* dpca
+* dtica
+* split
+* cat
+
+
+Documentation for specific topics: Included makefiles
+=====================================================
+
+.. todo:
+
+  Note about modification time for ``split`` and ``cat`` targets.
+
+
+TODO
+----
+* common.mk
+* fileinfo.mk
+* readme.mk (main directory only)
+* config.mk (main directory only)
+* example.mk (main directory only)
+
+* cat.mk (also standalone `cat`_)
+* split.mk (also standalone `split`_)
+* link_downsampling.mk
+* name_downsampling.mk
+
+* projfuture.mk
+* colselect.mk
+* cossin.mk
+* pca.mk
+* tica.mk
