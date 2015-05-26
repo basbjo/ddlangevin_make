@@ -15,8 +15,10 @@ exampleconf:
 plot: split trajs.png
 
 ## default settings
-TIME_STEP ?= 0.005
-EXAMPLE ?= mle2$(example_suffix)_$(TIME_STEP)
+TIME_STEP ?= 0.005# integration time step
+NTRAJS ?= 2# number of trajectories
+TRAJ_LENGTH ?= 800001# length of trajectories
+EXAMPLE ?= mle2$(example_suffix)_$(TIME_STEP)#filename
 
 # settings/data to be shown by showconf/showdata
 SHOWCONF +=
@@ -32,7 +34,7 @@ $(MLE): $(MLE).c
 	cd $(@D) && $(MAKE) $(@F)
 
 $(EXAMPLE)$(TIME_UNIT): $(MLE).c | $(MLE)
-	$| $(TIME_STEP) > $@
+	$| $(TIME_STEP) $(NTRAJS) $(TRAJ_LENGTH) > $@
 
 trajs.png: trajs.gp $(wildcard ${splitdir}/*)
 	gnuplot -e 'EXAMPLE="$(EXAMPLE)$(TIME_UNIT)"' $<

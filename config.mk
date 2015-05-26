@@ -5,9 +5,14 @@ makedir = $(prefix)/makefiles
 # default: none, variants: _var1
 example_suffix =
 
+# integration time step for mle
+TIME_STEP = 0.005# WARNING: also adjust dt in model*.gp
+# number and length of mle trajectories
+NTRAJS = 2
+TRAJ_LENGTH = 800001
+
 ## source data
 TIME_UNIT = ps
-TIME_STEP = 0.005# WARNING: also adjust dt in model*.gp
 RAWDATA = mle2$(example_suffix)_$(TIME_STEP)$(TIME_UNIT)
 # name format: <first part>_<num>$(TIME_UNIT)[<second part>]
 #      the occurance of _<num>$(TIME_UNIT) must be unique
