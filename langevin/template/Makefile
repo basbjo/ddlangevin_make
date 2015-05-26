@@ -32,9 +32,9 @@ INFO_testmodel = create testmodel trajectories and fields
 INFO_dle = create new dLE trajectories and fields
 
 TESTMODEL_DATA =\
-	$(RAWDATA).dle2$(OL_SUFFIX).m1.k25.ltm\
-	$(RAWDATA).dle2$(OL_SUFFIX).m1.k200.ltm\
-	$(RAWDATA).dle2$(OL_SUFFIX).m1.k500.ltm
+	$(RAWDATA).dle2$(OL_SUFFIX).m1.k50.ltm\
+	$(RAWDATA).dle2$(OL_SUFFIX).m1.k300.ltm\
+	$(RAWDATA).dle2$(OL_SUFFIX).m1.k1000.ltm
 
 ## call macros
 $(call_macros)
