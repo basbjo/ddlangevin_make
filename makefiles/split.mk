@@ -13,7 +13,7 @@ SHOWDATA += splitdir SPLIT_LIST
 splitdir ?= splitdata
 
 ## variables
-SPLIT_SUFFIX =# only needed to find split data if split.mk is not included
+SPLIT_SUFFIX ?=# only needed to find split data if split.mk is not included
 SPLIT_LIST ?= $(DATA)
 SPLIT_DATA = $(addsuffix -01,$(addprefix ${splitdir}/,\
 	     $(wildcard ${SPLIT_LIST})))
