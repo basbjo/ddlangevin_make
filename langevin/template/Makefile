@@ -19,7 +19,8 @@ DATA_LINK = $(addsuffix ${PROJSUFFIX},${RAWDATA}) $(SAMPDATA)
 OL_SUFFIX =
 include ol-second.mk# set OL_SUFFIX first
 # extra settings for testmodel programs
-OL_TM_FLAGS =
+# (set -L to length of two input trajectories)
+OL_TM_FLAGS = -L$(shell echo $$((2*${TRAJ_LENGTH}-4)))
 
 ## default targets
 all += testmodel# dle
