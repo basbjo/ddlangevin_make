@@ -18,7 +18,7 @@ ALL = noise_variances.eps friction_averages.eps diffusion_averages.eps
 
 ALL := $(ALL) $(sort $(patsubst %.eps,%.pdf,${ALL} $(wildcard *.eps))\
        $(patsubst %.eps,%.png,${ALL} $(wildcard *.eps)))\
-       $(wildcard *_noweights)
+       $(wildcard *_noweights.dat)
 
 ## rules
 
@@ -26,7 +26,7 @@ ALL := $(ALL) $(sort $(patsubst %.eps,%.pdf,${ALL} $(wildcard *.eps))\
 define rule_make_eps
 $(1).pdf: $(1).eps
 	epstopdf $$<
-$(1).eps: $(1).gp $(1)_noweights
+$(1).eps: $(1).gp $(1)_noweights.dat
 	gnuplot -e 'gpmodel="$$(GPMODEL)"' $$<
 endef
 
@@ -50,13 +50,13 @@ $(foreach name,friction_averages diffusion_averages noise_variances,\
 	$(eval $(call rule_make_eps,${name})))
 
 # rules to create data files
-friction_averages_noweights: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.g_1_1.bins)
+friction_averages_noweights.dat: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.g_1_1.bins)
 	$(call macro_bin_average,friction,mean)
 
-diffusion_averages_noweights: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.K_1_1.bins)
+diffusion_averages_noweights.dat: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.K_1_1.bins)
 	$(call macro_bin_average,diffusion,mean)
 
-noise_variances_noweights: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.xi1.bins)
+noise_variances_noweights.dat: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.xi1.bins)
 	$(call macro_bin_average,noise,var)
 
 # rules for additional gnuplot files
