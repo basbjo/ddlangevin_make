@@ -1,5 +1,5 @@
-.PHONY: no_neighbour_dependence
-no_neighbour_dependence: $$(ALL)
+.PHONY: no_neighbor_dependence
+no_neighbor_dependence: $$(ALL)
 
 ## default settings
 
