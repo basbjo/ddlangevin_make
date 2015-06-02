@@ -25,6 +25,7 @@ Arguments:
 
 An osnfile contains ndim components of points followed
 by indices of the corresponding neighbors on each row.
+The option -c of ol-search-neighbors is not supported.
 " >&2
     [ $NARGS -eq 1 ] && exit $1 || exit $EXIT_FAILURE
 }
@@ -56,7 +57,7 @@ else
     ndim=2
 fi
 
-# select one line from ol-search-neighbor output
+# select one line from ol-search-neighbors output
 function pointselect() {
      grep -v '^#' ${osnfile} | head -n${osnfilerow} | tail -n1
 }

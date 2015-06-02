@@ -51,6 +51,9 @@ endef
 ifndef INFO
 INFO = calc plot plot2d
 define INFOADD
+
+WARNING: While multiple columns are possible, always the first
+columns are selected, so olangevin option -c is not supported.
 endef
 else
 INFOend +=
