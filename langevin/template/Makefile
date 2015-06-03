@@ -20,7 +20,7 @@ OL_SUFFIX =
 include ol-second.mk# set OL_SUFFIX first
 # extra settings for testmodel programs
 # (set -L to length of two input trajectories)
-OL_TM_FLAGS = -L$(shell echo $$((2*${TRAJ_LENGTH}-4)))
+OL_TM_FLAGS = -L$(shell echo $$((2*${TRAJ_LENGTH}-4))) -H
 
 ## default targets
 all += testmodel# dle
