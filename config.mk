@@ -6,9 +6,9 @@ makedir = $(prefix)/makefiles
 example_suffix =
 
 # integration time step for mle
-TIME_STEP = 0.005# WARNING: also adjust dt in model*.gp
+TIME_STEP = 0.001# WARNING: also adjust dt in model*.gp
 # number and length of mle trajectories
-NTRAJS = 2
+NTRAJS = 4
 TRAJ_LENGTH = 800001
 
 ## source data
