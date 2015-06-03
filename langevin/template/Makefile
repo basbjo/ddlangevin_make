@@ -18,7 +18,7 @@ DATA_LINK = $(addsuffix ${PROJSUFFIX},${RAWDATA}) $(SAMPDATA)
 # extra suffix for olangevin programs
 OL_SUFFIX =
 # extra settings for testmodel programs
-OL_TM_FLAGS =
+OL_TM_FLAGS = -H
 
 ## default targets
 all += info
