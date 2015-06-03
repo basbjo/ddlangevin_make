@@ -26,10 +26,10 @@ SHOWDATA += catdir CAT_DATA
 catdir ?= catdata
 
 ## variables
-CAT_DATA = $(sort $(notdir $(shell find -L '${catdir}' \
+CAT_DATA = $(sort $(notdir $(shell [ -d ${catdir} ] && find -L '${catdir}' \
 		-regex '${catdir}/.*-[0-9][0-9]+' \
 		| tr ' ' '\n' | sed -r 's/-[0-9][0-9]+$$//')))\
-	 $(sort $(notdir $(shell find -L '${catdir}' \
+	 $(sort $(notdir $(shell [ -d ${catdir} ] && find -L '${catdir}' \
 		-regex '${catdir}/.*-[0-9][0-9]+.field' \
 		| tr ' ' '\n' | sed -r 's/-[0-9][0-9]+.field/.field/')))
 DIR_LIST += $(catdir)
@@ -40,7 +40,7 @@ $(catdir):
 
 # rule for concatenation of filename-## to filename
 define template_cat
-$(1) : $$$$(shell find -L '$$$${catdir}' \
+$(1) : $$$$(shell [ -d ${catdir} ] && find -L '$$$${catdir}' \
 		-regex '$$$${catdir}/$(1)-[0-9][0-9]+' | sort -g)
 	$$(cat_command)
 	touch -cmr $$(shell ls -t $$+ | head -n1) $$@
@@ -62,7 +62,7 @@ endef
 
 # rule for concatenation of filename-##.field to filename.field
 define template_cat_field
-$(1) : $$$$(shell find -L '$$$${catdir}' \
+$(1) : $$$$(shell [ -d ${catdir} ] && find -L '$$$${catdir}' \
 	-regex '$$$${catdir}/$(patsubst %.field,%,${1})-[0-9][0-9]+.field')
 	$$(cat_command)
 	touch -cmr $$(shell ls -t $$+ | head -n1) $$@
