@@ -16,7 +16,7 @@ DATA_LINK = $(addsuffix ${PROJSUFFIX},${RAWDATA}) $(SAMPDATA)
 ## settings
 # see config.mk and localconf.mk
 # extra suffix for olangevin programs
-OL_SUFFIX =
+OL_SUFFIX = _b2
 include ol-second.mk# set OL_SUFFIX first
 # extra settings for testmodel programs
 # (set -L to length of two input trajectories)
