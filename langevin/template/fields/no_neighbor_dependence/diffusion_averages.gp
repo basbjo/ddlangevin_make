@@ -4,7 +4,7 @@ set terminal postscript eps color enhanced solid size 7cm,5cm
 OUTFILE="diffusion_averages.eps"
 set output OUTFILE
 
-DATA="diffusion_averages_noweights"
+DATA="diffusion_averages_noweights.dat"
 
 load gpmodel
 

@@ -4,7 +4,7 @@ set terminal postscript eps color enhanced solid size 7cm,5cm
 OUTFILE="friction_averages.eps"
 set output OUTFILE
 
-DATA="friction_averages_noweights"
+DATA="friction_averages_noweights.dat"
 
 load gpmodel
 
