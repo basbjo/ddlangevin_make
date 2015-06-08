@@ -8,7 +8,8 @@ include $(firstword ${datadirs})/localconf.mk
 ## source data files in this directory (wildcards allowed)
 DATA_HERE =
 ## source data files in datadirs (wildcards allowed)
-DATA_LINK = *${DLE_SUFFIX}.field *.ltm
+LINK_PREFIX = $(RAWDATA)
+DATA_LINK = $(LINK_PREFIX)*$(DLE_SUFFIX).field $(LINK_PREFIX)*.ltm
 DROPSUFFIX = $(SUBDIR_DROPSUFFIX).field
 
 ## settings
