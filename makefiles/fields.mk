@@ -128,6 +128,12 @@ endef
 %.x1.distance.bins.tex: %.x1.distance.bins %.x1.abs_ecc.bins $(GPMODEL) $(SCR)/plot_field_distance.gp
 	$(plot_command_two_files)
 
+%.x1.var_ratio_fut.bins.tex: %.x1.var_ratio_fut.bins $(GPMODEL) $(SCR)/plot_field_var_ratio_fut.gp
+	$(plot_command_one_file)
+
+%.x1.var_ratio_past.bins.tex: %.x1.var_ratio_past.bins $(GPMODEL) $(SCR)/plot_field_var_ratio_past.gp
+	$(plot_command_one_file)
+
 %.x1.sweights.bins.tex: %.x1.sweights.bins $(GPMODEL) $(SCR)/plot_field_sweights.gp
 	$(plot_command_one_file)
 

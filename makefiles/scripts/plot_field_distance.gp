@@ -3,7 +3,6 @@
 #set terminal png size 520,390
 set terminal tikz standalone tightboundingbox
 set output OUTFILE
-load gpmodel
 
 set title sprintf("Neighbourhood distances for\n\\verb|%s|",LABEL)
 set key Left top center spacing 2
