@@ -16,6 +16,8 @@ DROPSUFFIX = $(SUBDIR_DROPSUFFIX).field
 IF_FUTURE = $(SPLIT_FUTURE)
 # additional flags for langevin fields
 HEATMAP_FLAGS =
+# additional info for target showdata
+#SHOWDATA += CALC PLOT
 
 ## default targets
 all += calc
