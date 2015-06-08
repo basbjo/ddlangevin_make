@@ -18,10 +18,12 @@ DATA_LINK = $(addsuffix ${PROJSUFFIX},${RAWDATA}) $(SAMPDATA)
 # extra suffix for olangevin programs
 OL_SUFFIX = _b2
 include ol-second.mk# set OL_SUFFIX first
-# extra settings for testmodel programs
+# additional flags for olangevin testmodel programs
 # (set -L to length of two input trajectories)
 # (set -H to print neighbourhood information)
 OL_TM_FLAGS = -L$(shell echo $$((2*${TRAJ_LENGTH}-4))) -H
+# additional flags for ol-search-neighbors program
+OL_SN_FLAGS =
 
 ## default targets
 all += testmodel# dle

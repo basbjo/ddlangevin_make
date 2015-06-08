@@ -10,7 +10,8 @@ SHOWDATA +=
 
 ## variables
 OL_SUFFIX ?=# extra suffix for olangevin programs
-OL_TM_FLAGS ?=# additional options to olangevin tm programs
+OL_TM_FLAGS ?=# additional flags for olangevin testmodel programs
+OL_SN_FLAGS ?=# additional flags for ol-search-neighbors program
 
 ## rules
 # select columns from data files
@@ -27,6 +28,7 @@ $(1).dle2$(OL_SUFFIX).%.ltm: $(1)
 	ol-second$$(testmodel_command)
 $(1).%.osn: $(1)
 	ol-search-neighbors $$(m_k_opt_arg)$$(if\
+		$${OL_SN_FLAGS}, $${OL_SN_FLAGS})$$(if\
 		$$(wildcard ${1}.m$$(call extract_argument,m).osnp),\
 	-R) $$< $$(wildcard ${1}.m$$(call extract_argument,m).osnp) -o $$@
 endef
@@ -39,11 +41,11 @@ define m_k_opt_arg
 endef
 
 define testmodel_command
--tm$(OL_SUFFIX) $(OL_TM_FLAGS)\
+-tm$(OL_SUFFIX)\
 $(m_k_opt_arg)$(if\
 $(shell [ ${IF_FUTURE} -eq 1 ] && echo yes),\
  -F$(shell echo `expr $(call fcols,$<) + 1`))\
- $< -o $@
+ $(OL_TM_FLAGS) $< -o $@
 endef
 
 ## macros to be called later
