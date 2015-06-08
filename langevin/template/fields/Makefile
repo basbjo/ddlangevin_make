@@ -55,5 +55,5 @@ PLOT += $(foreach psuffix,.pdf .png,$(addsuffix ${psuffix},\
 	$(foreach suffix,${2DFIELD_SUFFIXES},$(addsuffix ${suffix},${DATA}))))
 
 # further calc and plot targets
-CALC +=
+CALC += $(addsuffix .x1.abs_ecc.bins,${DATA})
 PLOT +=
