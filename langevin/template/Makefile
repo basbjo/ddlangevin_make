@@ -35,10 +35,8 @@ INFO += testmodel dle
 INFO_testmodel = create testmodel trajectories and fields
 INFO_dle = create new dLE trajectories and fields
 
-TESTMODEL_DATA =\
-	$(RAWDATA).dle2$(OL_SUFFIX).m1.k50.ltm\
-	$(RAWDATA).dle2$(OL_SUFFIX).m1.k300.ltm\
-	$(RAWDATA).dle2$(OL_SUFFIX).m1.k1000.ltm
+TESTMODEL_DATA = $(foreach k,50 300 1000\
+	,$(addsuffix .dle2${OL_SUFFIX}.m1.k${k}.ltm,${DATA}))
 
 ## call macros
 $(call_macros)
