@@ -17,8 +17,10 @@ DATA_LINK = $(addsuffix ${PROJSUFFIX},${RAWDATA}) $(SAMPDATA)
 # see config.mk and localconf.mk
 # extra suffix for olangevin programs
 OL_SUFFIX = _b2
-# extra settings for testmodel programs
+# additional flags for olangevin testmodel programs
 OL_TM_FLAGS = -H
+# additional flags for ol-search-neighbors program
+OL_SN_FLAGS =
 
 ## default targets
 all += info
