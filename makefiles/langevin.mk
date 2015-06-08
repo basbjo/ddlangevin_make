@@ -39,11 +39,11 @@ define m_k_opt_arg
 endef
 
 define testmodel_command
--tm$(OL_SUFFIX) $(OL_TM_FLAGS)\
+-tm$(OL_SUFFIX)\
 $(m_k_opt_arg)$(if\
 $(shell [ ${IF_FUTURE} -eq 1 ] && echo yes),\
  -F$(shell echo `expr $(call fcols,$<) + 1`))\
- $< -o $@
+ $(OL_TM_FLAGS) $< -o $@
 endef
 
 ## macros to be called later
