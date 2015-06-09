@@ -1,8 +1,8 @@
 prefix = ../..
 datadirs = ..
 makedir = $(prefix)/makefiles
-# include split.mk only in one makefile that uses the splitdir specified on
-# the following line and if not including split.mk here uncomment that line
+# include split.mk only in one makefile that uses
+# the splitdir as specified on the following line
 #splitdir = $(or $(firstword ${datadirs}),.)/splitdata
 include $(makedir)/common.mk
 include $(makedir)/fileinfo.mk

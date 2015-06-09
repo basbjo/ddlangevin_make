@@ -14,7 +14,6 @@ DROPSUFFIX = .pru
 DATA_LINK = $(addsuffix ${PROJSUFFIX},${RAWDATA}) $(SAMPDATA)\
 	    $(addsuffix ${PROJSUFFIX}*.pru,${RAWDATA})\
 	    $(addsuffix *.pru,${SAMPDATA})
-SHOWDATA += SYMLINKS
 
 ## settings
 # see config.mk and localconf.mk
