@@ -18,7 +18,7 @@ MINMAX_FLAG ?= -R# full output: -r, output only for reference range: -R
 SHOWCONF += HIST1D_NBINS HIST2D_NBINS BIN1D_NBINS BIN2D_NBINS MINMAX_FLAG\
 	    HEATMAP_HIST_COLS HEATMAP_BINS_COLS HEATMAP_FLAGS\
 	    CROP_1DBINNING_RANGE
-SHOWDATA += CALC PLOT
+SHOWDATA +=
 
 ## default settings that must be changed before including this file
 
