@@ -3,7 +3,7 @@
 #Where # = 01, 02, ... to file.cor_##n.tex and file.cor_##e.tex
 #Infile format: "x y [yerr]" in each file
 
-import sys, os
+import sys, os, re
 import numpy as np
 import Gnuplot, Gnuplot.funcutils
 
@@ -23,7 +23,9 @@ step = 1.0
 if len(sys.argv) > 7:
     unit = sys.argv[7].strip()
     if unit:
-        step = float(filenameroot.split(unit)[0].split('_')[-1])
+        m = re.match(".*_([0-9.]*[0-9]).*" + unit, filenameroot)
+        if m:
+            step = float(m.groups()[0])
         unit = ' [%s]' % unit
 
 # read data from selected files filenameroot-V[0-9][0-9]+.suffix
