@@ -10,7 +10,7 @@ endif
 
 # settings/data to be shown by showconf/showdata
 SHOWCONF += REDUCTION_FACTORS
-SHOWDATA += SAMPDATA
+SHOWDATA += SAMPDATA splitdir SPLIT_SUFFIX
 
 ## default settings that must be changed before including this file
 
@@ -20,17 +20,19 @@ SAMPDATA += $(foreach rfac,${REDUCTION_FACTORS},$(addsuffix _ds${rfac},${DATA}))
 ## rules
 # include also split.mk to split data
 define template_sampling
-%_ds$(1) : % | $$(splitdir)/%-01
-	$$(SCR)/downsampling.sh $$(splitdir) $$*\
-		$$< $(1) $$(strip $${SPLIT_FUTURE})
-endef
-
-define rule_downsampling
-$(foreach rfac,$(REDUCTION_FACTORS),$(eval $(call template_sampling,${rfac})))
+$(1)_ds$(2) : $(1) | $$(splitdir)/$(1)$$(SPLIT_SUFFIX)-01
+	$$(SCR)/downsampling.sh $$(splitdir) $(1)\
+		$$< $(2) $$(strip $${SPLIT_FUTURE})
 endef
 
 ## macros to be called later
 MACROS += rule_downsampling
+
+define rule_downsampling
+$(foreach file,${DATA},\
+	$(foreach rfac,$(REDUCTION_FACTORS),\
+	$(eval $(call template_sampling,${file},${rfac}))))
+endef
 
 ## info
 ifndef INFO
