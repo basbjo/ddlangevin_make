@@ -13,9 +13,9 @@ SHOWDATA += splitdir SPLIT_LIST
 splitdir ?= splitdata
 
 ## variables
-SPLIT_SUFFIX ?=# only needed to find split data if split.mk is not included
+SPLIT_SUFFIX ?=# suffix contained in split data but not in source data
 SPLIT_LIST ?= $(DATA)
-SPLIT_DATA = $(addsuffix -01,$(addprefix ${splitdir}/,\
+SPLIT_DATA = $(addsuffix ${SPLIT_SUFFIX}-01,$(addprefix ${splitdir}/,\
 	     $(wildcard ${SPLIT_LIST})))
 DIR_LIST += $(splitdir)
 
@@ -26,27 +26,31 @@ $(splitdir):
 # split data into consecutive trajectories / in two parts
 # - end of each series when last column is 0
 # - if SPLIT_FUTURE==0 split trajectory into two
-$(splitdir)/%-01 : % | $(splitdir)
-	$(split_command)
-	touch -cmr $< $$(find -L $(@D) -type f -regex '$(@D)/$*-[0-9]+')
+define template_split
+SPLIT_SUFFIX := $(SPLIT_SUFFIX)
+$(splitdir)/%$(SPLIT_SUFFIX)-01 : % | $(splitdir)
+	$$(split_command)
+	touch -cmr $$< $$$$(find -L $$(@D) -type f \
+		-regex '$$(@D)/$$*${SPLIT_SUFFIX}-[0-9]+')
+endef
 
 define split_command
   $(if $(shell [ ${SPLIT_FUTURE} -eq 1 ] && echo yes),\
-	  # split file $< by last column into $(@D)/$*-##
+	  # split file $< by last column into $(@D)/$*$(SPLIT_SUFFIX)-##
 	  awk 'BEGIN { i=1; end=0; }\
 	  !/^#/ {\
 	      if ($$NF==0) end=1;\
 	      $(if $(patsubst 1,,${SPLIT_KEEP_FUTURE}),sub(" [01]$$","",$$0);,)\
 	  } {\
-	      print $$0 >sprintf("$(@D)/$*-%02d", i);\
+	      print $$0 >sprintf("$(@D)/$*$(SPLIT_SUFFIX)-%02d", i);\
 	      if (end) { i++; end=0; }\
 	      $(awk_status)\
 	  }' $<)
   $(if $(shell [ ${SPLIT_FUTURE} -eq 0 ] && echo yes),\
-	  # split file $< in two parts $(@D)/$*-##
+	  # split file $< in two parts $(@D)/$*$(SPLIT_SUFFIX)-##
 	  awk -vhalf=$$(($$(${NROWS} $<) / 2))\
 	  'BEGIN { i=1; count=1 } {\
-	      print $$0 >sprintf("$(@D)/$*-%02d", i);\
+	      print $$0 >sprintf("$(@D)/$*$(SPLIT_SUFFIX)-%02d", i);\
 	      if (count==half) i++;\
 	      $(awk_status)\
 	  } !/^#/ { count++; }' $<)
@@ -59,7 +63,11 @@ if(! (NR % 10000)) {\
 endef
 
 ## macros to be called later
-#MACROS +=
+MACROS += rule_split
+
+define rule_split
+$(eval $(call template_split))
+endef
 
 ## info
 ifndef INFO
