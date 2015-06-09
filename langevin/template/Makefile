@@ -10,8 +10,11 @@ include $(makedir)/split.mk
 ## source data files in this directory (wildcards allowed)
 DATA_HERE =
 ## source data files in datadirs (wildcards allowed)
-DROPSUFFIX =
-DATA_LINK = $(addsuffix ${PROJSUFFIX},${RAWDATA}) $(SAMPDATA)
+DROPSUFFIX = .pru
+DATA_LINK = $(addsuffix ${PROJSUFFIX},${RAWDATA}) $(SAMPDATA)\
+	    $(addsuffix ${PROJSUFFIX}*.pru,${RAWDATA})\
+	    $(addsuffix *.pru,${SAMPDATA})
+SHOWDATA += SYMLINKS
 
 ## settings
 # see config.mk and localconf.mk
