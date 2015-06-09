@@ -30,8 +30,9 @@ define template_split
 SPLIT_SUFFIX := $(SPLIT_SUFFIX)
 $(splitdir)/%$(SPLIT_SUFFIX)-01 : % | $(splitdir)
 	$$(split_command)
-	touch -cmr $$< $$$$(find -L $$(@D) -type f \
-		-regex '$$(@D)/$$*${SPLIT_SUFFIX}-[0-9]+')
+	$(if $(shell [ ${SPLIT_FUTURE} -eq 1 ] || [ ${SPLIT_FUTURE} -eq 0 ] \
+		&& echo yes),touch -cmr $$< $$$$(find -L $$(@D) -type f \
+		-regex '$$(@D)/$$*${SPLIT_SUFFIX}-[0-9]+'))
 endef
 
 define split_command
