@@ -56,7 +56,7 @@ else
     ndim=2
 fi
 
-# select one line from ol-search-neighbor output
+# select one line from ol-search-neighbors output
 function pointselect() {
      grep -v '^#' ${osnfile} | head -n${osnfilerow} | tail -n1
 }

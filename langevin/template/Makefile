@@ -21,7 +21,7 @@ DATA_LINK = $(addsuffix ${PROJSUFFIX},${RAWDATA}) $(SAMPDATA)\
 OL_SUFFIX = _b2
 # additional flags for olangevin testmodel programs
 OL_TM_FLAGS = -H
-# additional flags for ol-search-neighbors program
+# additional flags for ol-search-neighbors programs
 OL_SN_FLAGS =
 
 ## default targets
