@@ -28,16 +28,23 @@ OL_TM_FLAGS = -L$(shell echo $$((2*${TRAJ_LENGTH}-4))) -H
 OL_SN_FLAGS =
 
 ## default targets
-all += testmodel# dle
+all += testmodel# neighborhood dle
 
 .PHONY: testmodel dle
 testmodel: $$(TESTMODEL_DATA)
+neighborhood: $$(NEIGHBORS_DATA)
 dle: $$(OLANGEVIN_DATA)
-INFO += testmodel dle
+INFO += testmodel neighborhood dle
 INFO_testmodel = create testmodel trajectories and fields
+INFO_neighborhood = create file with indices of neighbours
 INFO_dle = create new dLE trajectories and fields
 
-TESTMODEL_DATA = $(foreach k,50 300 1000\
+NEIGHBORS_DATA =\
+	$(foreach k,50 300 1000 \
+	,$(addsuffix .m1.k${k}.osn,${DATA}))
+
+TESTMODEL_DATA =\
+	$(foreach k,50 300 1000 \
 	,$(addsuffix .dle2${OL_SUFFIX}.m1.k${k}.ltm,${DATA}))
 
 ## call macros
