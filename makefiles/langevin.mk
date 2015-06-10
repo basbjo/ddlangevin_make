@@ -11,7 +11,7 @@ SHOWDATA +=
 ## variables
 OL_SUFFIX ?=# extra suffix for olangevin programs
 OL_TM_FLAGS ?=# additional flags for olangevin testmodel programs
-OL_SN_FLAGS ?=# additional flags for ol-search-neighbors program
+OL_SN_FLAGS ?=# additional flags for ol-search-neighbors programs
 
 ## rules
 # select columns from data files
@@ -27,7 +27,7 @@ $(1).dle1$(OL_SUFFIX).%.ltm: $(1)
 $(1).dle2$(OL_SUFFIX).%.ltm: $(1)
 	ol-second$$(testmodel_command)
 $(1).%.osn: $(1)
-	ol-search-neighbors $$(m_k_opt_arg)$$(if\
+	ol-search-neighbors$(OL_SUFFIX) $$(m_k_opt_arg)$$(if\
 		$${OL_SN_FLAGS}, $${OL_SN_FLAGS})$$(if\
 		$$(wildcard ${1}.m$$(call extract_argument,m).osnp),\
 	-R) $$< $$(wildcard ${1}.m$$(call extract_argument,m).osnp) -o $$@

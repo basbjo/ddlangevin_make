@@ -24,7 +24,7 @@ include ol-second.mk# set OL_SUFFIX first
 # (set -L to length of two input trajectories)
 # (set -H to print neighbourhood information)
 OL_TM_FLAGS = -L$(shell echo $$((2*${TRAJ_LENGTH}-4))) -H
-# additional flags for ol-search-neighbors program
+# additional flags for ol-search-neighbors programs
 OL_SN_FLAGS =
 
 ## default targets
