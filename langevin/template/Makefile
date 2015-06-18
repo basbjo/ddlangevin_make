@@ -30,7 +30,7 @@ OL_SN_FLAGS =
 ## default targets
 all += testmodel# neighborhood dle
 
-.PHONY: testmodel dle
+.PHONY: testmodel neighborhood dle
 testmodel: $$(TESTMODEL_DATA)
 neighborhood: $$(NEIGHBORS_DATA)
 dle: $$(OLANGEVIN_DATA)
