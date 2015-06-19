@@ -26,6 +26,16 @@ $(1).dle1$(OL_SUFFIX).%.ltm: $(1)
 	ol-first$$(testmodel_command)
 $(1).dle2$(OL_SUFFIX).%.ltm: $(1)
 	ol-second$$(testmodel_command)
+$(1).dle1.%.osn: $(1)
+	ol-search-neighbors$(OL_SUFFIX) -W1 $$(m_k_opt_arg)$$(if\
+		$${OL_SN_FLAGS}, $${OL_SN_FLAGS})$$(if\
+		$$(wildcard ${1}.m$$(call extract_argument,m).osnp),\
+	-R) $$< $$(wildcard ${1}.m$$(call extract_argument,m).osnp) -o $$@
+$(1).dle2.%.osn: $(1)
+	ol-search-neighbors$(OL_SUFFIX) -W2 $$(m_k_opt_arg)$$(if\
+		$${OL_SN_FLAGS}, $${OL_SN_FLAGS})$$(if\
+		$$(wildcard ${1}.m$$(call extract_argument,m).osnp),\
+	-R) $$< $$(wildcard ${1}.m$$(call extract_argument,m).osnp) -o $$@
 $(1).%.osn: $(1)
 	ol-search-neighbors$(OL_SUFFIX) $$(m_k_opt_arg)$$(if\
 		$${OL_SN_FLAGS}, $${OL_SN_FLAGS})$$(if\
@@ -81,6 +91,8 @@ Testmodel:
 
 Neighbors:
   Neighbor indices in »symlink.m<m>.k<k>.osn« can be created.
+  To obtain the neighbourhoods that are used by ol-first or
+  ol-second, create »symlink.dle<n>.m<m>.k<k>.osn«, n = 1,2.
   If »symlink.m<m>.osnp« is provided, neighbors are searched for
   points in this file and not for all points in input data.
   Use variable OL_SN_FLAGS to provide additional options.
