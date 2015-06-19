@@ -41,7 +41,7 @@ INFO_dle = create new dLE trajectories and fields
 
 NEIGHBORS_DATA =\
 	$(foreach k,50 300 1000 \
-	,$(addsuffix .m1.k${k}.osn,${DATA}))
+	,$(addsuffix .dle2.m1.k${k}.osn,${DATA}))
 
 TESTMODEL_DATA =\
 	$(foreach k,50 300 1000 \
