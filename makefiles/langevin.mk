@@ -90,9 +90,9 @@ Testmodel:
   Correct arguments to -m, -k and -F are generated automatically.
   If »symlink.m<m>.ltmp« is provided, fields are calculated for
   points in this file and not for all points in input data.
-  Additional options can be passed to the »OL_TM_FLAGS« variable.
+  Use variable »OL_TM_FLAGS« to provide additional options.
+
   Testmodel trajectories can be splitted with the »split« target.
-  Use variable OL_TM_FLAGS to provide additional options.
 
 Neighbors:
   Neighbor indices in »symlink.m<m>.k<k>.osn« can be created.
@@ -110,6 +110,7 @@ Langevin:
   Single trajectories »$(catdir)/file.detail.lang-##« are concatenated
   to »file.detail.lang« with a follower column by the »cat« target.
   Files »$(catdir)/name-##.field« are concatenated to »name.field«.
+
   Target »cat_links« creates symbolic links in »splitdata« that are
   needed for subdirectories that require split data.
 
