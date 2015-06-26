@@ -43,7 +43,7 @@ PLOT += $(foreach suffix,.tex .pdf .png,$(addsuffix ${suffix},\
 
 # further suffixes to be considered for /all/ data files
 1DFIELD_SUFFIXES = .x1.f1.bins .x1.g_1_1.bins .x1.K_1_1.bins\
-	.x1.distance.bins .x1.var_ratio_fut.bins#e.g. .x1.hist .x1.f1.bins
+	.x1.distance.bins#e.g. .x1.hist .x1.f1.bins
 2DFIELD_SUFFIXES = #e.g. .x1.x2.hist .x1.x2.f1.bins
 CALC += $(foreach suffix,${1DFIELD_SUFFIXES} ${2DFIELD_SUFFIXES},\
 	$(addsuffix ${suffix},${DATA}))\
@@ -51,13 +51,14 @@ CALC += $(foreach suffix,${1DFIELD_SUFFIXES} ${2DFIELD_SUFFIXES},\
 # further targets for plotting (heatmap for 2D histograms or binnings)
 PLOT += $(foreach psuffix,.tex .pdf .png,$(addsuffix ${psuffix},\
 	$(foreach suffix,${1DFIELD_SUFFIXES},$(addsuffix ${suffix},${DATA})\
+	$(addsuffix .x1.var_ratio_fut.bins,$(filter %.ltm,${DATA}))\
 	$(addsuffix .x1.sweights.bins,$(wildcard *.weights.*.ltm)))))
 PLOT += $(if ${NOISE_PCS},$(foreach psuffix,.tex .pdf .png,\
 	$(addsuffix ${psuffix},$(foreach suffix, .x1.K_1_1xxi1 .x1.g_1_1xxi1,\
-	$(addsuffix ${suffix},${DATA})))))
+	$(addsuffix ${suffix},$(filter %.ltm,${DATA}))))))
 PLOT += $(foreach psuffix,.pdf .png,$(addsuffix ${psuffix},\
 	$(foreach suffix,${2DFIELD_SUFFIXES},$(addsuffix ${suffix},${DATA}))))
 
 # further calc and plot targets
-CALC += $(addsuffix .x1.abs_ecc.bins,${DATA})
+CALC += $(addsuffix .x1.abs_ecc.bins,$(filter %.ltm,${DATA}))
 PLOT +=
