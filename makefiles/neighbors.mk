@@ -44,7 +44,9 @@ MACROS += rule_neighbors
 define rule_neighbors
 $(foreach file,${DATA},\
 	$(eval $(call template_calc,${file},$(shell\
-		echo ${file} | sed 's/\.m[0-9]*.k[0-9]*$$//'))))
+		echo ${file} | sed \
+			-e 's/\.m[0-9]*.k[0-9]*$$//' \
+			-e 's/\.dle[_a-z0-9]*$$//'))))
 endef
 
 ## info
