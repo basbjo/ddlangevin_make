@@ -9,8 +9,10 @@ for tmpl in \
 do
     for dir in `find . -mindepth 1 -maxdepth 1 -type d -not -name template`
     do
-        echo "#===== ${tmpl} vs ${tmpl/template/${dir}} ====="
-        eval "diff ${tmpl} ${tmpl/template/${dir}}"
-        echo
+        eval "diff -q ${tmpl} ${tmpl/template/${dir}}" >/dev/null || (
+            echo "#===== ${tmpl} vs ${tmpl/template/${dir}} ====="
+            eval "diff ${tmpl} ${tmpl/template/${dir}}"
+            echo
+            )
     done
 done
