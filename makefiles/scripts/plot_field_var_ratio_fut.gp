@@ -7,7 +7,8 @@ if(!exists("LABEL")) LABEL=DATA
 
 set xlabel "Coordinate"
 set ylabel "Ratio $\\langle(x_{n+1} - y_{m})^2\\rangle / \\langle(x_{n} - y_{m})^2\\rangle$"
-set key spacing 2
+set yrange [0:]
+set key spacing 2 bottom right
 set grid
 
 pl \
