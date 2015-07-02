@@ -20,4 +20,4 @@ sprintf('<paste %s %s',DATA1,DATA2)\
 sprintf('<paste %s %s',DATA1,DATA2)\
  using 1:($2/dt**1.5*sqrt($7**2*$8)):($3/dt**1.5*sqrt($7**2*$8))\
  with yerror lt 3 title "Standard deviation of mean values",\
-sqrt(2*kT*Gamma(x)) lt 1
+sqrt(2*kT*Gamma(x)) lt 1 title "$\\sqrt{2\\,\\textrm{kT}\\;\\Gamma(x)}$"

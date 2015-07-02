@@ -16,4 +16,4 @@ pl \
 DATA using 1:(($2+1)/dt) lt 2 title sprintf("\\verb|%s|",LABEL),\
 DATA using 1:(($2+1)/dt):($3*sqrt($4)/dt) with yerror lt 2  title "Standard deviation of single values",\
 DATA using 1:(($2+1)/dt):($3/dt) with yerror lt 3 title "Standard deviation of mean values",\
-Gamma(x) lt 1
+Gamma(x) lt 1 title "$\\Gamma(x)$"

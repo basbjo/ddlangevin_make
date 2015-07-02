@@ -20,4 +20,4 @@ sprintf('<paste %s %s',DATA1,DATA2)\
 sprintf('<paste %s %s',DATA1,DATA2)\
  using 1:(($2+1)/dt*$7**2*$8):($3/dt*$7**2*$8)\
  with yerror lt 3 title "Standard deviation of mean values",\
-Gamma(x) lt 1
+Gamma(x) lt 1 title "$\\Gamma(x)$"
