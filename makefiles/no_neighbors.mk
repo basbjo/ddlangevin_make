@@ -14,7 +14,8 @@ OL_SUFFIX = $(shell grep ^OL_SUFFIX ../../Makefile | sed 's/^[^=]*= *//;s/ *\#.*
 
 dt = $(shell grep ^dt $(GPMODEL) | sed 's/^[^=]*= *//;s/ *\#.*//')
 
-ALL = noise_variances.eps friction_averages.eps diffusion_averages.eps
+ALL ?= noise_variances.eps friction_averages.eps diffusion_averages.eps\
+       distance_averages.eps abs_ecc_averages.eps var_ratio_fut_averages.eps
 
 ALL := $(ALL) $(sort $(patsubst %.eps,%.pdf,${ALL} $(wildcard *.eps))\
        $(patsubst %.eps,%.png,${ALL} $(wildcard *.eps)))\
@@ -44,9 +45,13 @@ meanstd = awk '!/^\#/ {count ++; sum += $$2; sumsq += $$2**2}\
 bin_average_friction = $(meanstd) | awk '{print ($$1+1)/$(dt), $$2/$(dt)}'
 bin_average_diffusion = $(meanstd) | awk '{print $$1/$(dt)**1.5, $$2/$(dt)}'
 bin_average_noise = awk '!/^\#/ {print $$1, $$3**2*$$4}' | $(meanstd)
+bin_average_distance = $(meanstd)
+bin_average_abs_ecc = $(meanstd)
+bin_average_var_ratio_fut = $(meanstd)
 
 # rules to create eps files
-$(foreach name,friction_averages diffusion_averages noise_variances,\
+$(foreach name,friction_averages diffusion_averages noise_variances\
+	distance_averages abs_ecc_averages var_ratio_fut_averages,\
 	$(eval $(call rule_make_eps,${name})))
 
 # rules to create data files
@@ -58,6 +63,15 @@ diffusion_averages_noweights.dat: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.K_1_1
 
 noise_variances_noweights.dat: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.xi1.bins)
 	$(call macro_bin_average,noise,var)
+
+distance_averages_noweights.dat: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.distance.bins)
+	$(call macro_bin_average,distance,mean)
+
+abs_ecc_averages_noweights.dat: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.abs_ecc.bins)
+	$(call macro_bin_average,abs_ecc,mean)
+
+var_ratio_fut_averages_noweights.dat: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.var_ratio_fut.bins)
+	$(call macro_bin_average,var_ratio_fut,mean)
 
 # rules for additional gnuplot files
 
