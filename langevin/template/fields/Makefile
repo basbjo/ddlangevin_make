@@ -47,6 +47,7 @@ PLOT += $(foreach suffix,.tex .pdf .png,$(addsuffix ${suffix},\
 2DFIELD_SUFFIXES = #e.g. .x1.x2.hist .x1.x2.f1.bins
 CALC += $(foreach suffix,${1DFIELD_SUFFIXES} ${2DFIELD_SUFFIXES},\
 	$(addsuffix ${suffix},${DATA}))\
+	$(addsuffix .x1.var_ratio_fut.bins,$(filter %.ltm,${DATA}))\
 	$(addsuffix .x1.sweights.bins,$(wildcard *.weights.*.ltm))
 # further targets for plotting (heatmap for 2D histograms or binnings)
 PLOT += $(foreach psuffix,.tex .pdf .png,$(addsuffix ${psuffix},\
