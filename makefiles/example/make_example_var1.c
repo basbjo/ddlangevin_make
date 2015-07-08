@@ -12,7 +12,7 @@
 
 double gaussrand();
 
-unsigned long exclude=0,every=1;
+unsigned long exclude=1000,every=1;
 double m=1.0,g0=20.0,gsigma=1.3;
 
 double f(double x)
@@ -65,14 +65,15 @@ int main(int argc,char** argv)
     v1n=v1;
 
     /* integration step */
-    for (i=exclude;i<length;i++) {
+    length += exclude;
+    for (i=0;i<length;i++) {
       /* fields */
       dW1=gaussrand()*sqrt(dt);
       f1n = f(x1);
       gamma1n = gamma(x1);
       K1n = K(x1);
       /* printing out */
-      if (!(i%every)) {
+      if ((i>=exclude) && (!(i%every))) {
         if (i<length-every) {
           printf("%lf %lf %lf %lf %lf %lf 1\n",x1,v1,
               f1n*dt*dt,gamma1n*dt-1,K1n*pow(dt,1.5),dW1/sqrt(dt));
