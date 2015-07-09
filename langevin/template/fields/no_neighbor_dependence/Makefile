@@ -12,8 +12,7 @@ DATA_LINK = *.dat
 DROPSUFFIX = .dat
 
 ## settings
-ALL = noise_variances.eps friction_averages.eps diffusion_averages.eps\
-      distance_averages.eps abs_ecc_averages.eps var_ratio_fut_averages.eps
+ALL +=
 
 ## default targets
 all += no_neighbor_dependence

@@ -17,10 +17,6 @@ dt = $(shell grep ^dt $(GPMODEL) | sed 's/^[^=]*= *//;s/ *\#.*//')
 ALL ?= noise_variances.eps friction_averages.eps diffusion_averages.eps\
        distance_averages.eps abs_ecc_averages.eps var_ratio_fut_averages.eps
 
-ALL := $(ALL) $(sort $(patsubst %.eps,%.pdf,${ALL} $(wildcard *.eps))\
-       $(patsubst %.eps,%.png,${ALL} $(wildcard *.eps)))\
-       $(wildcard *_noweights.dat)
-
 ## rules
 
 # macros
@@ -88,8 +84,9 @@ empty =
 INFO = $(empty)
 define INFOADD
 
-Use make to create eps/pdf/png from further gnuplot files
-that use the »gpmodel« variable and produce eps output.$(if $(example_suffix),
+Use make to create eps/pdf/png from further gnuplot files that
+use the »gpmodel« variable and produce eps output (for example
+if plot.gp creates plot.eps, add »plot.pdf plot.png« to ALL).$(if $(example_suffix),
 
 WARNING: Plotting friction and diffusion averaged over the
 	 x-axis is meaningful for the default model with
@@ -104,6 +101,6 @@ endif
 PRECIOUS +=
 
 ## clean
-PLOTS_LIST +=
+PLOTS_LIST += $(addsuffix .eps,$(basename ${ALL}))
 CLEAN_LIST +=
-PURGE_LIST +=
+PURGE_LIST += $(addsuffix _noweights.dat,$(basename ${ALL}))
