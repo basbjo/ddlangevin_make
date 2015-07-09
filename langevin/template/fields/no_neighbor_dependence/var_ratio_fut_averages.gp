@@ -9,7 +9,7 @@ DATA="var_ratio_fut_averages_noweights.dat"
 load gpmodel
 
 set xlabel "Number of neighbours"
-set ylabel "Mean ratio follower/neighbour variance"
+set ylabel "Mean ratio neighbour/follower variance"
 set key Left top center
 set grid
 set log y

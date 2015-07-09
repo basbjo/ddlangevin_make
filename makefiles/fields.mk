@@ -75,6 +75,15 @@ $(1).%.bins : $(1) $(wildcard ${1}.minmax)
 		)$$< -o $$@
 endef
 
+# binning of inverse values of var_ratio_fut and var_ratio_past
+%.ltm.x1.var_ratio_fut.bins : %.ltm
+	$(eval field = $(shell $(call getfieldno_macro,$<,var_ratio_fut)))
+	cat $< | awk '!/^#/{if (!($$$(field) == "inf")) print $$1,1/$$$(field); else print $$1,0}' | $(BINNING1D) -o $@
+
+%.ltm.x1.var_ratio_past.bins : %.ltm
+	$(eval field = $(shell $(call getfieldno_macro,$<,var_ratio_past)))
+	cat $< | awk '!/^#/{if (!($$$(field) == "inf")) print $$1,1/$$$(field); else print $$1,0}' | $(BINNING1D) -o $@
+
 # plotting
 %.hist.pdf: %.hist
 	$(HEATMAP) $(HEATMAP_HIST_COLS) -t "Histogram for $*" $< -o $@
