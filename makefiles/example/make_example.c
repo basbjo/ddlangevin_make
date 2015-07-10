@@ -54,6 +54,7 @@ int main(int argc,char** argv)
   printf("#Content: x1 v1 f1 g_1_1 K_1_1 xi1\n");
 
   /* iterate over trajectories */
+  length += exclude;
   for (j=1;j<=ntraj;j++) {
     /* initialization */
     x1=0;
@@ -62,7 +63,6 @@ int main(int argc,char** argv)
     v1n=v1;
 
     /* integration step */
-    length += exclude;
     for (i=0;i<length;i++) {
       /* fields */
       dW1=gaussrand()*sqrt(dt);
