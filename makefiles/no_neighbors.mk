@@ -14,8 +14,8 @@ OL_SUFFIX = $(shell grep ^OL_SUFFIX ../../Makefile | sed 's/^[^=]*= *//;s/ *\#.*
 
 dt = $(shell grep ^dt $(GPMODEL) | sed 's/^[^=]*= *//;s/ *\#.*//')
 
-ALL ?= noise_variances.eps friction_averages.eps diffusion_averages.eps\
-       distance_averages.eps abs_ecc_averages.eps var_ratio_fut_averages.eps
+ALL ?= noise_variances.png friction_averages.png diffusion_averages.png\
+       distance_averages.png abs_ecc_averages.png var_ratio_fut_averages.png
 
 ## rules
 
