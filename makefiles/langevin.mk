@@ -1,4 +1,10 @@
-.PHONY:
+.PHONY: testmodel neighborhood dle
+
+testmodel: $$(TESTMODEL_DATA)
+
+neighborhood: $$(NEIGHBORS_DATA)
+
+dle: $$(OLANGEVIN_DATA)
 
 ## default settings
 
@@ -12,6 +18,9 @@ SHOWDATA +=
 OL_SUFFIX ?=# extra suffix for olangevin programs
 OL_TM_FLAGS ?=# additional flags for olangevin testmodel programs
 OL_SN_FLAGS ?=# additional flags for ol-search-neighbors programs
+TESTMODEL_DATA ?=# ltm files to be created (olangevin testmodel)
+NEIGHBORS_DATA ?=# osn files to be created (ol-search-neighbors)
+OLANGEVIN_DATA ?=# lang files to be created (olangevin programs)
 
 ## rules
 # select columns from data files
@@ -71,7 +80,10 @@ endef
 
 ## info
 ifndef INFO
-INFO = cat split
+INFO = cat split testmodel neighborhood dle
+INFO_testmodel = create testmodel trajectories and fields
+INFO_neighborhood = create files with indices of neighbours
+INFO_dle = create new dLE trajectories and fields
 define INFOADD
 
 To extract say 3 columns from a data file, call »make file.3cols«.
@@ -83,7 +95,7 @@ In olangevin programs, the number of components is selected by option
 by an extension ».m<num>.k<num>« in the output filenames.
 Let »symlink« an input trajectory in the following.
 
-Testmodel:
+Testmodel (target »testmodel«):
   Testmodel trajectories »symlink.dle<n>$(OL_SUFFIX).m<m>.k<k>.ltm«
   can be created where <n> is 1 for ol-first-tm$(OL_SUFFIX)
                           and 2 for ol-second-tm$(OL_SUFFIX).
@@ -91,16 +103,18 @@ Testmodel:
   If »symlink.m<m>.ltmp« is provided, fields are calculated for
   points in this file and not for all points in input data.
   Use variable »OL_TM_FLAGS« to provide additional options.
+  Targets can be added to »TESTMODEL_DATA« in Makefile.
 
   Testmodel trajectories can be splitted with the »split« target.
 
-Neighbors:
+Neighbors (target »neighborhood«):
   Neighbor indices in »symlink.m<m>.k<k>.osn« can be created.
   To obtain the neighbourhoods that are used by ol-first or
   ol-second, create »symlink.dle<n>.m<m>.k<k>.osn«, n = 1,2.
   If »symlink.m<m>.osnp« is provided, neighbors are searched for
   points in this file and not for all points in input data.
   Use variable »OL_SN_FLAGS« to provide additional options.
+  Targets can be added to »NEIGHBORS_DATA« in Makefile.
 
 Langevin:
   Save Langevin trajectories of a data file to »file.detail.lang«

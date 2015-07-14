@@ -30,22 +30,15 @@ OL_SN_FLAGS =
 ## default targets
 all += testmodel# neighborhood dle
 
-.PHONY: testmodel neighborhood dle
-testmodel: $$(TESTMODEL_DATA)
-neighborhood: $$(NEIGHBORS_DATA)
-dle: $$(OLANGEVIN_DATA)
-INFO += testmodel neighborhood dle
-INFO_testmodel = create testmodel trajectories and fields
-INFO_neighborhood = create file with indices of neighbours
-INFO_dle = create new dLE trajectories and fields
+TESTMODEL_DATA =\
+	$(foreach m,1 \
+	,$(foreach k,50 300 1000 \
+	,$(addsuffix .dle2${OL_SUFFIX}.m${m}.k${k}.ltm,${DATA})))
 
 NEIGHBORS_DATA =\
-	$(foreach k,50 300 1000 \
-	,$(addsuffix .dle2.m1.k${k}.osn,${DATA}))
-
-TESTMODEL_DATA =\
-	$(foreach k,50 300 1000 \
-	,$(addsuffix .dle2${OL_SUFFIX}.m1.k${k}.ltm,${DATA}))
+	$(foreach m,1 \
+	,$(foreach k,50 300 1000 \
+	,$(addsuffix .dle2.m${m}.k${k}.osn,${DATA})))
 
 ## call macros
 $(call_macros)
