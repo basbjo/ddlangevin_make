@@ -20,12 +20,23 @@ DATA_LINK = $(addsuffix ${PROJSUFFIX},${RAWDATA}) $(SAMPDATA)\
 # extra suffix for olangevin programs
 OL_SUFFIX = _b2
 # additional flags for olangevin testmodel programs
+# (set -H to print extra neighbourhood information)
 OL_TM_FLAGS = -H
 # additional flags for ol-search-neighbors programs
 OL_SN_FLAGS =
 
 ## default targets
-all += info
+all += testmodel# neighborhood
+
+TESTMODEL_DATA =\
+	$(foreach m,1 \
+	,$(foreach k,300 \
+	,$(addsuffix .dle2${OL_SUFFIX}.m${m}.k${k}.ltm,${DATA})))
+
+NEIGHBORS_DATA =\
+	$(foreach m,1 \
+	,$(foreach k,300 \
+	,$(addsuffix .dle2${OL_SUFFIX}.m${m}.k${k}.osn,${DATA})))
 
 ## call macros
 $(call_macros)
