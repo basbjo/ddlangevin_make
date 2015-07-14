@@ -36,7 +36,7 @@ TESTMODEL_DATA =\
 NEIGHBORS_DATA =\
 	$(foreach m,1 \
 	,$(foreach k,300 \
-	,$(addsuffix .dle2${OL_SUFFIX}.m${m}.k${k}.osn,${DATA})))
+	,$(addsuffix .dle2.m${m}.k${k}.osn,${DATA})))
 
 ## call macros
 $(call_macros)
