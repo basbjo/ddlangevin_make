@@ -40,7 +40,7 @@ alllabels = $(sort $(foreach file,$(wildcard ${DATA}),\
 	    $(shell $(call showfields_macro,${file}))))
 
 # field binning
-getfieldno_macro = $(shownumberedfields_macro) | grep $(2) | cut -d\  -f1
+getfieldno_macro = $(shownumberedfields_macro) | grep ' $(2)$$' | cut -d\  -f1
 
 comma = ,
 define special_binning_ranges
