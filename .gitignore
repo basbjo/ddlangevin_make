@@ -10,3 +10,11 @@ hist2d_*
 alldih*
 mle2_*
 /trajs.png
+#no_neighbor_dependence
+*_noweights.dat
+*_averages.eps
+*_averages.pdf
+*_averages.png
+*_variances.eps
+*_variances.pdf
+*_variances.png
