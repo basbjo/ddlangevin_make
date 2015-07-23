@@ -10,9 +10,9 @@ SHOWDATA += ALL
 ## default settings that must be changed before including this file
 
 ## variables
-OL_SUFFIX = $(shell grep ^OL_SUFFIX ../../Makefile | sed 's/^[^=]*= *//;s/ *\#.*//')
+OL_SUFFIX ?= $(shell grep ^OL_SUFFIX ../../Makefile | sed 's/^[^=]*= *//;s/ *\#.*//')
 
-dt = $(shell grep ^dt $(GPMODEL) | sed 's/^[^=]*= *//;s/ *\#.*//')
+dt ?= $(shell grep ^dt $(GPMODEL) | sed 's/^[^=]*= *//;s/ *\#.*//')
 
 ALL ?= noise_variances.png friction_averages.png diffusion_averages.png\
        distance_averages.png abs_ecc_averages.png var_ratio_fut_averages.png
@@ -51,22 +51,22 @@ $(foreach name,friction_averages diffusion_averages noise_variances\
 	$(eval $(call rule_make_eps,${name})))
 
 # rules to create data files
-friction_averages_noweights.dat: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.g_1_1.bins)
+friction_averages_noweights.dat: $$(wildcard ../*.dle2$$(OL_SUFFIX).m1.*.x1.g_1_1.bins)
 	$(call macro_bin_average,friction,mean)
 
-diffusion_averages_noweights.dat: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.K_1_1.bins)
+diffusion_averages_noweights.dat: $$(wildcard ../*.dle2$$(OL_SUFFIX).m1.*.x1.K_1_1.bins)
 	$(call macro_bin_average,diffusion,mean)
 
-noise_variances_noweights.dat: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.xi1.bins)
+noise_variances_noweights.dat: $$(wildcard ../*.dle2$$(OL_SUFFIX).m1.*.x1.xi1.bins)
 	$(call macro_bin_average,noise,var)
 
-distance_averages_noweights.dat: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.distance.bins)
+distance_averages_noweights.dat: $$(wildcard ../*.dle2$$(OL_SUFFIX).m1.*.x1.distance.bins)
 	$(call macro_bin_average,distance,mean)
 
-abs_ecc_averages_noweights.dat: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.abs_ecc.bins)
+abs_ecc_averages_noweights.dat: $$(wildcard ../*.dle2$$(OL_SUFFIX).m1.*.x1.abs_ecc.bins)
 	$(call macro_bin_average,abs_ecc,mean)
 
-var_ratio_fut_averages_noweights.dat: $(wildcard ../*.dle2$(OL_SUFFIX).m1.*.x1.var_ratio_fut.bins)
+var_ratio_fut_averages_noweights.dat: $$(wildcard ../*.dle2$$(OL_SUFFIX).m1.*.x1.var_ratio_fut.bins)
 	$(call macro_bin_average,var_ratio_fut,mean)
 
 # rules for additional gnuplot files
