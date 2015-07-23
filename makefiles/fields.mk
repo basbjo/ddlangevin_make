@@ -1,4 +1,6 @@
-.PHONY: showfields calc plot
+.PHONY: showfields average calc plot
+average: $$(AVERAGES)
+
 calc: $$(CALC)
 
 plot: calc $$(PLOT)
@@ -25,6 +27,7 @@ SHOWDATA +=
 ## variables
 BINNING1D += $(CROP_1DBINNING_RANGE)
 GPMODEL = $(prefix)/model$(example_suffix).gp
+AVERAGES += $(addsuffix .mean,${DATA})
 
 ## rules
 # field labels and column numbers
@@ -42,6 +45,17 @@ shownumberedfields_macro = $(showfields_macro) | nl -ba -s\  | sed 's/^  *//'
 
 alllabels = $(sort $(foreach file,$(wildcard ${DATA}),\
 	    $(shell $(call showfields_macro,${file}))))
+
+# field averages
+%.ltm.mean : %.ltm $(SCR)/average_ltm.awk
+	$(average_command)
+
+define average_command
+$(lastword $+)$(if ${CROP_1DBINNING_RANGE},\
+-vxmin=$(shell echo ${CROP_1DBINNING_RANGE} | cut -d',' -f1 | sed 's/-S//')\
+-vxmax=$(shell echo ${CROP_1DBINNING_RANGE} | cut -d',' -f2)\
+, )$< > $@
+endef
 
 # field binning
 getfieldno_macro = $(shownumberedfields_macro) | grep $(2) | cut -d\  -f1
@@ -152,8 +166,12 @@ endef
 
 ## info
 ifndef INFO
-INFO = showfields calc plot
+INFO = showfields average calc plot
 define INFOADD
+
+Averages
+========
+Field averages are calculated within »CROP_1DBINNING_RANGE«.
 
 Binning
 =======
@@ -182,6 +200,7 @@ else
 INFOend +=
 endif
 INFO_showfields = show column numbers with field labels
+INFO_average = average all fields within specified range
 INFO_calc = create targets in CALC list (see Makefile)
 INFO_plot = create targets in PLOT list (see Makefile)
 
@@ -191,4 +210,4 @@ PRECIOUS +=
 ## clean
 PLOTS_LIST += $(PLOT)
 CLEAN_LIST +=
-PURGE_LIST += $(CALC) $(ALL)
+PURGE_LIST += $(AVERAGES) $(CALC) $(ALL)
